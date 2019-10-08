@@ -1,2 +1,2 @@
-# lsmsd0
+# lsmsd
 Large Scale and Multi-Structured Databases 
