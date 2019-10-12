@@ -8,7 +8,7 @@ CREATE TABLE `utente` (
   `nome` varchar(32) NOT NULL,
   `password` varchar(32) NOT NULL,
   `tipo` varchar(32) NOT NULL,
-  PRIMARY KEY (`IdUtente`,`nome` ),
+  PRIMARY KEY (`IdUtente`,`nome` )
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 
