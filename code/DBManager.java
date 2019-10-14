@@ -128,6 +128,65 @@ public class DBManager{
 		  
             return reservations;   
 	 }
+         
+         public static int deleteReservation(Reservation r) {
+                 int res = -1;
+		 try {
+			 PreparedStatement ps = connectionToDB.prepareStatement("DELETE * FROM prenotazione WHERE nomeCliente = ? and IdRisto = ? and data = ? and ora = ?"); 
+					 												
+			 ps.setString(1, r.getUsername());
+			 ps.setInt(2,r.getRestaurant());
+			 ps.setString(3,r.getDate());
+			 ps.setString(4,r.getHour());
+			 res = ps.executeUpdate();
+			 //Manca gestione errore
+		 }catch(SQLException e) {
+			 System.out.println(e.getMessage());
+		 }	 
+                 return res;
+	 }
+         
+         public static int updateReservation(Reservation r) {
+                 int res = -1;
+		 try {
+			 PreparedStatement ps = connectionToDB.prepareStatement("UPDATE prenotazione SET data = ? AND ora = ? and persone = ? WHERE nomeCliente = ? and IdRisto = ? "); 
+			
+                         ps.setString(1, r.getDate());
+                         ps.setString(2,r.getHour());
+                         ps.setInt(3, r.getSeats());
+			 ps.setString(4, r.getUsername());
+			 ps.setInt(5,r.getRestaurant());
+			 
+			 res = ps.executeUpdate();
+			 //Manca gestione errore
+		 }catch(SQLException e) {
+			 System.out.println(e.getMessage());
+		 }	 
+                 return res;
+	 }
 	
-	
+	public static int updateRestaurant(Restaurant r) {
+                 int res = -1;
+		 try {
+			 PreparedStatement ps = connectionToDB.prepareStatement("UPDATE ristorante " +
+            "SET nome = ? AND genere = ? AND costo = ? AND citta = ? AND via = ? AND descrizione = ? AND coperti = ? " +
+            "AND oraApertura = ? AND oraChiusura = ? WHERE IdUtente = ? and IdRisto = ? "); 
+			
+                         ps.setString(1, r.getName());
+                         ps.setString(2,r.getType());
+                         ps.setInt(3, r.getPrice());
+			 ps.setString(4, r.getCity());
+			 ps.setString(5, r.getAddress());
+                         ps.setString(6, r.getDescription());
+                         ps.setInt(7, r.getSeats());
+			 ps.setString(8, r.getOpeningAt());
+                         ps.setString(9, r.getClosingAt());
+                         
+			 res = ps.executeUpdate();
+			 //Manca gestione errore
+		 }catch(SQLException e) {
+			 System.out.println(e.getMessage());
+		 }	 
+                 return res;
+	 }
 }
