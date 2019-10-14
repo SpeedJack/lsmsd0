@@ -55,7 +55,7 @@ DROP TABLE IF EXISTS `prenotazione`;
 CREATE TABLE `prenotazione` (
   `nomeCliente` varchar(32) NOT NULL,
   `IdRisto` int(11) NOT NULL,
-  `data` date NOT NULL,
+  `data` varchar(10) NOT NULL,
   `ora` varchar(32) NOT NULL,
   `persone` int(11) NOT NULL,
   PRIMARY KEY (`nomeCliente`, `IdRisto`, `data`, `ora`, `persone`)
