@@ -20,7 +20,7 @@ public class DBManager{
 		 try {
 			 PreparedStatement ps = connectionToDB.prepareStatement("SELECT IdUtente, COUNT(*) AS Numero" 
 					 												+ "FROM utente"
-					 												+"WHERE nome= "+us.name+" AND password = " + us.password + ";");
+					 												+"WHERE nome= "+us.getUsername()+" AND password = " + us.getPassword() + ";");
 			 ResultSet res = ps.executeQuery();
 			 if(res.getInt("Numero")== 1) {
 				 return res.getInt("IdUtente");
@@ -41,7 +41,7 @@ public class DBManager{
 		 try {
 			 PreparedStatement ps = connectionToDB.prepareStatement("SELECT COUNT(*) AS Numero" 
 					 												+ "FROM utente"
-					 												+"WHERE nome= "+us.name+";");
+					 												+"WHERE nome= "+us.getUsername()+";");
 			 ResultSet res = ps.executeQuery();
 			 if(res.getInt("Numero")== 0) {
 				 return 1;
@@ -86,7 +86,8 @@ public class DBManager{
                  return restaurant;
 	 }
 	
-	 public static void book(Reservation r) {
+	 public static int book(Reservation r) {
+                 int res = -1;
 		 try {
 			 PreparedStatement ps = connectionToDB.prepareStatement("INSERT INTO prenotazione" 
 					 												+ "VALUES(?,?,?,?,?);");
@@ -95,11 +96,12 @@ public class DBManager{
 			 ps.setString(3,r.getDate());
 			 ps.setString(4,r.getHour());
 			 ps.setInt(5, r.getSeats());
-			 ps.executeUpdate();
+			 res = ps.executeUpdate();
 			 //Manca gestione errore
 		 }catch(SQLException e) {
 			 System.out.println(e.getMessage());
 		 }	 
+                 return res;
 	 }
 	
 	 public static List<Reservation> list_reservation_client(User s){
