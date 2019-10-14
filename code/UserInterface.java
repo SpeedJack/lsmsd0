@@ -7,6 +7,7 @@ public class UserInterface{
 	
 	static Scanner sc;
 	
+	
 	public static void access() {
 		int check = 0;
 		String input = new String();
@@ -21,14 +22,31 @@ public class UserInterface{
 				System.out.println("Insert your password:");
 				password = sc.nextLine();
 				if(input.equals("/login")) {
-					//metodo che manda la richiesta di accesso con le credenziali (us/pass). Se può acccedere viene restituito
+					
+					//metodo che manda la richiesta di accesso con le credenziali (us/pass). Se puo' acccedere viene restituito
 					//l'oggetto utente da cui si prevela il tipo di utente e si mette in 'type'. l'userID viene messo in 'UserID'
 					type = "cliente";
 					check = 1;
 				}
 				else if(input.equals("/register")) {
 					 //metodo che manda richiesta di registrazione.
-				}
+				System.out.println("insert 'c' if you are a customer or 'r' if you are a ristorateur");
+				input = sc.nextLine();
+				while(type.isEmpty()) {
+					if(input.equals("c"))
+							type = new String("cliente");
+					else if(input.equals("r"))
+							type = new String("ristoratore");
+					else System.out.println("Bad Input, Values Admitted 'c' or 'r'");
+				};
+				User u = new User(username, password, type);
+				List<User> ul = new ArrayList<User>();
+				ul.add(u);
+				
+				Request r = new Request(1, "Registration Request", ul, new ArrayList<>(), new ArrayList<>());
+				RequestHandlerClient.sendRequest(r);
+				Request rx = RequestHandlerClient.receiveRequest();
+				
 			}
 			else{
 				System.out.println("Not valid input. To login, type '/ login', if you are not registered yet type '/register'\n");	
@@ -115,7 +133,7 @@ public class UserInterface{
 	
 	
 	public static void main (String args[]) {
-		
+		rhc = new RequestHandlerClient();
 		System.out.println("Welcome to RistoGo!\n"
 				+ "The application that allows you to book tables at your favorite restaurants.");
 		System.out.println("To login, type '/ login', if you are not registered yet type '/register'\n");

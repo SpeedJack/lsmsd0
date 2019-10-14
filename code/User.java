@@ -4,19 +4,19 @@ import javafx.beans.property.*;
       
       private final SimpleStringProperty username;
       private final SimpleStringProperty password;
-      private final SimpleBooleanProperty restorateur;
+      private final SimpleStringProperty restaurateur;
  
-      public User(String u, String p, boolean r) {
+      public User(String u, String p, String r) {
         username = new SimpleStringProperty(u);
         password = new SimpleStringProperty(p);
-        restorateur = new SimpleBooleanProperty(r);
+        restaurateur = new SimpleStringProperty(r);
       }
  
       public String getUsername() { return username.get(); }
       public String getPassword() { return password.get(); }
-      public boolean getRestorateur() { return restorateur.get(); }
+      public String getRestaurateur() { return restaurateur.get(); }
       
       public void setUsername(String u) { username.set(u); }
       public void setPassword(String p) { password.set(p); }
-      public void setRestorateur(boolean r) { restorateur.set(r); }
+      public void setRestaurateur(String r) { restaurateur.set(r); }
  } 
