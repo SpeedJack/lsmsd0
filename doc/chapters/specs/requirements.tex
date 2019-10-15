@@ -1,12 +1,15 @@
 \section{Requirements}
-
+	In this section we will introduce the requirements for our application, extracted from the previous specification.
+	
 \subsection{Functional requirements}
 \begin{enumerate}
-	\item A customer can reserve a table choosing a restaurants from a list.
-	\item A restaurateur can add his restaurant in the list provided by the
+	\item A customer reserve a table choosing a restaurants from a list.
+	\item A restaurateur add his restaurant in the list provided to customers by the
 		application.
 	\item Users (customers and restaurateurs) must be registered in order to
-		make a reservation.
+		add/modify/remove a reservation.
+	\item Restaurateurs must be registered in order to modify/add/remove their restauraunts
+	\item A Restaurateur can only modify his/her restauraunts
 	\item The application must handle the reservation process, managing also
 		the residual available seats in each restaurant (in order to
 		avoid to take a reservation when the restaurant is full).
@@ -18,4 +21,7 @@
 		handle reservation also when the restaurant is closed, thus
 		significantly simplifying and speeding up the interaction
 		between customers and restaurateurs.
+	\item Usability and Portability: The application must be easy to use and
+		must be as much portable as possible, in order to easily spread among
+		the people. 
 \end{enumerate}
