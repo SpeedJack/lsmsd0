@@ -20,8 +20,8 @@ public class DBManager{
 	 public static int login(User us) {
 		 try {
 			 PreparedStatement ps = connectionToDB.prepareStatement("SELECT IdUtente, COUNT(*) AS Numero" 
-					 												+ "FROM utente"
-					 												+"WHERE nome= "+us.getUsername()+" AND password = " + us.getPassword() + ";");
+		 			+ "FROM utente"
+					+"WHERE nome= "+us.getUsername()+" AND password = " + us.getPassword() + ";");
 			 ResultSet res = ps.executeQuery();
 			 if(res.getInt("Numero")== 1) {
 				 return res.getInt("IdUtente");
@@ -41,8 +41,8 @@ public class DBManager{
 		 
 		 try {
 			 PreparedStatement ps = connectionToDB.prepareStatement("SELECT COUNT(*) AS Numero" 
-					 												+ "FROM utente"
-					 												+"WHERE nome= "+us.getUsername()+";");
+										+ "FROM utente"
+                                                				+"WHERE nome= "+us.getUsername()+";");
 			 ResultSet res = ps.executeQuery();
 			 if(res.getInt("Numero")== 0) {
 				 return 1;
@@ -63,7 +63,7 @@ public class DBManager{
 		 List<Restaurant> restaurant = new ArrayList<>();
 		 try {
 			 PreparedStatement ps = connectionToDB.prepareStatement("SELECT*" 
-					 												+ "FROM ristorante;");
+							+ "FROM ristorante;");
 			 ResultSet res = ps.executeQuery();
 			 while(res.next()) {
 				 String name = res.getString("nome");
@@ -91,8 +91,8 @@ public class DBManager{
                  int res = -1;
 		 try {
 			 PreparedStatement ps = connectionToDB.prepareStatement("INSERT INTO prenotazione" 
-					 												+ "VALUES(?,?,?,?,?);");
-			 ps.setString(1, r.getUsername());
+							+ "(IdCliente, IdRisto, data, ora, persone) VALUES(?,?,?,?,?);");
+			 ps.setInt(1, r.getUser());
 			 ps.setInt(2,r.getRestaurant());
 			 ps.setString(3,r.getDate());
 			 ps.setString(4,r.getHour());
@@ -108,18 +108,19 @@ public class DBManager{
 	 public static List<Reservation> list_reservation_client(User s){
 		 List<Reservation> reservations = new ArrayList<>();
 		 try {
-			 PreparedStatement ps = connectionToDB.prepareStatement("SELECT r.nome AS Nome, p.data As Data, r.IdRisto AS Ristorante, p.ora AS ORA, p.persone AS Persone" 
-																	+ "FROM prenotazione p INNER JOIN ristorante r ON p.IdRisto=r.IdRisto "
-																	+"WHERE nomeCliente= "+s.getUsername()+";");
+			 PreparedStatement ps = connectionToDB.prepareStatement("SELECT r.IdUtente AS Utente, " + 
+                                 "p.data As Data, r.IdRisto AS Ristorante, p.ora AS ORA, p.persone AS Persone" 
+					+ "FROM prenotazione p INNER JOIN ristorante r ON p.IdRisto=r.IdRisto "
+                                    +"WHERE nomeCliente= "+s.getUsername()+";");
 			 ResultSet res = ps.executeQuery();
 			 while(res.next()) {
-				 String name = res.getString("Nome");
+				 int utente = res.getInt("Utente");
 				 String date = res.getString("Data");
                                  int restaurant = res.getInt("Ristorante");
                                  int seats = res.getInt("Persone");
 				 String hour = res.getString("Ora");
 				 
-				 reservations.add(new Reservation(name, restaurant, date, seats, hour));
+				 reservations.add(new Reservation(utente, restaurant, date, seats, hour));
 				 
 			 }
 			 
@@ -129,20 +130,69 @@ public class DBManager{
 		  
             return reservations;   
 	 }
-	 public static void main (String args[]) {
+         
+         public static int deleteReservation(Reservation r) {
+                 int res = -1;
+		 try {
+			 PreparedStatement ps = connectionToDB.prepareStatement("DELETE * FROM prenotazione " + 
+                          "WHERE nomeCliente = ? and IdRisto = ? and data = ? and ora = ?"); 
+					 												
+			 ps.setInt(1, r.getUser());
+			 ps.setInt(2,r.getRestaurant());
+			 ps.setString(3,r.getDate());
+			 ps.setString(4,r.getHour());
+			 res = ps.executeUpdate();
+			 //Manca gestione errore
+		 }catch(SQLException e) {
+			 System.out.println(e.getMessage());
+		 }	 
+                 return res;
+	 }
+         
+         public static int updateReservation(Reservation r) {
+                 int res = -1;
+		 try {
+			 PreparedStatement ps = connectionToDB.prepareStatement("UPDATE prenotazione " + 
+                         "SET data = ? AND ora = ? and persone = ? WHERE IdPrenotazione = ? "); 
 			
-			System.out.println("Welcome to RistoGo!\n"
-					+ "The application that allows you to book tables at your favorite restaurants.");
+                         ps.setString(1, r.getDate());
+                         ps.setString(2,r.getHour());
+                         ps.setInt(3, r.getSeats());
+			 ps.setInt(4, r.getReservation());
+			 
+			 res = ps.executeUpdate();
+			 //Manca gestione errore
+		 }catch(SQLException e) {
+			 System.out.println(e.getMessage());
+		 }	 
+                 return res;
+	 }
+	
+	public static int updateRestaurant(Restaurant r) {
+                 int res = -1;
+		 try {
+			 PreparedStatement ps = connectionToDB.prepareStatement("UPDATE ristorante " +
+            "SET nome = ? AND genere = ? AND costo = ? AND citta = ? AND via = ? AND descrizione = ? AND coperti = ? " +
+            "AND oraApertura = ? AND oraChiusura = ? WHERE IdRisto = ? "); 
 			
-			Scanner sc = new Scanner(System.in);
-			while(1) {
-				//Ricevo richiesta
-				Request rst = RequestHandler.receiveRequest();
-				//Parse
-				//QueryDB
-				//Invio risultati
-			}
-		}	
+                         ps.setString(1, r.getName());
+                         ps.setString(2,r.getType());
+                         ps.setInt(3, r.getPrice());
+			 ps.setString(4, r.getCity());
+			 ps.setString(5, r.getAddress());
+                         ps.setString(6, r.getDescription());
+                         ps.setInt(7, r.getSeats());
+			 ps.setString(8, r.getOpeningAt());
+                         ps.setString(9, r.getClosingAt());
+                         ps.setInt(10, r.getId());
+                         
+			 res = ps.executeUpdate();
+			 //Manca gestione errore
+		 }catch(SQLException e) {
+			 System.out.println(e.getMessage());
+		 }	 
+                 return res;
+	 }
 	
 	
 }

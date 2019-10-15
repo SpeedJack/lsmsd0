@@ -2,7 +2,7 @@ import javafx.beans.property.*;
 
   public class Reservation {
       
-	  private final SimpleIntegerProperty idReservation;
+      private final SimpleIntegerProperty idReservation;
       private final SimpleIntegerProperty idUser;
       private final SimpleIntegerProperty idRestaurant;
       private final SimpleStringProperty date;
