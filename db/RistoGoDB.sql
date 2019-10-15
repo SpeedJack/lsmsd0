@@ -4,11 +4,12 @@ USE `ristogo`;
 DROP TABLE IF EXISTS `utente`;
 
 CREATE TABLE `utente` (
-  `IdUtente` int(11) NOT NULL,
+  `IdUtente` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(32) NOT NULL,
   `password` varchar(32) NOT NULL,
   `tipo` varchar(32) NOT NULL,
-  PRIMARY KEY (`IdUtente`,`nome` )
+  PRIMARY KEY(`IdUtente`),
+  CONSTRAINT vincolo_utente UNIQUE(`nome`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 
@@ -26,7 +27,7 @@ INSERT INTO utente VALUES ('10', 'gabriele97', 'gabriele97', 'cliente');
 DROP TABLE IF EXISTS `ristorante`;
 
 CREATE TABLE `ristorante` (
-  `IdRisto` int(11) NOT NULL,
+  `IdRisto` int(11) NOT NULL AUTO_INCREMENT,
   `IdUtente` int(11) NOT NULL,
   `nome` varchar(32) NOT NULL,
   `genere` varchar(32) NOT NULL,
@@ -37,7 +38,9 @@ CREATE TABLE `ristorante` (
   `coperti` int(11) NOT NULL,
   `oraApertura` varchar(255) NOT NULL,
   `oraChiusura` varchar(255) NOT NULL,
-  PRIMARY KEY (`IdRisto`, `IdUtente`)
+  PRIMARY KEY(`IdRisto`),
+  CONSTRAINT vincolo_ristorante UNIQUE(`IdRisto`, `IdUtente`),
+  FOREIGN KEY (idUtente) REFERENCES utente(idUtente)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 
@@ -53,17 +56,21 @@ INSERT INTO `ristorante` VALUES (1,4,'La Baita del Pirata','ristorante',4,'Donor
 DROP TABLE IF EXISTS `prenotazione`;
 
 CREATE TABLE `prenotazione` (
-  `nomeCliente` varchar(32) NOT NULL,
+  `idPrenotazione`int(11) NOT NULL AUTO_INCREMENT,
+  `idCliente` int(11) NOT NULL,
   `IdRisto` int(11) NOT NULL,
   `data` varchar(10) NOT NULL,
   `ora` varchar(32) NOT NULL,
   `persone` int(11) NOT NULL,
-  PRIMARY KEY (`nomeCliente`, `IdRisto`, `data`, `ora`, `persone`)
+  PRIMARY KEY (`idPrenotazione`),
+  FOREIGN KEY (idRisto) REFERENCES ristorante(idRisto),
+  FOREIGN KEY (idCliente) REFERENCES utente(idUtente),
+  CONSTRAINT vincolo_prenotazioni UNIQUE(`idPrenotazione`,`idCliente`,`idRisto`,`data`,`ora`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 
-INSERT INTO prenotazione VALUES ('gabriele97', '2', '2018-06-18', '22:00', '5');
-INSERT INTO prenotazione VALUES ('gino', '2', '2018-06-26', '21:00', '6');
-INSERT INTO prenotazione VALUES ('simone', '1', '2018-06-19', '20:45', '2');
-INSERT INTO prenotazione VALUES ('simone', '2', '2018-06-26', '20:00', '3');
-INSERT INTO prenotazione VALUES ('simone', '5', '2018-06-16', '22:00', '6');
+INSERT INTO prenotazione VALUES (1, 1, '2', '2018-06-18', '22:00', '5');
+INSERT INTO prenotazione VALUES (2, 2, '2', '2018-06-26', '21:00', '6');
+INSERT INTO prenotazione VALUES (3, 3, '1', '2018-06-19', '20:45', '2');
+INSERT INTO prenotazione VALUES (4, 4, '2', '2018-06-26', '20:00', '3');
+INSERT INTO prenotazione VALUES (5, 5, '5', '2018-06-16', '22:00', '6');

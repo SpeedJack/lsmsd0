@@ -1,7 +1,7 @@
 import javafx.beans.property.*;
 
   public class Restaurant {
-      
+      private final SimpleIntegerProperty id;
       private final SimpleStringProperty name;
       private final SimpleStringProperty type;
       private final SimpleIntegerProperty seats;
@@ -22,8 +22,10 @@ import javafx.beans.property.*;
         price = new SimpleIntegerProperty(p);
         openingAt = new SimpleStringProperty(oa);
         closingAt = new SimpleStringProperty(ca);
+        id = new SimpleIntegerProperty();
       }
- 
+      
+      public int getId() {return id.get(); }
       public String getName() { return name.get(); }
       public String getType() { return type.get(); }
       public int getSeats() { return seats.get(); }
@@ -34,6 +36,7 @@ import javafx.beans.property.*;
       public String getOpeningAt() { return openingAt.get(); }
       public String getClosingAt() { return closingAt.get(); }
       
+      public void setId(int i) {id.set(i);}
       public void setName(String n) { name.set(n); }
       public void setType(String t) { type.set(t); }
       public void setSeats(int s) { seats.set(s); }

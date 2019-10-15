@@ -28,7 +28,7 @@ public class UserInterface{
 //					List<User> ul = new ArrayList<User>();
 //					ul.add(u);
 //					//Create Request
-					Request r = RequestHandler.prepareLogin(username, password, "");
+					Request r = RequestHandler.prepareLogin(username, password);
 					//Send Request
 					RequestHandler.sendRequest(r);
 					//Wait response and read results
@@ -42,25 +42,20 @@ public class UserInterface{
 				}
 				else if(input.equals("/register")) {
 					 //metodo che manda richiesta di registrazione.
-//				System.out.println("insert 'c' if you are a customer or 'r' if you are a ristorateur");
-//				
-//				input = sc.nextLine();
-//				
-//				while(type.isEmpty()) {
-//					if(input.equals("c"))
-//							type = new String("cliente");
-//					else if(input.equals("r"))
-//							type = new String("ristoratore");
-//					else System.out.println("Bad Input, Values Admitted 'c' or 'r'");
-//				};
-//				
-//				//Create User Bean to insert in Request
-//				u = new User(username, password, type);
-//				List<User> ul = new ArrayList<User>();
-//				ul.add(u);
-//				
+				System.out.println("insert 'c' if you are a customer or 'r' if you are a ristorateur");
+				
+				input = sc.nextLine();
+				
+				while(type.isEmpty()) {
+					if(input.equals("c"))
+							type = new String("cliente");
+					else if(input.equals("r"))
+							type = new String("ristoratore");
+					else System.out.println("Bad Input, Values Admitted 'c' or 'r'");
+				};
+				
 //				//Create Request
-				Request r = RequestHandler.prepareRegistration(username, password);
+				Request r = RequestHandler.prepareRegistration(username, password,type);
 						//Send Request
 				RequestHandler.sendRequest(r);
 				//Wait response
