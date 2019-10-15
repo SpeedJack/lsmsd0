@@ -1,6 +1,7 @@
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class DBManager{
 	
@@ -128,6 +129,20 @@ public class DBManager{
 		  
             return reservations;   
 	 }
+	 public static void main (String args[]) {
+			
+			System.out.println("Welcome to RistoGo!\n"
+					+ "The application that allows you to book tables at your favorite restaurants.");
+			
+			Scanner sc = new Scanner(System.in);
+			while(1) {
+				//Ricevo richiesta
+				Request rst = RequestHandler.receiveRequest();
+				//Parse
+				//QueryDB
+				//Invio risultati
+			}
+		}	
 	
 	
 }

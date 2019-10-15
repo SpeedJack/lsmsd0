@@ -6,7 +6,7 @@ public class UserInterface{
 	static String type;
 	
 	static Scanner sc;
-	
+	static User u;
 	
 	public static void access() {
 		int check = 0;
@@ -23,34 +23,59 @@ public class UserInterface{
 				password = sc.nextLine();
 				if(input.equals("/login")) {
 					
-					//metodo che manda la richiesta di accesso con le credenziali (us/pass). Se puo' acccedere viene restituito
-					//l'oggetto utente da cui si prevela il tipo di utente e si mette in 'type'. l'userID viene messo in 'UserID'
-					type = "cliente";
-					check = 1;
+					
+//					u = new User(username, password, "");
+//					List<User> ul = new ArrayList<User>();
+//					ul.add(u);
+//					//Create Request
+					Request r = RequestHandler.prepareLogin(username, password, "");
+					//Send Request
+					RequestHandler.sendRequest(r);
+					//Wait response and read results
+					Request rx = RequestHandler.receiveRequest();
+					if(rx.getSuccess()) {
+						u = rx.getUsers().get(0);
+						type = u.getType();
+						check = 1;
+					} else break;
+					
 				}
 				else if(input.equals("/register")) {
 					 //metodo che manda richiesta di registrazione.
-				System.out.println("insert 'c' if you are a customer or 'r' if you are a ristorateur");
-				input = sc.nextLine();
-				while(type.isEmpty()) {
-					if(input.equals("c"))
-							type = new String("cliente");
-					else if(input.equals("r"))
-							type = new String("ristoratore");
-					else System.out.println("Bad Input, Values Admitted 'c' or 'r'");
+//				System.out.println("insert 'c' if you are a customer or 'r' if you are a ristorateur");
+//				
+//				input = sc.nextLine();
+//				
+//				while(type.isEmpty()) {
+//					if(input.equals("c"))
+//							type = new String("cliente");
+//					else if(input.equals("r"))
+//							type = new String("ristoratore");
+//					else System.out.println("Bad Input, Values Admitted 'c' or 'r'");
+//				};
+//				
+//				//Create User Bean to insert in Request
+//				u = new User(username, password, type);
+//				List<User> ul = new ArrayList<User>();
+//				ul.add(u);
+//				
+//				//Create Request
+				Request r = RequestHandler.prepareRegistration(username, password);
+						//Send Request
+				RequestHandler.sendRequest(r);
+				//Wait response
+				Request rx = RequestHandler.receiveRequest();
+				if(rx.getSuccess()){
+					System.out.println("Registration completed!");
+					check = 1;
+				} else {
+					System.out.println("Invalid credentials, try something different");
 				};
-				User u = new User(username, password, type);
-				List<User> ul = new ArrayList<User>();
-				ul.add(u);
-				
-				Request r = new Request(1, "Registration Request", ul, new ArrayList<>(), new ArrayList<>());
-				RequestHandlerClient.sendRequest(r);
-				Request rx = RequestHandlerClient.receiveRequest();
-				
 			}
 			else{
 				System.out.println("Not valid input. To login, type '/ login', if you are not registered yet type '/register'\n");	
-			}	
+			};
+			}
 		}
 	}
 	
@@ -62,24 +87,53 @@ public class UserInterface{
 		System.out.println( "'/list': the list of restaurants available on RistoGo, with all the details for each restaurant");
 		System.out.println( "'/book': book a table in one of our restaurants");
 		System.out.println( "'/myres': the list of your reservations made, with all the details");
-		System.out.println("'/quit': exit to RistoGo.");
+		System.out.println( "'/modres': modify one of yours reservation");
+		System.out.println( "'/delres': delete one of yours reservation");
+		System.out.println("'/quit': exit to RistoGo\n");
 		
 		
 		while(finish != 1) {
 			input = sc.nextLine();
 			if(input.equals("/list")) {
+				
 				//metodo per la lista dei ristoranti
 			}
 			else if(input.equals("/book")) {
-				System.out.println("Name of the resturant:");
-				//inserire nome del ristorante nella classe bean
-				System.out.println("Date of the reservation(YYYY-MM-DD):");
-				//inserire data 
-				System.out.println("Hour of the reservation(HH:MM):");
-				//inserire orario
-				System.out.println("Number of seats:");
-				
-				
+				//Metodo per la prenotazione
+				Request rst = RequestHandler.prepareBook(u);
+//				Reservation r = new Reservation("", 0, "", 0, "");
+//				
+//				System.out.println("resturant id:");
+//				input = sc.nextLine();
+//				r.setRestaurant(Integer.parseInt(input));
+//				
+//				System.out.println("Date of the reservation(YYYY-MM-DD):");
+//				input = sc.nextLine();
+//				r.setDate(input);
+//				
+//				System.out.println("Hour of the reservation(HH:MM):");
+//				//inserire orario
+//				input = sc.nextLine();
+//				r.setHour(input);
+//				
+//				System.out.println("Number of seats:");
+//				input = sc.nextLine();
+//				r.setSeats(Integer.parseInt(input));
+//				
+//				List<User> ul = new ArrayList<User>();
+//				ul.add(u);
+//				List<Reservation> rl = new ArrayList<Reservation>();
+//				rl.add(r);
+//				
+//				Request rst = new Request(2, "Booking Request", true, ul, new ArrayList<>(), rl);
+//				RequestHandlerClient.sendRequest(rst);
+				rst = RequestHandler.receiveRequest();
+				if(rst.getSuccess()) {
+					System.out.println("Booking Completed Succesfully");
+				} else {
+					System.out.println("Something has gone wrong, please retry! ");
+					System.out.println(rst.getMessage());
+				};
 				
 			}
 			else if(input.equals("/myres")) {
@@ -94,6 +148,8 @@ public class UserInterface{
 				System.out.println( "'/list': the list of restaurants available on RistoGo, with all the details for each restaurant");
 				System.out.println( "'/book': book a table in one of our restaurants");
 				System.out.println( "'/myres': the list of your reservations made, with all the details");
+				System.out.println( "'/modres': modify one of yours reservation");
+				System.out.println( "'/delres': delete one of yours reservation");
 				System.out.println("'/quit': exit to RistoGo\n");
 			}
 		}
@@ -108,7 +164,7 @@ public class UserInterface{
 		System.out.println( "Here is the list of available actions:");
 		System.out.println( "'/res': the list of  reservations at your resturant, with all the details");
 		System.out.println( "'/modify': modify details of your resturant");
-		System.out.println("'/quit': exit to RistoGo");
+		System.out.println("'/quit': exit from RistoGo");
 
 		while(finish != 1) {
 			input = sc.nextLine();
@@ -126,14 +182,14 @@ public class UserInterface{
 				System.out.println( "Here is the list of available actions:");
 				System.out.println( "'/res': the list of  reservations at your resturant, with all the details");
 				System.out.println( "'/modify': modify details of your resturant");
-				System.out.println("'/quit': exit to RistoGo");
+				System.out.println("'/quit': exit from RistoGo");
 			}
 		}
 	}
 	
 	
 	public static void main (String args[]) {
-		rhc = new RequestHandlerClient();
+		
 		System.out.println("Welcome to RistoGo!\n"
 				+ "The application that allows you to book tables at your favorite restaurants.");
 		System.out.println("To login, type '/ login', if you are not registered yet type '/register'\n");
