@@ -1,204 +1,188 @@
-import java.util.*;
+package application;
+	
+import javafx.application.*;
+import javafx.event.ActionEvent;
+import javafx.geometry.*;
+import javafx.stage.*;
+import javafx.scene.*;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
-public class UserInterface{
-	
-	static int userID;
-	static String type;
-	
-	static Scanner sc;
-	static User u;
-	
-	public static void access() {
-		int check = 0;
-		String input = new String();
-		String username;
-		String password;
-		
-		while(check != 1) {
-			input = sc.nextLine();
-			if(input.equals("/login") || input.equals("/register")) {
-				System.out.println("insert your username:");
-				username = sc.nextLine();
-				System.out.println("Insert your password:");
-				password = sc.nextLine();
-				if(input.equals("/login")) {
-					
-					
-//					u = new User(username, password, "");
-//					List<User> ul = new ArrayList<User>();
-//					ul.add(u);
-//					//Create Request
-					Request r = RequestHandler.prepareLogin(username, password);
-					//Send Request
-					RequestHandler.sendRequest(r);
-					//Wait response and read results
-					Request rx = RequestHandler.receiveRequest();
-					if(rx.getSuccess()) {
-						u = rx.getUsers().get(0);
-						type = u.getType();
-						check = 1;
-					} else break;
-					
-				}
-				else if(input.equals("/register")) {
-					 //metodo che manda richiesta di registrazione.
-				System.out.println("insert 'c' if you are a customer or 'r' if you are a ristorateur");
-				
-				input = sc.nextLine();
-				
-				while(type.isEmpty()) {
-					if(input.equals("c"))
-							type = new String("cliente");
-					else if(input.equals("r"))
-							type = new String("ristoratore");
-					else System.out.println("Bad Input, Values Admitted 'c' or 'r'");
-				};
-				
-//				//Create Request
-				Request r = RequestHandler.prepareRegistration(username, password,type);
-						//Send Request
-				RequestHandler.sendRequest(r);
-				//Wait response
-				Request rx = RequestHandler.receiveRequest();
-				if(rx.getSuccess()){
-					System.out.println("Registration completed!");
-					check = 1;
-				} else {
-					System.out.println("Invalid credentials, try something different");
-				};
-			}
-			else{
-				System.out.println("Not valid input. To login, type '/ login', if you are not registered yet type '/register'\n");	
-			};
-			}
-		}
-	}
-	
-	public static void client_menu() {
-		int finish = 0;
-		String input = new String();
-		System.out.println( "Welcome to the client section of RistoGo!");
-		System.out.println( "Here is the list of available actions:");
-		System.out.println( "'/list': the list of restaurants available on RistoGo, with all the details for each restaurant");
-		System.out.println( "'/book': book a table in one of our restaurants");
-		System.out.println( "'/myres': the list of your reservations made, with all the details");
-		System.out.println( "'/modres': modify one of yours reservation");
-		System.out.println( "'/delres': delete one of yours reservation");
-		System.out.println("'/quit': exit to RistoGo\n");
-		
-		
-		while(finish != 1) {
-			input = sc.nextLine();
-			if(input.equals("/list")) {
-				
-				//metodo per la lista dei ristoranti
-			}
-			else if(input.equals("/book")) {
-				//Metodo per la prenotazione
-				Request rst = RequestHandler.prepareBook(u);
-//				Reservation r = new Reservation("", 0, "", 0, "");
-//				
-//				System.out.println("resturant id:");
-//				input = sc.nextLine();
-//				r.setRestaurant(Integer.parseInt(input));
-//				
-//				System.out.println("Date of the reservation(YYYY-MM-DD):");
-//				input = sc.nextLine();
-//				r.setDate(input);
-//				
-//				System.out.println("Hour of the reservation(HH:MM):");
-//				//inserire orario
-//				input = sc.nextLine();
-//				r.setHour(input);
-//				
-//				System.out.println("Number of seats:");
-//				input = sc.nextLine();
-//				r.setSeats(Integer.parseInt(input));
-//				
-//				List<User> ul = new ArrayList<User>();
-//				ul.add(u);
-//				List<Reservation> rl = new ArrayList<Reservation>();
-//				rl.add(r);
-//				
-//				Request rst = new Request(2, "Booking Request", true, ul, new ArrayList<>(), rl);
-//				RequestHandlerClient.sendRequest(rst);
-				rst = RequestHandler.receiveRequest();
-				if(rst.getSuccess()) {
-					System.out.println("Booking Completed Succesfully");
-				} else {
-					System.out.println("Something has gone wrong, please retry! ");
-					System.out.println(rst.getMessage());
-				};
-				
-			}
-			else if(input.equals("/myres")) {
-				
-			}
-			else if(input.equals("/quit")) {
-				finish = 1;
-			}
-			else {
-				System.out.println("Not valid input.");
-				System.out.println( "Here is the list of available actions:");
-				System.out.println( "'/list': the list of restaurants available on RistoGo, with all the details for each restaurant");
-				System.out.println( "'/book': book a table in one of our restaurants");
-				System.out.println( "'/myres': the list of your reservations made, with all the details");
-				System.out.println( "'/modres': modify one of yours reservation");
-				System.out.println( "'/delres': delete one of yours reservation");
-				System.out.println("'/quit': exit to RistoGo\n");
-			}
-		}
-		
-		
-	}
-	
-	public static void restaurateur_menu() {
-		int finish = 0;
-		String input = new String();
-		System.out.println( "Welcome to the restaurateur section of RistoGo!");
-		System.out.println( "Here is the list of available actions:");
-		System.out.println( "'/res': the list of  reservations at your resturant, with all the details");
-		System.out.println( "'/modify': modify details of your resturant");
-		System.out.println("'/quit': exit from RistoGo");
 
-		while(finish != 1) {
-			input = sc.nextLine();
-			if(input.equals("/res")) {
-				
-			}
-			else if(input.equals("/modify")) {
-				
-			}
-			else if(input.equals("/quit")) {
-				finish = 1;
-			}
-			else {
-				System.out.println("Not valid input.");
-				System.out.println( "Here is the list of available actions:");
-				System.out.println( "'/res': the list of  reservations at your resturant, with all the details");
-				System.out.println( "'/modify': modify details of your resturant");
-				System.out.println("'/quit': exit from RistoGo");
-			}
-		}
-	}
+public class UserInterface extends Application {
 	
+	Stage window;
+	Scene loginScene;
+	Scene regScene;
 	
-	public static void main (String args[]) {
+	String font = "Arial";
+	double dimC = 18;
+	String textColor = "FFFFFF";
+	String backgroundColor = "FF421E";
+	
+	public void registerInterface(Stage window) {
 		
-		System.out.println("Welcome to RistoGo!\n"
-				+ "The application that allows you to book tables at your favorite restaurants.");
-		System.out.println("To login, type '/ login', if you are not registered yet type '/register'\n");
-		sc = new Scanner(System.in);
-		access();
-		if(type.equals("cliente")) {
-			
-			client_menu();
-			
-		}
-		else if(type.equals("ristoratore")) {
-			restaurateur_menu();
-		}
-		sc.close();
-		System.out.println("Thank you for using RistoGo. See you soon! :)");
-	}	
+		Label name2 = new Label("Fill out the form to register!!\n\nName: ");
+        TextField name_field2 = new TextField();
+        name2.setFont(Font.font(font, FontWeight.NORMAL, dimC));
+        name2.setTextFill(Color.web(textColor));
+        name_field2.setFont(Font.font(font, dimC));
+        name_field2.setMaxWidth(200);
+      
+        Label password2 = new Label("Password: ");
+        TextField password_field2 = new TextField();
+        password2.setFont(Font.font(font, FontWeight.NORMAL, dimC));
+        password2.setTextFill(Color.web(textColor));
+        password_field2.setFont(Font.font(font, dimC));
+        password_field2.setMaxWidth(200);
+        
+        Label type = new Label("Type of User: ");
+        ChoiceBox<String> cb = new ChoiceBox();
+        cb.getItems().addAll("Client", "Restaurateur");
+        type.setFont(Font.font(font, FontWeight.NORMAL, dimC));
+        type.setTextFill(Color.web(textColor));
+        
+        Button register2 = new Button("Register");   
+        register2.setOnAction((ActionEvent ev) -> {
+												window.setScene(loginScene);
+												});
+   
+        register2.setFont(Font.font(font, FontWeight.BOLD, dimC));
+        register2.setTextFill(Color.web(backgroundColor));
+        register2.setStyle("-fx-base: " + textColor);  
+        
+        VBox regInterface = new VBox(10);
+        regInterface.getChildren().addAll(name2,name_field2, password2, password_field2, type, cb, register2);
+        regInterface.setPrefSize(400, 400);
+        regInterface.setAlignment(Pos.CENTER);
+        
+        regScene = new Scene(new Group(regInterface));
+        regScene.setFill(Color.web(backgroundColor));
+        window.setScene(regScene);
+    		
+	}
+
+    public void start(Stage stage) {
+    	
+		window = stage;
+ 	 
+  //////////LOGIN INTERFACE /////////////////////////////////////////////////////////////////////////////////////////////////
+    	 
+    	Label title = new Label("Welcome to RistoGo!");
+    	Label description = new Label("The application that allows you to book tables\n at your favorite restaurants!");
+    	
+    	title.setFont(Font.font(font, FontWeight.BOLD, dimC+2));
+        title.setTextFill(Color.web(textColor));
+        description.setFont(Font.font(font, FontWeight.NORMAL, dimC));
+        description.setTextFill(Color.web(textColor));
+        title.setAlignment(Pos.CENTER_LEFT); 
+        description.setAlignment(Pos.CENTER);
+            
+        Label name1 = new Label("Name: ");
+        TextField name_field1 = new TextField();
+        name1.setFont(Font.font(font, FontWeight.NORMAL, dimC));
+        name1.setTextFill(Color.web(textColor));
+        name_field1.setFont(Font.font(font, dimC));
+        name_field1.setMaxWidth(200);
+      
+        Label password1 = new Label("Password: ");
+        TextField password_field1 = new TextField();
+        password1.setFont(Font.font(font, FontWeight.NORMAL, dimC));
+        password1.setTextFill(Color.web(textColor));
+        password_field1.setFont(Font.font(font, dimC));
+        password_field1.setMaxWidth(200);
+        
+        VBox boxField = new VBox(10);
+        boxField.getChildren().addAll(title,description,name1, name_field1, password1, password_field1);
+        boxField.setAlignment(Pos.CENTER);
+        
+    	Button login = new Button("Login");   
+    	login.setOnAction((ActionEvent ev) -> {  
+        					//inserire azioni bottone login
+        									});
+    	
+        login.setFont(Font.font(font, FontWeight.BOLD, dimC));
+        login.setTextFill(Color.web(backgroundColor));
+        login.setStyle("-fx-base: " + textColor );  
+        
+        Button register = new Button("Register");   
+        register.setOnAction((ActionEvent ev) -> {
+        										registerInterface(window);
+												//window.setScene(regScene);
+												});
+   
+        register.setFont(Font.font(font, FontWeight.BOLD, dimC));
+        register.setTextFill(Color.web(backgroundColor));
+        register.setStyle("-fx-base: " + textColor);  
+        
+        //regScene = new Scene(new Group(boxTitle));
+      
+        HBox boxButton = new HBox(20);
+        boxButton.getChildren().addAll(login, register);
+        boxButton.setAlignment(Pos.CENTER); 
+       
+        
+        VBox loginInterface = new VBox(20);
+        loginInterface.getChildren().addAll(boxField, boxButton);
+        loginInterface.setPrefSize(400, 400);
+        loginInterface.setAlignment(Pos.CENTER_LEFT);
+        
+        loginScene = new Scene(new Group(loginInterface));
+        loginScene.setFill(Color.web(backgroundColor));
+        
+ //////////////////////////REGISTER INTERFACE /////////////////////////////////////////////////////////////////
+/*        Label name2 = new Label("Name: ");
+        TextField name_field2 = new TextField();
+        name2.setFont(Font.font(font, FontWeight.NORMAL, dimC));
+        name2.setTextFill(Color.web(textColor));
+        name_field2.setFont(Font.font(font, dimC));
+        name_field2.setMaxWidth(200);
+      
+        Label password2 = new Label("Password: ");
+        TextField password_field2 = new TextField();
+        password2.setFont(Font.font(font, FontWeight.NORMAL, dimC));
+        password2.setTextFill(Color.web(textColor));
+        password_field2.setFont(Font.font(font, dimC));
+        password_field2.setMaxWidth(200);
+        
+        Label type = new Label("Type of User: ");
+        ChoiceBox<String> cb = new ChoiceBox();
+        cb.getItems().addAll("Client", "Restaurateur");
+        type.setFont(Font.font(font, FontWeight.NORMAL, dimC));
+        type.setTextFill(Color.web(textColor));
+        
+        Button register2 = new Button("Register");   
+        register2.setOnAction((ActionEvent ev) -> {
+												window.setScene(loginScene);
+												});
+   
+        register2.setFont(Font.font(font, FontWeight.BOLD, dimC));
+        register2.setTextFill(Color.web(backgroundColor));
+        register2.setStyle("-fx-base: " + textColor);  
+        
+        VBox regInterface = new VBox(10);
+        regInterface.getChildren().addAll(name2,name_field2, password2, password_field2, type, cb, register2);
+        regInterface.setPrefSize(400, 400);
+        regInterface.setAlignment(Pos.CENTER);
+        
+        regScene = new Scene(new Group(regInterface));
+        regScene.setFill(Color.web(backgroundColor));
+*/    
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+        
+        window.setTitle("RistoGo");
+        window.setResizable(false);
+        window.setScene(loginScene);
+        window.show();      
+        
+    }
+    
+	public static void main(String[] args) {
+		launch(args);
+	}
+
 }
