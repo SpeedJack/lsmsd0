@@ -1,6 +1,7 @@
 
 
 import java.net.*;
+import java.time.LocalDate;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -9,142 +10,107 @@ import java.io.*;
 import java.util.*;
 
 class RequestHandler {
+	public static String REQ = "req";
+	public static String RES = "res";
+	private static String xml;
+	private static final int LOGIN = 1;
+	private static final int REGISTRATION = 2;
+	private static final int BOOK = 3;
+	private static final int LIST_RESTAURANT = 4;
+	private static final int LIST_RESERVATION = 5;
+	private static final int LIST_RESERVATION_REST = 6;
+	private static final int MODIFY_RESTAURANT = 7;
+	private static final int MODIFY_RESERVATION = 8;
+	private static final int DELETE_RESERVATION = 9;
+	private static final int DELETE_RESTAURANT = 10;
+	private static final int CHECK_SEATS = 10;
 	
-	public static void sendRequest(Request r) {
+	
+	public static void send(Object r, String type) { 
 		XStream xs = new XStream();
-		String xml = xs.toXML(r);
+		
+		if(type.equals(REQ)) {
+			xml = xs.toXML((Request)r);
+		} else if (type.equals(RES)) {
+			xml = xs.toXML((Request)r);
+		}
 	    try ( DataOutputStream dout = new DataOutputStream( (new Socket("localhost",8080) ).getOutputStream())
 	    ) { dout.writeUTF(xml);} catch (Exception e) {e.printStackTrace();}
 		return;
 	};
 	
-	public static Request receiveRequest() {
+	public static Object receive() {
 		try ( ServerSocket servs = new ServerSocket(8080);
 		          Socket sd = servs.accept(); 
 		          DataInputStream din = new DataInputStream(sd.getInputStream()) //1
 		        ) { 
-		          XStream xs = new XStream();
-		          String xml = din.readUTF(); 
-		          Request r = (Request)xs.fromXML(xml);
-		          return r;
-		        } catch (Exception e) {
-		        	e.printStackTrace();
-		        	return null;
-		        }
-	}
-	public static Request prepareLogin(String username, String password) {
-				
-			User u = new User(username, password, "");
-			List<User> ul = new ArrayList<User>();
-			ul.add(u);
-			//Create Request
-			return new Request(0, "Login Request", true,  ul, new ArrayList<>(), new ArrayList<>());
+			XStream xs = new XStream();
+			String xml = din.readUTF(); 
+			return xs.fromXML(xml);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
-	public static Request prepareRegistration(String username, String password, String type) {
+	public static String sendRequest(int type, String ... strings){
+		Request r; 
+		switch(type) {
+		case LOGIN: {
+			r = prepareLogin(strings[0], strings[1] );
+			break;
+		}
+		case REGISTRATION: {
+			r = prepareRegistration(strings[0], strings[1], Boolean.parseBoolean(strings[2]));
+		}
+		}
 		
+	}
+	
+	public static Request prepareLogin(String username, String password) {
+				
+			User u = new User(0, username, password);
+			//Create Request
+			return new Request(LOGIN, u, null, null);
+	}
+	
+	public static Request prepareRegistration(String username, String password, boolean restaurateur) {
 		
 		//Create User Bean to insert in Request
-		User u = new User(username, password, type);
-		List<User> ul = new ArrayList<User>();
-		ul.add(u);
-		
+		User u = new User(0, username, password);
+		Restaurant r = new Restaurant(0, u.getUserId(), "", "", 0, "", "", "", 0, "");    
 		//Create Request
-		return new Request(1, "Registration Request", true,  ul, new ArrayList<>(), new ArrayList<>());
+		return new Request(REGISTRATION, u, r, null);
 	};
 	
 	public static Request prepareList() {
-		return new Request(2, "List Request", true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+		return new Request(LIST_RESTAURANT, null, null, null);
 	};
-	public static Request prepareBook(User u, String todo) {
-		Reservation r = new Reservation(0, 0, "", 0, "");
-		Scanner sc = new Scanner(System.in);
-		String input;
-		int type;
+	
+	
+	public static Request prepareBook(int uid, String n, LocalDate d, String h, int s) {
 		
-		if(todo.equals("add")) type = 10;
-		else if(todo.equals("mod")) type = 11;
-		else if(todo.equals("del")) type = 12;
-		else return null;
+		Reservation r = new Reservation(0, uid, 0, d.toString(), s, h );
+		Restaurant rst = new Restaurant(0, 0, n, null, 0, null, null, null, 0, null);
 		
-		if(todo.equals("add") || todo.equals("mod")) {
-		r.setUser(u.getUserId());
-		
-		System.out.println("resturant id:");
-		input = sc.nextLine();
-		r.setRestaurant(Integer.parseInt(input));
-		System.out.println("Date of the reservation(YYYY-MM-DD):");
-		input = sc.nextLine();
-		r.setDate(input);
-		
-		System.out.println("Hour of the reservation(HH:MM):");
-		//inserire orario
-		input = sc.nextLine();
-		r.setHour(input);
-		
-		System.out.println("Number of seats:");
-		input = sc.nextLine();
-		r.setSeats(Integer.parseInt(input));
-		} if (todo.equals("del")) {
-			System.out.println("Insert Reservation Id");
-			input = sc.nextLine();
-			r.setReservation(Integer.parseInt(input));
-		}
-		
-		List<User> ul = new ArrayList<User>();
-		ul.add(u);
-		List<Reservation> rl = new ArrayList<Reservation>();
-		rl.add(r);
-		sc.close();
-		return new Request(type, "Booking Request", true, ul, new ArrayList<>(), rl);
-		
-	}
-	public static Request prepareListBooking(User u) {
-		List<User> ul = new ArrayList<User>();
-		ul.add(u);
-		return new Request(4, "List Booking Request", true, ul, new ArrayList<>(), new ArrayList<>());
-	}
-	public static Request prepareModifyReservation(User u) {
-		Reservation r = new Reservation(0, 0, "", 0, "");
-		Scanner sc = new Scanner(System.in);
-		String input;
-		
-		System.out.println("resturant id:");
-		input = sc.nextLine();
-		r.setRestaurant(Integer.parseInt(input));
-		System.out.println("Date of the reservation(YYYY-MM-DD):");
-		input = sc.nextLine();
-		r.setDate(input);
-		System.out.println("Hour of the reservation(HH:MM):");
-		//inserire orario
-		input = sc.nextLine();
-		r.setHour(input);
-		
-		System.out.println("Number of seats:");
-		input = sc.nextLine();
-		r.setSeats(Integer.parseInt(input));
-		
-		List<User> ul = new ArrayList<User>();
-		ul.add(u);
-		List<Reservation> rl = new ArrayList<Reservation>();
-		rl.add(r);
-		sc.close();
-		return new Request(2, "Booking Request", true, ul, new ArrayList<>(), rl);
+		return new Request(BOOK, null, rst, r);
 		
 	}
 	
-	public static Request prepareRestaurant(User u, String todo) {
-		Restaurant r = new Restaurant("", "", 0, "", "","", 0, "", "");
-		Scanner sc = new Scanner(System.in);
-		String input;
-		int type;
-		if(todo.equals("add")) type = 20;
-		else if(todo.equals("mod")) type = 21;
-		else if(todo.equals("del")) type = 22;
-		else return null;
-		
-		
-	}
+	/*Da fare
+	
+	* LISTA PRENOTAZIONI
+	*
+	* LISTA PRENOTAZIONI RISTORATORE
+	*
+	* MODIFICA_CANCELLA_PRENOTAZIONE
+	* 
+	* MODIFICA_RISTORANTE
+	* 
+	* CHECK_PRENOTAZIONE
+	*/
+
+	
 
 	
 	
