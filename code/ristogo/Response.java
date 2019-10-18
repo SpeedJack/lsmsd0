@@ -1,3 +1,4 @@
+package ristogo;
 import java.util.List;
 
 public class Response {

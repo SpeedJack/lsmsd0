@@ -1,3 +1,4 @@
+package ristogo;
 
 
 import java.net.*;
@@ -90,10 +91,14 @@ class RequestHandler {
 	
 	public static Request prepareBook(int uid, String n, LocalDate d, String h, int s) {
 		
-		Reservation r = new Reservation(0, uid, 0, d.toString(), s, h );
+		Reservation r = new Reservation(0, uid, 0, d.toString(), h, s );
 		Restaurant rst = new Restaurant(0, 0, n, null, 0, null, null, null, 0, null);
 		
 		return new Request(BOOK, null, rst, r);
+		
+	}
+	
+	public static Request prepareListReservation(int uid) {
 		
 	}
 	

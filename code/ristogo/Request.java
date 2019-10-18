@@ -1,3 +1,4 @@
+package ristogo;
 class Request {
 	private int reqType;
 	private User user;

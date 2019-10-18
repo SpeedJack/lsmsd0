@@ -1,4 +1,4 @@
-package application;
+package ristogo;
 
 public class Configuration {
 	private String font;
