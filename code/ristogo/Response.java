@@ -20,12 +20,7 @@ public class Response {
 	public void setResType(int resType) {
 		this.resType = resType;
 	}
-	public String getResMessage() {
-		return resMessage;
-	}
-	public void setResMessage(String resMessage) {
-		this.resMessage = resMessage;
-	}
+
 	public List<Restaurant> getRestaurants() {
 		return restaurants;
 	}
@@ -46,16 +41,12 @@ public class Response {
 	}
 	public Response(boolean success, int resType, String resMessage, List<Restaurant> restaurants,
 			List<Reservation> reservations, User user) {
-		super();
-		this.success = success;
-		this.resType = resType;
-		this.resMessage = resMessage;
-		this.restaurants = restaurants;
-		this.reservations = reservations;
-		this.user = user;
+		setSuccess(success);
+		setResType(resType);
+		setRestaurants(restaurants);
+		setReservations(reservations);
+		setUser(user);		
 	}
-	public Response() {
-		super();
-	}
+	public Response() {	};
 		
 }

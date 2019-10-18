@@ -1,4 +1,9 @@
 package ristogo;
+
+/**
+ * This class is used to represent a Request from the Client to the Server
+ */
+
 class Request {
 	private int reqType;
 	private User user;
