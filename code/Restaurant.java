@@ -1,3 +1,5 @@
+package application;
+
 import javafx.beans.property.*;
 
   public class Restaurant {

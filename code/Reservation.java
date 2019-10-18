@@ -8,10 +8,10 @@ import javafx.beans.property.*;
       private final SimpleIntegerProperty idClient;
       private final SimpleIntegerProperty idRestaurant;
       private final SimpleStringProperty date;
-      private final SimpleIntegerProperty seats;
       private final SimpleStringProperty hour;
- 
-      public Reservation(int reservation, int client, int resturant, String d , int s, String h) {
+      private final SimpleIntegerProperty seats;
+
+      public Reservation(int reservation, int client, int resturant, String d , String h, int s) {
     	idReservation = new SimpleIntegerProperty(reservation);
         idClient = new SimpleIntegerProperty(client);
         idRestaurant = new SimpleIntegerProperty(resturant);

@@ -19,7 +19,7 @@ public class Configuration {
 		textColor = "FFFFFF";
 		numberRowsDisplayable = 7;
 		serverIP = "127.0.0.1";
-		serverPort= "9999";
+		serverPort= 9999;
 		clientIP = "127.0.0.1";
 	}
 	
@@ -28,25 +28,25 @@ public class Configuration {
 	 }
 	 
 	 public double getDimCharacter () {
-		    return font;
+		    return dimCharacter;
 	 }
 	 public String getBackgroundColor () {
-		    return font;
+		    return backgroundColor;
 	 }
-	 public String getFont () {
-		    return font;
+	 public int getnumberRowsDisplayable () {
+		    return numberRowsDisplayable;
 	 }
-	 public int getFont () {
-		    return font;
+	 public String getTextColor () {
+		    return textColor;
 	 }
-	 public String getFont () {
-		    return font;
+	 public String getServerIP () {
+		    return serverIP;
 	 }
-	 public String getFont () {
-		    return font;
+	 public int getServerPort () {
+		    return serverPort;
 	 }
-	 public String getFont () {
-		    return font;
+	 public String getClientIP () {
+		    return clientIP;
 	 }
 	
 }
