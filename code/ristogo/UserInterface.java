@@ -1,4 +1,4 @@
-package application;
+package ristogo;
 	
 import javafx.application.*;
 import javafx.event.*;

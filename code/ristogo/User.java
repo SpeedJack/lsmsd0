@@ -1,4 +1,4 @@
-package application;
+package ristogo;
 
 import javafx.beans.property.*;
 
