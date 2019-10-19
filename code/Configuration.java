@@ -13,10 +13,10 @@ public class Configuration {
 	
 	
 	public Configuration() {
-		font = "Arial";
-		dimCharacter = 18;
-		backgroundColor = "FF421E";
-		textColor = "FFFFFF";
+		font = "Open Sans";
+		dimCharacter = 12;
+		backgroundColor = "FFFFFF";
+		textColor = "D9561D";
 		numberRowsDisplayable = 7;
 		serverIP = "127.0.0.1";
 		serverPort= 9999;

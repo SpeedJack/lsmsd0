@@ -1,15 +1,15 @@
 package application;
 	
 import javafx.application.*;
-import javafx.event.ActionEvent;
+import javafx.event.*;
 import javafx.geometry.*;
 import javafx.stage.*;
 import javafx.scene.*;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
-import javafx.scene.text.Font;
+import javafx.scene.text.*;
 import javafx.scene.text.FontWeight;
 
 
@@ -20,228 +20,573 @@ public class UserInterface extends Application {
 	Scene regScene;
 	Scene tableInterface;
 	
-	String font = "Arial";
-	double dimC = 18;
-	String textColor = "FFFFFF";
-	String backgroundColor = "FF421E";
+	String username = "Prova";
+	int userID = 0000;
+	
+	String font = (new Configuration()).getFont();
+	double dimC = (new Configuration()).getDimCharacter();
+	String backgroundColor = (new Configuration()).getBackgroundColor();
+	String textColor = (new Configuration()).getTextColor();
+	
+	
+	
+//////////START INTERFACE /////////////////////////////////////////////////////////////////////////////////////////////////
+	public void start(Stage stage) {
+		
+		window = stage;
+	
+		 
+		Label title = new Label("Welcome to RistoGo!");
+		title.setFont(Font.font(font, FontWeight.BOLD, dimC+5));
+		title.setTextFill(Color.web(backgroundColor));
+		title.setAlignment(Pos.CENTER_LEFT); 
+		
+		ImageView icon = new ImageView("resources/whiteLogo.png");
+		icon.setFitHeight(50);
+		icon.setFitWidth(50);
+		
+		HBox boxTitle = new HBox(20);
+		boxTitle.getChildren().addAll(title,icon);
+		boxTitle.setAlignment(Pos.CENTER);
+	
+	  
+		Label description = new Label("The application that allows you to book tables\n at your favorite restaurants!");
+		description.setAlignment(Pos.CENTER_LEFT);
+		description.setFont(Font.font(font, FontWeight.NORMAL, dimC+3));
+		  description.setTextFill(Color.web(backgroundColor));
+		  
+		  
+		  Label name = new Label("Name: ");
+		  TextField name_field = new TextField();
+		  name.setFont(Font.font(font, FontWeight.NORMAL, dimC+3));
+		  name.setTextFill(Color.web(backgroundColor));
+		  name_field.setFont(Font.font(font, dimC));
+		  name_field.setMaxWidth(200);
+		
+		  Label password = new Label("Password: ");
+		  TextField password_field = new TextField();
+		  password.setFont(Font.font(font, FontWeight.NORMAL, dimC+3));
+		  password.setTextFill(Color.web(backgroundColor));
+		  password_field.setFont(Font.font(font, dimC));
+		  password_field.setMaxWidth(200);
+		  
+		//////////////////error/////////////////////////////////////////////////////     
+		  Label error = new Label("Error");
+		  error.setFont(Font.font(font, FontWeight.NORMAL, dimC+3));
+		  error.setTextFill(Color.web(backgroundColor));
+		  error.setStyle("-fx-background-color:   green;");
+		  error.setVisible(false);
+		///////////////////////////////////////////////////////////////////////////////
+		  
+		  VBox boxField = new VBox(10);
+		  boxField.getChildren().addAll(boxTitle, description, name, name_field, password, password_field, error);
+		  boxField.setAlignment(Pos.CENTER);
+		  
+			Button login = new Button("Login");   
+			login.setOnAction((ActionEvent ev) -> { 
+										        /*	try {
+														String n = name_field.getText();
+														String p = password_field.getText();
+													}catch(NullPointerException e) {
+														e.getMessage();
+														//GESTIRE MESSAGGIO ERRORE
+													}
+										        	int  res = RequestHandler.login(n,p);
+									         	*/
+													//restaranteurInterface(window);
+													clientInterface(window);
+													//error.setVisible(true);
+													
+		  									});
+			
+		  login.setFont(Font.font(font, FontWeight.BOLD, dimC+3));
+		  login.setTextFill(Color.web(textColor));
+		  login.setStyle("-fx-base: " + backgroundColor );  
+		  
+		  Button register = new Button("Register");   
+		  register.setOnAction((ActionEvent ev) -> {
+		  										registerInterface(window);
+													});
+		
+		  register.setFont(Font.font(font, FontWeight.BOLD, dimC+3));
+		  register.setTextFill(Color.web(textColor));
+		  register.setStyle("-fx-base: " + backgroundColor);
+		
+		
+		  HBox boxButton = new HBox(20);
+		  boxButton.getChildren().addAll(login, register);
+		  boxButton.setAlignment(Pos.CENTER); 
+		 
+		  
+		  VBox loginInterface = new VBox(20);
+		  loginInterface.getChildren().addAll(boxField, boxButton);
+		  loginInterface.setPrefSize(400, 400);
+		  loginInterface.setAlignment(Pos.CENTER_LEFT);
+		  
+		  loginScene = new Scene(new Group(loginInterface));
+		  loginScene.setFill(Color.web(textColor));
+		  
+		  
+		  window.setTitle("RistoGo");
+		  window.setResizable(false);
+		  window.setScene(loginScene);
+		  window.show();      
+		  
+	}
+	
+	public static void main(String[] args) {
+		launch(args);
+	}
+
 //////////////////////////////REGISTER INTERFACE ///////////////////////////////////////////////////////////////////////////	
 	public void registerInterface(Stage window) {
 		
-		Label name2 = new Label("Fill out the form to register!!\n\nName: ");
-        TextField name_field2 = new TextField();
-        name2.setFont(Font.font(font, FontWeight.NORMAL, dimC));
-        name2.setTextFill(Color.web(textColor));
-        name_field2.setFont(Font.font(font, dimC));
-        name_field2.setMaxWidth(200);
-      
-        Label password2 = new Label("Password: ");
-        TextField password_field2 = new TextField();
-        password2.setFont(Font.font(font, FontWeight.NORMAL, dimC));
-        password2.setTextFill(Color.web(textColor));
-        password_field2.setFont(Font.font(font, dimC));
-        password_field2.setMaxWidth(200);
-        
-        Label type = new Label("Type of User: ");
-        ChoiceBox<String> cb = new ChoiceBox();
-        cb.getItems().addAll("Client", "Restaurateur");
-        type.setFont(Font.font(font, FontWeight.NORMAL, dimC));
-        type.setTextFill(Color.web(textColor));
-        
-        Button register2 = new Button("Register");   
-        register2.setOnAction((ActionEvent ev) -> {
-												window.setScene(loginScene);
-												});
-   
-        register2.setFont(Font.font(font, FontWeight.BOLD, dimC));
-        register2.setTextFill(Color.web(backgroundColor));
-        register2.setStyle("-fx-base: " + textColor);  
-        
-        VBox regInterface = new VBox(10);
-        regInterface.getChildren().addAll(name2,name_field2, password2, password_field2, type, cb, register2);
-        regInterface.setPrefSize(400, 400);
-        regInterface.setAlignment(Pos.CENTER);
-        
-        regScene = new Scene(new Group(regInterface));
-        regScene.setFill(Color.web(backgroundColor));
-        window.setScene(regScene);
-    		
-	}
-////////////////////////RESTAURANT LIST INTERFACE /////////////////////////////////////////////////////	
-	public void restaurantInterface(Stage window) {	
-		
-    	Label title = new Label("This is the list of our restaurants!");
-    	Label description = new Label("Use the table to see all the details of restaurants.\n"
-    			+ "Press 'Book' to book a table in a restaurant.\n"
-    			+ "Press 'MyRes' to see your reservations.");
-    	
-    	title.setFont(Font.font(font, FontWeight.BOLD, dimC+2));
-        title.setTextFill(Color.web(textColor));
-        description.setFont(Font.font(font, FontWeight.NORMAL, dimC));
-        description.setTextFill(Color.web(textColor));
+		Label title = new Label("Sign in!");
+    	title.setFont(Font.font(font, FontWeight.BOLD, dimC+5));
+        title.setTextFill(Color.web(backgroundColor));
         title.setAlignment(Pos.CENTER_LEFT); 
-        description.setAlignment(Pos.CENTER);
-        
-	    TableViewRestaurant resturant = new TableViewRestaurant();
-	    
-	    
-	    Button book = new Button("Book");
-    	book.setOnAction((ActionEvent ev) -> { 
-			//inserire azioni bottone book
-							});
-    	book.setFont(Font.font(font, FontWeight.BOLD, dimC));
-    	book.setTextFill(Color.web(backgroundColor));
-    	book.setStyle("-fx-base: " + textColor );
-	    
-	    Button myres = new Button("MyRes");
-    	myres.setOnAction((ActionEvent ev) -> { 
-			//inserire azioni bottone myres
-							});
-    	myres.setFont(Font.font(font, FontWeight.BOLD, dimC));
-    	myres.setTextFill(Color.web(backgroundColor));
-    	myres.setStyle("-fx-base: " + textColor );
-    	
-    	HBox boxButton = new HBox(20);
-    	boxButton.getChildren().addAll(book,myres);
-    	boxButton.setAlignment(Pos.CENTER); 
-	    
-	    
-	    
-	    VBox res = new VBox(10);
-	    res.getChildren().addAll(title, description, resturant, boxButton);
-	    res.setPrefSize(900, 500);
-	    res.setAlignment(Pos.CENTER);
-	    
-	    tableInterface = new Scene(new Group(res));
-	    tableInterface.setFill(Color.web(backgroundColor));
-	    window.setScene(tableInterface);
-    
-	}
-	
-///////////////////////////BOOK INTERFACE/////////////////////////////////////////////////////////////////////////////////
-	
-	public void bookInterface(Stage window) {
 		
-		Label title = new Label("Book your table!");
-    	Label description = new Label("Fill the following form to have your reservation\n");
-    	title.setFont(Font.font(font, FontWeight.BOLD, dimC+2));
-        title.setTextFill(Color.web(textColor));
-        description.setFont(Font.font(font, FontWeight.NORMAL, dimC));
-        description.setTextFill(Color.web(textColor));
-        title.setAlignment(Pos.CENTER_LEFT); 
-        description.setAlignment(Pos.CENTER);
-        
-        
-        Label name = new Label("Name of Restaurant: ");
+		Label name = new Label("Name: ");
         TextField name_field = new TextField();
-        
-        Label date = new Label("Date of Reservation: ");
-        DatePicker date_field = new DatePicker();
-        
-        /*Prelevare valore da DP
-         * LocalDate data = date_field.getValue();
-         */
-        
-        Label hour = new Label("Booking Time: Lunch or Dinner?: ");
-        ChoiceBox<String> cb = new ChoiceBox();
-        cb.getItems().addAll("Lunch", "Dinner");
-        
-        Label seats = new Label("Seats: ");
-        ChoiceBox<String> s = new ChoiceBox();
-        s.getItems().addAll("Lunch", "Dinner");
-        
-		
-		
-	}
-    
-//////////START INTERFACE /////////////////////////////////////////////////////////////////////////////////////////////////
-    public void start(Stage stage) {
-    	
-		window = stage;
- 	 
-    	 
-    	Label title = new Label("Welcome to RistoGo!");
-    	Label description = new Label("The application that allows you to book tables\n at your favorite restaurants!");
-    	
-    	title.setFont(Font.font(font, FontWeight.BOLD, dimC+2));
-        title.setTextFill(Color.web(textColor));
-        description.setFont(Font.font(font, FontWeight.NORMAL, dimC));
-        description.setTextFill(Color.web(textColor));
-        title.setAlignment(Pos.CENTER_LEFT); 
-        description.setAlignment(Pos.CENTER);
-            
-        Label name = new Label("Name: ");
-        TextField name_field = new TextField();
-        name.setFont(Font.font(font, FontWeight.NORMAL, dimC));
-        name.setTextFill(Color.web(textColor));
+        name.setFont(Font.font(font, FontWeight.NORMAL, dimC+3));
+        name.setTextFill(Color.web(backgroundColor));
         name_field.setFont(Font.font(font, dimC));
         name_field.setMaxWidth(200);
       
         Label password = new Label("Password: ");
         TextField password_field = new TextField();
-        password.setFont(Font.font(font, FontWeight.NORMAL, dimC));
-        password.setTextFill(Color.web(textColor));
-        password_field.setFont(Font.font(font, dimC));
+        password.setFont(Font.font(font, FontWeight.NORMAL, dimC+3));
+        password.setTextFill(Color.web(backgroundColor));
+        password_field.setFont(Font.font(font, dimC+3));
         password_field.setMaxWidth(200);
         
-   //////////////////error/////////////////////////////////////////////////////     
+        Label type = new Label("Type of User: ");
+        ChoiceBox<String> cb = new ChoiceBox();
+        cb.getItems().addAll("Client", "Restaurateur");
+        type.setFont(Font.font(font, FontWeight.NORMAL, dimC+3));
+        type.setTextFill(Color.web(backgroundColor));
+        
+//////////////////error/////////////////////////////////////////////////////     
         Label error = new Label("Error");
-        error.setFont(Font.font(font, FontWeight.NORMAL, dimC));
-        error.setTextFill(Color.web(textColor));
+        error.setFont(Font.font(font, FontWeight.NORMAL, dimC+3));
+        error.setTextFill(Color.web(backgroundColor));
         error.setStyle("-fx-background-color:   green;");
         error.setVisible(false);
   ///////////////////////////////////////////////////////////////////////////////
         
-        VBox boxField = new VBox(10);
-        boxField.getChildren().addAll(title,description,name, name_field, password, password_field, error);
-        boxField.setAlignment(Pos.CENTER);
-        
-    	Button login = new Button("Login");   
-    	login.setOnAction((ActionEvent ev) -> { 
-    						restaurantInterface(window);
-    						error.setVisible(true);
-    						
-        					//inserire azioni bottone login
-        									});
-    	
-        login.setFont(Font.font(font, FontWeight.BOLD, dimC));
-        login.setTextFill(Color.web(backgroundColor));
-        login.setStyle("-fx-base: " + textColor );  
-        
-        Button register = new Button("Register");   
-        register.setOnAction((ActionEvent ev) -> {
-        										registerInterface(window);
-												//window.setScene(regScene);
+        Button register2 = new Button("Register");   
+        register2.setOnAction((ActionEvent ev) -> {
+										        /*	try {
+														String n = name_field.getText();
+														String p = password_field.getText();
+														String t = cb.getValue();
+													}catch(NullPointerException e) {
+														e.getMessage();
+														//GESTIRE MESSAGGIO ERRORE
+													}
+										        	int  res = RequestHandler.register(n,p,t);
+										        	if(res > 0) {
+										        		window.setScene(loginScene);
+										        	}
+										        	else {
+										        		//GESTIONE ERRORE
+										        	}
+										        	*/
 												});
    
-        register.setFont(Font.font(font, FontWeight.BOLD, dimC));
-        register.setTextFill(Color.web(backgroundColor));
-        register.setStyle("-fx-base: " + textColor);
+        register2.setFont(Font.font(font, FontWeight.BOLD, dimC+3));
+        register2.setTextFill(Color.web(textColor));
+        register2.setStyle("-fx-base: " + backgroundColor);  
         
-
-      
-        HBox boxButton = new HBox(20);
-        boxButton.getChildren().addAll(login, register);
-        boxButton.setAlignment(Pos.CENTER); 
-       
+        VBox regInterface = new VBox(10);
+        regInterface.getChildren().addAll(title,name,name_field, password, password_field, type, cb,error, register2);
+        regInterface.setPrefSize(400, 400);
+        regInterface.setAlignment(Pos.CENTER);
         
-        VBox loginInterface = new VBox(20);
-        loginInterface.getChildren().addAll(boxField, boxButton);
-        loginInterface.setPrefSize(400, 400);
-        loginInterface.setAlignment(Pos.CENTER_LEFT);
-        
-        loginScene = new Scene(new Group(loginInterface));
-        loginScene.setFill(Color.web(backgroundColor));
-        
-        
-        window.setTitle("RistoGo");
-        window.setResizable(false);
-        window.setScene(loginScene);
-        window.show();      
-        
-    }
-    
-	public static void main(String[] args) {
-		launch(args);
+        regScene = new Scene(new Group(regInterface));
+        regScene.setFill(Color.web(textColor));
+        window.setScene(regScene);
+    		
 	}
+////////////////////////CLIENT INTERFACE /////////////////////////////////////////////////////	
+	public void clientInterface(Stage window) {	
+
+//Left Interface
+	//Title Box
+		Label title = new Label("RistoGo");
+		title.setFont(Font.font(font, FontWeight.BOLD, dimC+7));
+		title.setTextFill(Color.web(textColor)); 
+		
+		ImageView icon = new ImageView("resources/OrangeLogo.png");
+		icon.setFitHeight(30);
+		icon.setFitWidth(30);
+		
+		HBox boxTitle = new HBox(10);
+		boxTitle.getChildren().addAll(title,icon);
+		
+		Label title2 = new Label("Welcome " + username + "!");
+		title2.setFont(Font.font(font, FontWeight.NORMAL, dimC+4));
+		title2.setTextFill(Color.web(textColor));
+		
+	//Book box
+		
+		Label subTitle1 = new Label("Book a table");
+		Label l1 = new Label("To select a restaurant click on the table on the side" );
+		subTitle1.setStyle("-fx-underline: true;");
+		subTitle1.setFont(Font.font(font, FontWeight.BOLD, dimC+3));
+		subTitle1.setTextFill(Color.web(textColor));
+		l1.setFont(Font.font(font, FontWeight.NORMAL, dimC+1));
+		l1.setTextFill(Color.web(textColor));
+
+		
+		Label name = new Label("Name of Restaurant: ");
+		TextField name_f = new TextField();
+		name.setFont(Font.font(font, FontWeight.BOLD, dimC));
+		name.setTextFill(Color.web(textColor));
+
+		name_f.setDisable(true);
+		
+		HBox name_box = new HBox(20);
+		name_box.getChildren().addAll(name,name_f);
+ 
+		    
+		Label date = new Label("Date of Reservation: ");
+		date.setFont(Font.font(font, FontWeight.BOLD, dimC));
+		date.setTextFill(Color.web(textColor));
+
+		DatePicker date_f = new DatePicker();//Prelevare valore da DP    LocalDate data = date_field.getValue(); 
+		
+		HBox date_box = new HBox(20);
+		date_box.getChildren().addAll(date,date_f);
+
+		 
+		
+		Label hour = new Label("Booking Time, lunch or dinner?: ");
+		hour.setFont(Font.font(font, FontWeight.BOLD, dimC));
+		hour.setTextFill(Color.web(textColor));
+
+		ChoiceBox<String> hour_f = new ChoiceBox();
+		hour_f.getItems().addAll("Lunch", "Dinner");
+		
+		HBox hour_box = new HBox(20);
+		hour_box.getChildren().addAll(hour,hour_f);
+
+    	
+    	Button check = new Button("Check");
+
+
+    	check.setFont(Font.font(font, FontWeight.BOLD, dimC+2));
+    	check.setTextFill(Color.web(backgroundColor));
+    	check.setStyle("-fx-base: " + textColor );
+		
+		
+		Label seats = new Label("Seats: ");
+		seats.setFont(Font.font(font, FontWeight.BOLD, dimC));
+		seats.setTextFill(Color.web(textColor));
+
+		ChoiceBox<Integer> seats_f = new ChoiceBox();
+		seats_f.setDisable(true);
+		
+		HBox seats_box = new HBox(20);
+		seats_box.getChildren().addAll(seats,seats_f);
+    
+		
+		
+		Button book = new Button("Book");
+		
+		
+    	check.setOnAction((ActionEvent ev) -> {
+    											try {
+    												String n = name_f.getText();
+    												String d = date_f.getValue().toString();
+    												String h = hour_f.getValue();
+    											}catch(NullPointerException e) {
+    												e.getMessage();
+    												//GESTIRE MESSAGGIO ERRORE
+    											}
+												int s = 8;
+												//int s = RequestHandler.checkSeat(n,d,h);
+												if(s>0) {
+													for(int i=1; i<=s; i++) {
+														seats_f.getItems().add(i);
+													}
+													seats_f.setDisable(false);
+													book.setDisable(false);
+												}
+										});
+    	
+		book.setOnAction((ActionEvent ev) -> {
+												try {
+													String n = name_f.getText();
+													String d = date_f.getValue().toString();
+													String h = hour_f.getValue();
+													int s = seats_f.getValue();
+												}catch(NullPointerException e) {
+													e.getMessage();
+													//GESTIRE MESSAGGIO ERRORE
+												}
+												//int res = RequestHandler.bookTable(n,d,h,s);
+												//reservation.myReservation(userID);
+											});
+		date_f.setOnAction((ActionEvent ev) -> { 
+											seats_f.setDisable(true);
+											book.setDisable(true);
+											});
+		hour_f.setOnAction((ActionEvent ev) -> { 
+											seats_f.setDisable(true);
+											book.setDisable(true);
+											});
+		
+		
+		
+		book.setFont(Font.font(font, FontWeight.BOLD, dimC+2));
+		book.setTextFill(Color.web(backgroundColor));
+		book.setStyle("-fx-base: " + textColor );
+		book.setDisable(true);
+		
+		
+		VBox boxBook = new VBox(20);
+		boxBook.getChildren().addAll(subTitle1,l1,name_box, date_box, hour_box, check, seats_box, book);
+        boxBook.setStyle("-fx-padding: 7;" + 
+                "-fx-border-style: solid inside;" + 
+                "-fx-border-width: 2;" +
+                "-fx-border-insets: 3;" + 
+                "-fx-border-radius: 10;" + 
+                "-fx-border-color: "+ textColor +";");
+		
+		VBox leftInterface = new VBox(30);
+		leftInterface.getChildren().addAll(boxTitle,title2, boxBook);
+		leftInterface.setPrefSize(400, 600);
+        leftInterface.setStyle("-fx-padding: 7;" + 
+                "-fx-border-width: 2;" +
+                "-fx-border-insets: 3;" + 
+                "-fx-border-radius: 10;" );
+		
+//Right Interface
+		
+		Label subTitle2 = new Label("List of Restaurant");
+		subTitle2.setFont(Font.font(font, FontWeight.BOLD, dimC+2));
+		subTitle2.setTextFill(Color.web(textColor));
+		subTitle2.setStyle("-fx-underline: true;");
+		
+	    TableViewRestaurant restaurant = new TableViewRestaurant();
+	    //restaurant.updateTable();
+	    
+	    Label description = new Label("Description: ");
+		TextArea description_f = new TextArea();
+		description.setFont(Font.font(font, FontWeight.BOLD, dimC-2));
+		description.setTextFill(Color.web(textColor));
+		description_f.setDisable(true);
+		description_f.setMinSize(480, 100);
+		description_f.setMaxSize(480, 100);
+		
+		HBox description_box = new HBox(20);
+		description_box.getChildren().addAll(description,description_f);
+		
+		Label subTitle3 = new Label("My Reservation");
+		subTitle3.setFont(Font.font(font, FontWeight.BOLD, dimC+2));
+		subTitle3.setTextFill(Color.web(textColor));
+		subTitle3.setStyle("-fx-underline: true;");
+		
+	    TableViewReservation reservation = new TableViewReservation();
+	   // reservation.updateTable(userID);
+	    
+	    VBox rightInterface = new VBox(10);
+	    rightInterface.getChildren().addAll(subTitle2, restaurant, description_box, subTitle3, reservation);
+	    rightInterface.setPrefSize(600, 600);
+	    rightInterface.setStyle("-fx-padding: 7;" + 
+	                "-fx-border-width: 2;" +
+	                "-fx-border-insets: 3;" + 
+	                "-fx-border-radius: 10;" );
+	       
+	    HBox clientInterface = new HBox(10);
+	    clientInterface.getChildren().addAll(leftInterface, rightInterface);
+	    clientInterface.setPrefSize(1000, 600);
+	    
+  
+	    tableInterface = new Scene(new Group(clientInterface));
+	    tableInterface.setFill(Color.web(backgroundColor));
+	    window.setScene(tableInterface);
+    
+	}
+	
+/////////////////////////////////RESTAURANTEUR INTERFACE ///////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public void restaranteurInterface(Stage window) {
+//Left Interface
+		//Title Box
+		Label title = new Label("RistoGo");
+		title.setFont(Font.font(font, FontWeight.BOLD, dimC+7));
+		title.setTextFill(Color.web(textColor)); 
+		
+		ImageView icon = new ImageView("resources/OrangeLogo.png");
+		icon.setFitHeight(30);
+		icon.setFitWidth(30);
+		
+		HBox boxTitle = new HBox(10);
+		boxTitle.getChildren().addAll(title,icon);
+		
+		Label title2 = new Label("Welcome " + username + "!");
+		title2.setFont(Font.font(font, FontWeight.NORMAL, dimC+4));
+		title2.setTextFill(Color.web(textColor));
+		
+		//Modify Box
+
+		Label subTitle1 = new Label("Modify your Restaurant");
+		subTitle1.setStyle("-fx-underline: true;");
+		subTitle1.setFont(Font.font(font, FontWeight.BOLD, dimC+3));
+		subTitle1.setTextFill(Color.web(textColor));
+
+		Label name = new Label("Name: ");
+		TextField name_f = new TextField();
+		name.setFont(Font.font(font, FontWeight.BOLD, dimC));
+		name.setTextFill(Color.web(textColor));
+		
+		HBox name_box = new HBox(20);
+		name_box.getChildren().addAll(name,name_f);
+ 
+		    
+		Label type = new Label("Type: ");
+		type.setFont(Font.font(font, FontWeight.BOLD, dimC));
+		type.setTextFill(Color.web(textColor));
+		ChoiceBox<String> type_f = new ChoiceBox();
+		type_f.getItems().addAll("Pizza", "Chinese", "Mexican", "Italian", "SteakHouse");
+
+		
+		HBox type_box = new HBox(20);
+		type_box.getChildren().addAll(type,type_f);
+
+		
+		Label cost = new Label("Cost:");
+		cost.setFont(Font.font(font, FontWeight.BOLD, dimC));
+		cost.setTextFill(Color.web(textColor));
+
+		ChoiceBox<Integer> cost_f = new ChoiceBox();
+		cost_f.getItems().addAll(1, 2, 3, 4, 5);
+		
+		HBox cost_box = new HBox(20);
+		cost_box.getChildren().addAll(cost,cost_f);
+		
+		Label city = new Label("City: ");
+		TextField city_f = new TextField();
+		city.setFont(Font.font(font, FontWeight.BOLD, dimC));
+		city.setTextFill(Color.web(textColor));
+		
+		HBox city_box = new HBox(20);
+		city_box.getChildren().addAll(city,city_f);
+		
+		Label address = new Label("Address: ");
+		TextField address_f = new TextField();
+		address.setFont(Font.font(font, FontWeight.BOLD, dimC));
+		address.setTextFill(Color.web(textColor));
+		
+		HBox address_box = new HBox(20);
+		address_box.getChildren().addAll(address,address_f);
+		
+		Label desc = new Label("Description: ");
+		TextArea desc_f = new TextArea();
+		desc.setFont(Font.font(font, FontWeight.BOLD, dimC));
+		desc.setTextFill(Color.web(textColor));
+		desc_f.setMinSize(480, 100);
+		desc_f.setMaxSize(480, 100);
+		
+		//HBox desc_box = new HBox(20);
+		//desc_box.getChildren().addAll(desc,desc_f);
+		
+		
+		Label seats = new Label("Seats: ");
+		TextField seats_f = new TextField();
+		seats.setFont(Font.font(font, FontWeight.BOLD, dimC));
+		seats.setTextFill(Color.web(textColor));
+		
+		HBox seats_box = new HBox(20);
+		seats_box.getChildren().addAll(seats,seats_f);
+		
+		Label hour = new Label("Hour:");
+		hour.setFont(Font.font(font, FontWeight.BOLD, dimC));
+		hour.setTextFill(Color.web(textColor));
+
+		ChoiceBox<String> hour_f = new ChoiceBox();
+		hour_f.getItems().addAll("Lunch", "Dinner", "Lunch&Dinner");
+		
+		HBox hour_box = new HBox(20);
+		hour_box.getChildren().addAll(hour,hour_f);
+
+    	
+    	Button commit = new Button("Commit");
+
+
+    	commit.setFont(Font.font(font, FontWeight.BOLD, dimC+2));
+    	commit.setTextFill(Color.web(backgroundColor));
+    	commit.setStyle("-fx-base: " + textColor );
+		
+
+		
+		
+    	commit.setOnAction((ActionEvent ev) -> {
+  
+										});
+		
+		VBox boxModify = new VBox(20);
+		boxModify.getChildren().addAll(subTitle1,name_box, type_box, cost_box, city_box, address_box, desc, desc_f, seats_box, hour_box, commit);
+		boxModify.setStyle("-fx-padding: 7;" + 
+                "-fx-border-style: solid inside;" + 
+                "-fx-border-width: 2;" +
+                "-fx-border-insets: 3;" + 
+                "-fx-border-radius: 10;" + 
+                "-fx-border-color: "+ textColor +";");
+		
+		VBox leftInterface = new VBox(30);
+		leftInterface.getChildren().addAll(boxTitle,title2, boxModify);
+		leftInterface.setPrefSize(400, 600);
+        leftInterface.setStyle("-fx-padding: 7;" + 
+                "-fx-border-width: 2;" +
+                "-fx-border-insets: 3;" + 
+                "-fx-border-radius: 10;" );
+        
+        
+//RightInterface
+		Label subTitle2 = new Label("List of Reservations at your restaurant");
+		subTitle2.setFont(Font.font(font, FontWeight.BOLD, dimC+1));
+		subTitle2.setTextFill(Color.web(textColor));
+		subTitle2.setStyle("-fx-underline: true;");
+		
+		
+	    TableViewReservation reservation = new TableViewReservation();
+	   // reservation.updateTable(userID);
+	    
+	   	Button refresh = new Button("Refresh");
+
+
+	   	refresh.setFont(Font.font(font, FontWeight.BOLD, dimC+2));
+	   	refresh.setTextFill(Color.web(backgroundColor));
+	   	refresh.setStyle("-fx-base: " + textColor );
+		
+    	commit.setOnAction((ActionEvent ev) -> {
+  
+										});
+	    
+	    VBox rightInterface = new VBox(10);
+	    rightInterface.setAlignment(Pos.CENTER);
+	    rightInterface.getChildren().addAll(subTitle2, reservation, refresh);
+	    rightInterface.setPrefSize(600, 600);
+	    rightInterface.setStyle("-fx-padding: 7;" + 
+	                "-fx-border-width: 2;" +
+	                "-fx-border-insets: 3;" + 
+	                "-fx-border-radius: 10;" );
+			
+		
+        HBox restaranteurInterface = new HBox(10);
+        restaranteurInterface.getChildren().addAll(leftInterface, rightInterface);
+        restaranteurInterface.setPrefSize(1000, 600);
+	    
+  
+	    tableInterface = new Scene(new Group(restaranteurInterface));
+	    tableInterface.setFill(Color.web(backgroundColor));
+	    window.setScene(tableInterface);
+		
+		
+	}
+	
 
 }
