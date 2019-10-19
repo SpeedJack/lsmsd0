@@ -1,4 +1,4 @@
-package ristogo;
+package application;
 
 import javafx.collections.*;
 import javafx.scene.control.*;
