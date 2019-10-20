@@ -1,4 +1,4 @@
-package application;
+package ristogo;
 	
 
 
@@ -272,12 +272,14 @@ public class UserInterface extends Application {
 
 		 
 		
-		Label hour = new Label("Booking Time, lunch or dinner?: ");
+		Label hour = new Label("Booking Time: ");
 		hour.setFont(Font.font(font, FontWeight.BOLD, dimC));
 		hour.setTextFill(Color.web(textColor));
 
 		ChoiceBox<String> hour_f = new ChoiceBox();
-		hour_f.getItems().addAll("Lunch", "Dinner");
+		hour_f.setMinSize(70, 25);
+		hour_f.setMaxSize(70, 25);
+		
 		
 		HBox hour_box = new HBox(20);
 		hour_box.getChildren().addAll(hour,hour_f);
@@ -397,6 +399,16 @@ public class UserInterface extends Application {
 	    restaurant.setOnMouseClicked((e) -> {
 			name_f.setText(restaurant.getSelectionModel().getSelectedItem().getName());
 			description_f.setText(restaurant.getSelectionModel().getSelectedItem().getDescription());
+			hour_f.getItems().clear();
+			if(restaurant.getSelectionModel().getSelectedItem().getOpening() == "Lunch&Dinner") {
+				hour_f.getItems().addAll("Lunch", "Dinner");
+			}
+			else if(restaurant.getSelectionModel().getSelectedItem().getOpening() == "Lunch") {
+				hour_f.getItems().add("Lunch");
+			}
+			else {
+				hour_f.getItems().add("Dinner");
+			}
 			});
 		
 		

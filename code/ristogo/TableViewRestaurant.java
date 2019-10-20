@@ -1,4 +1,4 @@
-package application;
+package ristogo;
 
 
 import javafx.collections.*;
@@ -65,7 +65,7 @@ public class TableViewRestaurant extends TableView<Restaurant> {
 		    setItems(restaurantList); //ATTACCA ALLA TABLEVIEW I DATI LISTA RISTORANTI
 		    
 		    Restaurant res = new Restaurant(0000, 0000, "aaaa", "Pizza", 4, "pisa", "bbbb", "AAAAA", 10, "Lunch");
-		    Restaurant res1 = new Restaurant(0000, 0000, "bbbb", "Pizza", 4, "pisa", "bbbb", "DDDDD", 10, "Lunch");
+		    Restaurant res1 = new Restaurant(0000, 0000, "bbbb", "Pizza", 4, "pisa", "bbbb", "DDDDD", 10, "Dinner");
 		    restaurantList.clear();
 		    restaurantList.addAll(res, res1);
 		  }
