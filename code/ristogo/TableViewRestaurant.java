@@ -11,47 +11,13 @@ import javafx.util.*;
 
 
 public class TableViewRestaurant extends TableView<Restaurant> {
-	 private final ObservableList<Restaurant> restaurantList;
+	 final ObservableList<Restaurant> restaurantList;
 	 private TableColumn nameColumn;
 	 private TableColumn typeColumn;
 	 private TableColumn priceColumn;
 	 private TableColumn cityColumn;
 	 private TableColumn addressColumn;
 	 
-/*	    class MyStringTableCell extends TableCell<Restaurant, String> {
-	    	 
-	        public void updateItem(String item, boolean empty) {
-	            super.updateItem(item, empty);
-	            setText(empty ? null : getString());
-	            setGraphic(null);
-	        }
-	 
-	        private String getString() {
-	            return getItem() == null ? "" : getItem().toString();
-	        }
-	    }
-	 
-	    class MyEventHandler implements EventHandler<MouseEvent> {
-	 
-	        @Override
-	        public void handle(MouseEvent t) {
-	            TableCell c = (TableCell) t.getSource();
-	            int index = c.getIndex();
-	            System.out.println("id = " + restaurantList.get(index).getName());
-	            
-	        }
-	    }
-	 
-     Callback<TableColumn, TableCell> stringCellFactory =
-             new Callback<TableColumn, TableCell>() {
-    	 
-		         public TableCell call(TableColumn p) {
-		             MyStringTableCell cell = new MyStringTableCell();
-		             cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new MyEventHandler());
-		             return cell;
-		         }
-     	};
-     	*/
 		 
 	  public TableViewRestaurant () {
 		    setEditable(true);
@@ -67,7 +33,6 @@ public class TableViewRestaurant extends TableView<Restaurant> {
 		    nameColumn = new TableColumn("Name");
 		    nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 		    nameColumn.setStyle("-fx-font-family: " + font + "; -fx-font-size: " + (new Configuration()).getDimCharacter() + "; -fx-color: "+ textColor +";");
-		    //nameColumn.setCellFactory(stringCellFactory);
 		    
 		    
 		    typeColumn = new TableColumn("Type");
@@ -100,8 +65,9 @@ public class TableViewRestaurant extends TableView<Restaurant> {
 		    setItems(restaurantList); //ATTACCA ALLA TABLEVIEW I DATI LISTA RISTORANTI
 		    
 		    Restaurant res = new Restaurant(0000, 0000, "aaaa", "Pizza", 4, "pisa", "bbbb", "AAAAA", 10, "Lunch");
+		    Restaurant res1 = new Restaurant(0000, 0000, "bbbb", "Pizza", 4, "pisa", "bbbb", "DDDDD", 10, "Lunch");
 		    restaurantList.clear();
-		    restaurantList.addAll(res, res);
+		    restaurantList.addAll(res, res1);
 		  }
 	  
 	  

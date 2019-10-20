@@ -1,8 +1,8 @@
 package application;
 	
+
+
 import javafx.application.*;
-import javafx.event.*;
-import javafx.geometry.*;
 import javafx.stage.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -10,7 +10,9 @@ import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.scene.text.*;
-import javafx.scene.text.FontWeight;
+import javafx.event.*;
+import javafx.geometry.*;
+import java.time.*;
 
 
 public class UserInterface extends Application {
@@ -35,7 +37,7 @@ public class UserInterface extends Application {
 		
 		window = stage;
 	
-		 
+///Title Box		 
 		Label title = new Label("Welcome to RistoGo!");
 		title.setFont(Font.font(font, FontWeight.BOLD, dimC+5));
 		title.setTextFill(Color.web(backgroundColor));
@@ -48,12 +50,12 @@ public class UserInterface extends Application {
 		HBox boxTitle = new HBox(20);
 		boxTitle.getChildren().addAll(title,icon);
 		boxTitle.setAlignment(Pos.CENTER);
-	
-	  
+////	
+///Login Box  
 		Label description = new Label("The application that allows you to book tables\n at your favorite restaurants!");
 		description.setAlignment(Pos.CENTER_LEFT);
 		description.setFont(Font.font(font, FontWeight.NORMAL, dimC+3));
-		  description.setTextFill(Color.web(backgroundColor));
+		description.setTextFill(Color.web(backgroundColor));
 		  
 		  
 		  Label name = new Label("Name: ");
@@ -116,7 +118,8 @@ public class UserInterface extends Application {
 		  HBox boxButton = new HBox(20);
 		  boxButton.getChildren().addAll(login, register);
 		  boxButton.setAlignment(Pos.CENTER); 
-		 
+
+/////////
 		  
 		  VBox loginInterface = new VBox(20);
 		  loginInterface.getChildren().addAll(boxField, boxButton);
@@ -130,6 +133,7 @@ public class UserInterface extends Application {
 		  window.setTitle("RistoGo");
 		  window.setResizable(false);
 		  window.setScene(loginScene);
+		  window.getIcons().add(new Image("resources/logo.png"));
 		  window.show();      
 		  
 	}
@@ -172,7 +176,7 @@ public class UserInterface extends Application {
         error.setTextFill(Color.web(backgroundColor));
         error.setStyle("-fx-background-color:   green;");
         error.setVisible(false);
-  ///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
         
         Button register2 = new Button("Register");   
         register2.setOnAction((ActionEvent ev) -> {
@@ -217,7 +221,7 @@ public class UserInterface extends Application {
 		title.setFont(Font.font(font, FontWeight.BOLD, dimC+7));
 		title.setTextFill(Color.web(textColor)); 
 		
-		ImageView icon = new ImageView("resources/OrangeLogo.png");
+		ImageView icon = new ImageView("resources/logo.png");
 		icon.setFitHeight(30);
 		icon.setFitWidth(30);
 		
@@ -243,8 +247,7 @@ public class UserInterface extends Application {
 		TextField name_f = new TextField();
 		name.setFont(Font.font(font, FontWeight.BOLD, dimC));
 		name.setTextFill(Color.web(textColor));
-
-		name_f.setDisable(true);
+		name_f.setEditable(false);
 		
 		HBox name_box = new HBox(20);
 		name_box.getChildren().addAll(name,name_f);
@@ -254,7 +257,15 @@ public class UserInterface extends Application {
 		date.setFont(Font.font(font, FontWeight.BOLD, dimC));
 		date.setTextFill(Color.web(textColor));
 
-		DatePicker date_f = new DatePicker();//Prelevare valore da DP    LocalDate data = date_field.getValue(); 
+		DatePicker date_f = new DatePicker();
+		date_f.setDayCellFactory(picker -> new DateCell() {   //Disable all past dates
+	        public void updateItem(LocalDate date, boolean empty) {
+	            super.updateItem(date, empty);
+	            LocalDate today = LocalDate.now();
+
+	            setDisable(empty || date.compareTo(today) < 0 );
+	        }
+	    });
 		
 		HBox date_box = new HBox(20);
 		date_box.getChildren().addAll(date,date_f);
@@ -300,19 +311,20 @@ public class UserInterface extends Application {
     												String n = name_f.getText();
     												String d = date_f.getValue().toString();
     												String h = hour_f.getValue();
+    												//int s = RequestHandler.checkSeat(n,d,h);
+    												int s = 8;
+
+    												if(s>0) {
+    													for(int i=1; i<=s; i++) {
+    														seats_f.getItems().add(i);
+    													}
+    													seats_f.setDisable(false);
+    													book.setDisable(false);
+    												}
     											}catch(NullPointerException e) {
     												e.getMessage();
     												//GESTIRE MESSAGGIO ERRORE
     											}
-												int s = 8;
-												//int s = RequestHandler.checkSeat(n,d,h);
-												if(s>0) {
-													for(int i=1; i<=s; i++) {
-														seats_f.getItems().add(i);
-													}
-													seats_f.setDisable(false);
-													book.setDisable(false);
-												}
 										});
     	
 		book.setOnAction((ActionEvent ev) -> {
@@ -371,14 +383,22 @@ public class UserInterface extends Application {
 		
 	    TableViewRestaurant restaurant = new TableViewRestaurant();
 	    //restaurant.updateTable();
-	    
+
+	        
 	    Label description = new Label("Description: ");
 		TextArea description_f = new TextArea();
 		description.setFont(Font.font(font, FontWeight.BOLD, dimC-2));
 		description.setTextFill(Color.web(textColor));
-		description_f.setDisable(true);
+		description_f.setEditable(false);
 		description_f.setMinSize(480, 100);
 		description_f.setMaxSize(480, 100);
+		
+		
+	    restaurant.setOnMouseClicked((e) -> {
+			name_f.setText(restaurant.getSelectionModel().getSelectedItem().getName());
+			description_f.setText(restaurant.getSelectionModel().getSelectedItem().getDescription());
+			});
+		
 		
 		HBox description_box = new HBox(20);
 		description_box.getChildren().addAll(description,description_f);
@@ -419,7 +439,7 @@ public class UserInterface extends Application {
 		title.setFont(Font.font(font, FontWeight.BOLD, dimC+7));
 		title.setTextFill(Color.web(textColor)); 
 		
-		ImageView icon = new ImageView("resources/OrangeLogo.png");
+		ImageView icon = new ImageView("resources/logo.png");
 		icon.setFitHeight(30);
 		icon.setFitWidth(30);
 		
