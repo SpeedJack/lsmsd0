@@ -39,7 +39,7 @@ public class Response {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	public Response(boolean success, int resType, String resMessage, List<Restaurant> restaurants,
+	public Response(boolean success, int resType, List<Restaurant> restaurants,
 			List<Reservation> reservations, User user) {
 		setSuccess(success);
 		setResType(resType);
@@ -47,6 +47,7 @@ public class Response {
 		setReservations(reservations);
 		setUser(user);		
 	}
+	
 	public Response() {	};
 		
 }

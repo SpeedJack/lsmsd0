@@ -166,7 +166,7 @@ public class DBManager{
 
 //list of reservation (client/restauranteur) 
 	
-	MANCA LA PARTE RISTORATORE
+	//MANCA LA PARTE RISTORATORE
 	public static List<Reservation> list_reservation(User s){
 	
             List<Reservation> reservations = new ArrayList<>();
