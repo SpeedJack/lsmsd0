@@ -68,7 +68,7 @@ public class DBManager{
 //list of restaurant	 
 	public static List<Restaurant> list_restaurant(){
 		 
-            List<Restaurant> restaurants = new ArrayList<>();
+            List<Restaurant> restaurants = new ArrayList();
             try {
                 PreparedStatement ps = connectionToDB.prepareStatement("SELECT* " 
                                                                     + "FROM ristorante;");
@@ -122,9 +122,8 @@ public class DBManager{
 	}
 	
 //check for a table
-	public static int check(Reservation r) {
-       
-		
+        public static int check(Reservation r) {
+       	
         try {
             PreparedStatement ps = connectionToDB.prepareStatement("SELECT (r.coperti - SUM(p.coperti)) AS PostiRimasti"
             														+"FROM ristorante r INNER JOIN prenotazione p ON r.IdRisto = p.IdRisto"
@@ -143,7 +142,6 @@ public class DBManager{
         
  }
 	
-
 //book a table
 	public static int book(Reservation r) {
                  
@@ -167,7 +165,7 @@ public class DBManager{
 //list of reservation (client/restaurateur) 
 	public static List<Reservation> list_reservation(User s, boolean restaurateur){
 	
-            List<Reservation> reservations = new ArrayList<>();
+            List<Reservation> reservations = new ArrayList();
             try {
             	PreparedStatement ps;
             	if(!restaurateur) {ps = connectionToDB.prepareStatement("SELECT p.IdPrenotazione AS Prenotazione "
@@ -175,24 +173,23 @@ public class DBManager{
                 + "FROM prenotazione p INNER JOIN ristorante r ON p.IdRisto = r.IdRisto "
                 + "WHERE idCliente = ?;");}
             	else {
-            		ps = connectionToDB.prepareStatement("SELECT p.IdPrenotazione AS Prenotazione "
-                            + "r.IdUtente AS Utente, p.data As Data, r.IdRisto AS Ristorante, p.orario AS Orario, p.persone AS Persone "  
-                            + "FROM prenotazione p INNER JOIN ristorante r ON p.IdRisto = r.IdRisto "
-                            + "WHERE r.IdUtente = ?;");
+                    ps = connectionToDB.prepareStatement("SELECT p.IdPrenotazione AS Prenotazione "
+                + "r.IdUtente AS Utente, p.data As Data, r.IdRisto AS Ristorante, p.orario AS Orario, p.persone AS Persone "  
+                + "FROM prenotazione p INNER JOIN ristorante r ON p.IdRisto = r.IdRisto "
+                + "WHERE r.IdUtente = ?;");
             	};
                 
                 ps.setInt(1, s.getUserId());
                 ResultSet res = ps.executeQuery();
-				while(res.next()) {
-	                int reservation = res.getInt("Prenotazione");
-	                int user = res.getInt("Utente");
-	                int restaurant = res.getInt("Ristorante");
-	                String date = res.getString("Data");
-	                String hour = res.getString("Orario");
-	                int seats = res.getInt("Persone");
+		while(res.next()) {
+	            int reservation = res.getInt("Prenotazione");
+	            int user = res.getInt("Utente");
+	            int restaurant = res.getInt("Ristorante");
+	            String date = res.getString("Data");
+	            String hour = res.getString("Orario");
+	            int seats = res.getInt("Persone");
 				 
-	                reservations.add(new Reservation(reservation, user, restaurant, date, hour, seats, "", ""));
-				 
+	            reservations.add(new Reservation(reservation, user, restaurant, date, hour, seats, "", ""));		 
 				}
             }catch(SQLException e) {
                 System.out.println(e.getMessage());

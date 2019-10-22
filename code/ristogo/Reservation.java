@@ -15,8 +15,8 @@ import javafx.beans.property.*;
 
       public Reservation(int reservation, int client, int resturant, String d , String h, int s, String cn, String rn) {
     	clientName = new SimpleStringProperty(cn);
-		restaurantName = new SimpleStringProperty(rn);
-		idReservation = new SimpleIntegerProperty(reservation);
+	restaurantName = new SimpleStringProperty(rn);
+	idReservation = new SimpleIntegerProperty(reservation);
         idClient = new SimpleIntegerProperty(client);
         idRestaurant = new SimpleIntegerProperty(resturant);
         date = new SimpleStringProperty(d);
@@ -31,6 +31,8 @@ import javafx.beans.property.*;
       public String getDate() { return date.get(); }
       public int getSeats() { return seats.get(); }
       public String getHour() { return hour.get(); }
+      public String getClientName() { return clientName.get(); }
+      public String getRestaurantName() { return restaurantName.get(); }
       
       public void setReservation(int reservation) {idReservation.set(reservation);};
       public void setUser(int client) { idClient.set(client); }
@@ -38,14 +40,5 @@ import javafx.beans.property.*;
       public void setDate(String d) { date.set(d); }
       public void setSeats(int s) { seats.set(s); }
       public void setHour(String h) { hour.set(h); }
-
-	public String getClientName() {
-		return clientName.get();
-	}
-
-	public String getRestaurantName() {
-		return restaurantName.get();
-	}
-      
       
   }
