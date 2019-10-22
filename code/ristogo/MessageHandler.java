@@ -26,15 +26,15 @@ class MessageHandler {
 	 * REQUEST/RESPONSE CODES
 	 -----------------------------------------------------------------------------------------------------------------------------*/
 	
-	private static final int LOGIN = 1;
-	private static final int REGISTRATION = 2;
-	private static final int RESERVATION = 3;
-	private static final int LIST_RESTAURANT = 4;
-	private static final int LIST_RESERVATION = 5;
-	private static final int LIST_RESERVATION_REST = 6;
-	private static final int MODIFY_RESTAURANT = 7;
-	private static final int DELETE_RESERVATION = 8;
-	private static final int CHECK_SEATS = 9;
+	public static final int LOGIN = 1;
+	public static final int REGISTRATION = 2;
+	public static final int RESERVATION = 3;
+	public static final int LIST_RESTAURANT = 4;
+	public static final int LIST_RESERVATION = 5;
+	public static final int LIST_RESERVATION_REST = 6;
+	public static final int MODIFY_RESTAURANT = 7;
+	public static final int DELETE_RESERVATION = 8;
+	public static final int CHECK_SEATS = 9;
 	
 	/*----------------------------------------------------------------------------------------------------------------------------
 	 * COMMON UTILITIES
@@ -154,14 +154,17 @@ class MessageHandler {
 				return res.getReservations();
 			};
 		} case DELETE_RESERVATION: {
-			int id;
+			int id = 0;
 			
 			for(Reservation rr : rsvList) {
-		//		if(rr.getUser() == Integer.parseInt(strings[0]) && 
-	//				rr.get
+				if(rr.getUser() == Integer.parseInt(strings[0]) && 
+						rr.getRestaurantName() == strings[1] &&
+						rr.getDate() == strings[2] &&
+						rr.getHour() == strings[3])
+				id = rr.getReservation();
 			}
-		//	r = prepareDeleteReservation(Integer.parseInt(strings[0]), strings[1], strings[2], strings[3], 
-		//			Integer.parseInt(strings[4]));
+			r = prepareDeleteReservation(id);
+			
 			if(r == null ) return false;
 			send(r, REQ);
 			res = (Response) receive();
@@ -170,6 +173,10 @@ class MessageHandler {
 				return true;
 			};
 			break;
+		} case CHECK_SEATS: {
+			
+		} case MODIFY_RESTAURANT:{
+			
 		}
 		
 		default: break;
@@ -198,9 +205,9 @@ class MessageHandler {
 	};
 	
 	
-	public static Request prepareReservation(int uid, String n, String d, String h, int s) {
+	public static Request prepareReservation(int uid, String n, String d, String h, int s, String cn) {
 		
-		Reservation r = new Reservation(0, uid, 0, d.toString(), h, s );
+		Reservation r = new Reservation(0, uid, 0, d.toString(), h, s, cn, n );
 		Restaurant rst = new Restaurant(0, 0, n, null, 0, null, null, null, 0, null);
 		
 		return new Request(RESERVATION, null, rst, r);
@@ -219,7 +226,7 @@ class MessageHandler {
 	};
 	
 	public static Request prepareDeleteReservation(int rid) {
-		Reservation r = new Reservation(rid, 0, 0, null, null, 0);
+		Reservation r = new Reservation(rid, 0, 0, null, null, 0, "", "");
 		return new Request(DELETE_RESERVATION, null, null, r);
 	}
 	
@@ -229,15 +236,62 @@ class MessageHandler {
 	};
 	
 	public static Request prepareCheckSeats(int rid, LocalDate d, String oa) {
-		Reservation r = new Reservation(0, 0, rid, d.toString(), oa, 0 );
+		Reservation r = new Reservation(0, 0, rid, d.toString(), oa, 0, "", "" );
 		return new Request(CHECK_SEATS, null, null, r);
 	};	
 	
 /*----------------------------------------------------------------------------------------------------------------------------
  * SERVER SIDE UTILITIES
  -----------------------------------------------------------------------------------------------------------------------------*/
+	public static int parseRequest(Request r) {
+		return r.getReqType();
+	};	
 	
-};
+	
+	public static Response buildResponse(int type, boolean success, Object rx) {
+		
+		switch(type) {
+		case LOGIN: { 
+			User u = new User((Integer) rx, "", "");
+			return new Response(success, type, null, null, u );
+		}
+		case REGISTRATION: {
+			 return new Response(success, type, null, null, null );
+		} 
+		case LIST_RESTAURANT: {
+			List<Restaurant> lr = (List<Restaurant>) rx;
+			return new Response(success, type, lr , null, null);
+		} case RESERVATION: {
+			
+			Reservation res = new Reservation ((Integer) rx, 0, 0, "", "", 0, "", "");
+			List<Reservation> lr= new ArrayList<>();
+			lr.add(res);
+			return new Response(success, type, null, lr, null );
+			
+		} case LIST_RESERVATION: {
+			List<Reservation> lr= (List<Reservation>) rx;
+			return new Response(success, type, null, lr, null );
+			
+		} case LIST_RESERVATION_REST: {
+			List<Reservation> lr= (List<Reservation>) rx;
+			return new Response(success, type, null, lr, null );
+			
+		} case DELETE_RESERVATION: {
+			return new Response(success, type, null, null, null);
+		} case CHECK_SEATS: {
+			Restaurant r = new Restaurant(0 , 0, "", "", 0, "", "", "", 0, "");
+			List<Restaurant> lr = new ArrayList<>();
+			lr.add(r);
+			return new Response(success, type, lr, null, null);
+			
+		} case MODIFY_RESTAURANT:{			
+			return new Response(success, type, null, null, null);
+		}
+		default: break;
+		}
+	return null;
+	}
+}
 
 
 

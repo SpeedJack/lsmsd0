@@ -164,17 +164,22 @@ public class DBManager{
             return res;
 	 }
 
-//list of reservation (client/restauranteur) 
-	
-	//MANCA LA PARTE RISTORATORE
-	public static List<Reservation> list_reservation(User s){
+//list of reservation (client/restaurateur) 
+	public static List<Reservation> list_reservation(User s, boolean restaurateur){
 	
             List<Reservation> reservations = new ArrayList<>();
             try {
-            	PreparedStatement ps = connectionToDB.prepareStatement("SELECT p.IdPrenotazione AS Prenotazione "
+            	PreparedStatement ps;
+            	if(!restaurateur) {ps = connectionToDB.prepareStatement("SELECT p.IdPrenotazione AS Prenotazione "
                 + "r.IdUtente AS Utente, p.data As Data, r.IdRisto AS Ristorante, p.orario AS Orario, p.persone AS Persone "  
                 + "FROM prenotazione p INNER JOIN ristorante r ON p.IdRisto = r.IdRisto "
-                + "WHERE idCliente = ?;");
+                + "WHERE idCliente = ?;");}
+            	else {
+            		ps = connectionToDB.prepareStatement("SELECT p.IdPrenotazione AS Prenotazione "
+                            + "r.IdUtente AS Utente, p.data As Data, r.IdRisto AS Ristorante, p.orario AS Orario, p.persone AS Persone "  
+                            + "FROM prenotazione p INNER JOIN ristorante r ON p.IdRisto = r.IdRisto "
+                            + "WHERE r.IdUtente = ?;");
+            	};
                 
                 ps.setInt(1, s.getUserId());
                 ResultSet res = ps.executeQuery();
@@ -186,7 +191,7 @@ public class DBManager{
 	                String hour = res.getString("Orario");
 	                int seats = res.getInt("Persone");
 				 
-	                reservations.add(new Reservation(reservation, user, restaurant, date, hour, seats));
+	                reservations.add(new Reservation(reservation, user, restaurant, date, hour, seats, "", ""));
 				 
 				}
             }catch(SQLException e) {
@@ -196,7 +201,7 @@ public class DBManager{
             return reservations;   
 	}
 
-//delete a reservation(Not used)
+//delete a reservation
 	public static int deleteReservation(Reservation r) {
 	
 	    int res = -1;

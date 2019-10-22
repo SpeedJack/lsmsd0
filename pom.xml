@@ -3,14 +3,16 @@
   <groupId>lsmsd0</groupId>
   <artifactId>lsmsd0</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
   <!-- https://mvnrepository.com/artifact/org.openjfx/javafx -->
   <dependencies>
   <dependency>
     <groupId>org.openjfx</groupId>
-    <artifactId>javafx</artifactId>
-    <version>13</version>
-    <type>pom</type>
-</dependency>
+    <artifactId>javafx-controls</artifactId>
+    <version>11</version>
+  </dependency>
 <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 <dependency>
     <groupId>mysql</groupId>
@@ -22,7 +24,9 @@
     <groupId>com.thoughtworks.xstream</groupId>
     <artifactId>xstream</artifactId>
     <version>1.4.11.1</version>
-</dependency>
+</dependency>	
+<!-- https://mvnrepository.com/artifact/javafx/javafxrt -->
+
 
   </dependencies>
 
@@ -32,11 +36,19 @@
     <sourceDirectory>code</sourceDirectory>
     <plugins>
     <plugin>
-        <groupId>org.openjfx</groupId>
-    <artifactId>javafx-plugin</artifactId>
-    <version>0.0.8</version>
+    <groupId>javafx</groupId>
+    <artifactId>javafxrt</artifactId>
+    <version>1.3.0</version>
     </plugin>
-      <plugin>
+    <plugin>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <version>0.0.3</version>
+        <configuration>
+            <mainClass>UserInterface</mainClass>
+        </configuration>
+    </plugin>
+    <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.0</version>
         <configuration>
