@@ -10,8 +10,8 @@ import javafx.util.*;
 
 
 
-public class TableViewRestaurant extends TableView<Restaurant> {
-	 final ObservableList<Restaurant> restaurantList;
+public class TableViewRestaurant extends TableView<RestaurantBean> {
+	 final ObservableList<RestaurantBean> restaurantList;
 	 private TableColumn nameColumn;
 	 private TableColumn typeColumn;
 	 private TableColumn priceColumn;
@@ -64,8 +64,8 @@ public class TableViewRestaurant extends TableView<Restaurant> {
 		    restaurantList = FXCollections.observableArrayList(); //"Costruttore"
 		    setItems(restaurantList); //ATTACCA ALLA TABLEVIEW I DATI LISTA RISTORANTI
 		    
-		    Restaurant res = new Restaurant(0000, 0000, "aaaa", "Pizza", 4, "pisa", "bbbb", "AAAAA", 10, "Lunch");
-		    Restaurant res1 = new Restaurant(0000, 0000, "bbbb", "Pizza", 4, "pisa", "bbbb", "DDDDD", 10, "Dinner");
+		    RestaurantBean res = new RestaurantBean(0000, 0000, "aaaa", "Pizza", 4, "pisa", "bbbb", "AAAAA", 10, "Lunch");
+		    RestaurantBean res1 = new RestaurantBean(0000, 0000, "bbbb", "Pizza", 4, "pisa", "bbbb", "DDDDD", 10, "Dinner");
 		    restaurantList.clear();
 		    restaurantList.addAll(res, res1);
 		  }

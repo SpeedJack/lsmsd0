@@ -3,6 +3,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * FINIRE DI ADATTARE A NUOVI USER REST RES
+ */
 public class DBManager{
 	
 	public static Connection connectionToDB;
@@ -103,16 +106,16 @@ public class DBManager{
         	PreparedStatement ps = connectionToDB.prepareStatement("UPDATE ristorante " +
                     "SET IdUtente = ? AND nome = ? AND genere = ? AND costo = ? AND citta = ? AND via = ? " +
                     "AND descrizione = ? AND coperti = ? AND apertura = ? WHERE IdRisto = ? "); 
-            ps.setInt(1, r.getIdUser());
+            ps.setInt(1, r.getIdOwner());
             ps.setString(2, r.getName());
             ps.setString(3,r.getType());
-            ps.setInt(4, r.getPrice());
+            ps.setInt(4, r.getCost().ordinal());
             ps.setString(5, r.getCity());
             ps.setString(6, r.getAddress());
             ps.setString(7, r.getDescription());
-            ps.setInt(8, r.getSeats());
-            ps.setString(9, r.getOpening());
-            ps.setInt(10, r.getIdRestaurant());                         
+            ps.setInt(8, r.getSeatsAvailable());
+            ps.setString(9, r.getOpenAt().toString());
+            ps.setInt(10, r.getIdRisto());                         
             res = ps.executeUpdate();
 		
         }catch(SQLException e) {
@@ -149,10 +152,10 @@ public class DBManager{
             try {
                 PreparedStatement ps = connectionToDB.prepareStatement("INSERT INTO prenotazione " 
 							+ "(IdCliente, IdRisto, data, orario, persone) VALUES(?,?,?,?,?);");
-				ps.setInt(1, r.getUser());
-				ps.setInt(2,r.getRestaurant());
+				ps.setInt(1, r.getCustomer().getIdUser());
+				ps.setInt(2,r.getRestaurant().getIdRisto());
 				ps.setString(3,r.getDate());
-				ps.setString(4,r.getHour());
+				ps.setString(4,r.getResTime().toString());
 				ps.setInt(5, r.getSeats());
 				res = ps.executeUpdate();
 
@@ -165,7 +168,7 @@ public class DBManager{
 //list of reservation (client/restaurateur) 
 	public static List<Reservation> list_reservation(User s, boolean restaurateur){
 	
-            List<Reservation> reservations = new ArrayList();
+            List<Reservation> reservations = new ArrayList<>();
             try {
             	PreparedStatement ps;
             	if(!restaurateur) {ps = connectionToDB.prepareStatement("SELECT p.IdPrenotazione AS Prenotazione "

@@ -1,44 +1,52 @@
 package ristogo;
 
-import javafx.beans.property.*;
+import java.io.Serializable;
 
-  public class Reservation {
-      
-      private final SimpleIntegerProperty idReservation;
-      private final SimpleIntegerProperty idClient;
-      private final SimpleIntegerProperty idRestaurant;
-      private final SimpleStringProperty date;
-      private final SimpleStringProperty hour;
-      private final SimpleIntegerProperty seats;
-      private final SimpleStringProperty clientName;
-      private final SimpleStringProperty restaurantName;
-
-      public Reservation(int reservation, int client, int resturant, String d , String h, int s, String cn, String rn) {
-    	clientName = new SimpleStringProperty(cn);
-	restaurantName = new SimpleStringProperty(rn);
-	idReservation = new SimpleIntegerProperty(reservation);
-        idClient = new SimpleIntegerProperty(client);
-        idRestaurant = new SimpleIntegerProperty(resturant);
-        date = new SimpleStringProperty(d);
-        seats = new SimpleIntegerProperty(s);
-        hour = new SimpleStringProperty(h);
-        
-      }
-      
-      public int getReservation() {return idReservation.get();};
-      public int getUser() { return idClient.get(); }
-      public int getRestaurant() { return idRestaurant.get(); }
-      public String getDate() { return date.get(); }
-      public int getSeats() { return seats.get(); }
-      public String getHour() { return hour.get(); }
-      public String getClientName() { return clientName.get(); }
-      public String getRestaurantName() { return restaurantName.get(); }
-      
-      public void setReservation(int reservation) {idReservation.set(reservation);};
-      public void setUser(int client) { idClient.set(client); }
-      public void setRestaurant(int resturant) { idRestaurant.set(resturant); }
-      public void setDate(String d) { date.set(d); }
-      public void setSeats(int s) { seats.set(s); }
-      public void setHour(String h) { hour.set(h); }
-      
-  }
+public class Reservation implements Serializable{
+	int idRes = 0;
+	User customer = null;
+	Restaurant restaurant = null;
+	int seats = 0;
+	String date = null;
+	OpeningHour resTime = null;
+	
+	public int getIdRes() {
+		return idRes;
+	}
+	public void setIdRes(int idRes) {
+		this.idRes = idRes;
+	}
+	public Reservation(){};
+	public Reservation(ReservationBean rb){};
+	public ReservationBean getBean() {return new ReservationBean(seats, seats, seats, date, date, seats, date, date) ;};
+	public User getCustomer() {
+		return customer;
+	}
+	public void setCustomer(User customer) {
+		this.customer = customer;
+	}
+	public Restaurant getRestaurant() {
+		return restaurant;
+	}
+	public void setRestaurant(Restaurant restaurant) {
+		this.restaurant = restaurant;
+	}
+	public int getSeats() {
+		return seats;
+	}
+	public void setSeats(int seats) {
+		this.seats = seats;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	public OpeningHour getResTime() {
+		return resTime;
+	}
+	public void setResTime(OpeningHour resTime) {
+		this.resTime = resTime;
+	}
+}
