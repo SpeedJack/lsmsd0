@@ -15,8 +15,8 @@ import javafx.beans.property.*;
 
       public ReservationBean(int reservation, int client, int resturant, String d , String h, int s, String cn, String rn) {
     	clientName = new SimpleStringProperty(cn);
-	restaurantName = new SimpleStringProperty(rn);
-	idReservation = new SimpleIntegerProperty(reservation);
+    	restaurantName = new SimpleStringProperty(rn);
+    	idReservation = new SimpleIntegerProperty(reservation);
         idClient = new SimpleIntegerProperty(client);
         idRestaurant = new SimpleIntegerProperty(resturant);
         date = new SimpleStringProperty(d);

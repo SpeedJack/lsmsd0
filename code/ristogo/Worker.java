@@ -71,7 +71,7 @@ public class Worker implements Runnable {
 			
 			int ret = DBManager.check(currentRequest.getReservation());
 			if (ret == -1) success = false;
-			Restaurant rest = new Restaurant();
+			Restaurant rest = new Restaurant(0, 0, null, null, null, null, null, null, null, 0, null);
 			rest.setSeatsAvailable(ret);
 			rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, rest);
 			break;

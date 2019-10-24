@@ -64,8 +64,8 @@ public class TableViewRestaurant extends TableView<RestaurantBean> {
 		    restaurantList = FXCollections.observableArrayList(); //"Costruttore"
 		    setItems(restaurantList); //ATTACCA ALLA TABLEVIEW I DATI LISTA RISTORANTI
 		    
-		    RestaurantBean res = new RestaurantBean(0000, 0000, "aaaa", "Pizza", 4, "pisa", "bbbb", "AAAAA", 10, "Lunch");
-		    RestaurantBean res1 = new RestaurantBean(0000, 0000, "bbbb", "Pizza", 4, "pisa", "bbbb", "DDDDD", 10, "Dinner");
+		    RestaurantBean res = new RestaurantBean(0000, 0000, "gino","aaaa", "Pizza", 4, "pisa", "bbbb", "AAAAA", 10, "Lunch");
+		    RestaurantBean res1 = new RestaurantBean(0000, 0000, "pino","bbbb", "Pizza", 4, "pisa", "bbbb", "DDDDD", 10, "Dinner");
 		    restaurantList.clear();
 		    restaurantList.addAll(res, res1);
 		  }

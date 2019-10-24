@@ -3,50 +3,42 @@ package ristogo;
 import java.io.Serializable;
 
 public class Reservation implements Serializable{
-	int idRes = 0;
-	User customer = null;
-	Restaurant restaurant = null;
-	int seats = 0;
-	String date = null;
-	OpeningHour resTime = null;
+	int idRes;
+	User customer;
+	Restaurant restaurant;
+	int seats;
+	String date;
+	OpeningHour resTime;
 	
-	public int getIdRes() {
-		return idRes;
-	}
-	public void setIdRes(int idRes) {
+	public Reservation(int idRes, User customer, Restaurant restaurant, int seats, String date, OpeningHour resTime){
 		this.idRes = idRes;
-	}
-	public Reservation(){};
-	public Reservation(ReservationBean rb){};
-	public ReservationBean getBean() {return new ReservationBean(seats, seats, seats, date, date, seats, date, date) ;};
-	public User getCustomer() {
-		return customer;
-	}
-	public void setCustomer(User customer) {
 		this.customer = customer;
-	}
-	public Restaurant getRestaurant() {
-		return restaurant;
-	}
-	public void setRestaurant(Restaurant restaurant) {
 		this.restaurant = restaurant;
-	}
-	public int getSeats() {
-		return seats;
-	}
-	public void setSeats(int seats) {
 		this.seats = seats;
-	}
-	public String getDate() {
-		return date;
-	}
-	public void setDate(String date) {
 		this.date = date;
-	}
-	public OpeningHour getResTime() {
-		return resTime;
-	}
-	public void setResTime(OpeningHour resTime) {
 		this.resTime = resTime;
-	}
+	};
+	public Reservation(ReservationBean rb){
+		//SUI BEAN NON CI SONO LE INFORMAZIONI PER GENERARE GLI OGGETTI
+		//USER E RESTAURANT PER customer e restaurant
+	};
+	
+	//VA CONVERTITO ENUM IN STRING
+	public ReservationBean getBean() {
+		return new ReservationBean(idRes, customer.getIdUser(), restaurant.getIdRisto(), date, resTime, seats, customer.getUsername(), restaurant.getName());
+	};
+	
+	public int getIdRes() {return idRes;}
+	public User getCustomer() {return customer;}
+	public Restaurant getRestaurant() {return restaurant;}
+	public int getSeats() {return seats;}
+	public String getDate() {return date;}
+	public OpeningHour getResTime() {return resTime;}
+	
+	public void setIdRes(int idRes) {this.idRes = idRes;}
+	public void setCustomer(User customer) {this.customer = customer;}
+	public void setRestaurant(Restaurant restaurant) {this.restaurant = restaurant;}
+	public void setSeats(int seats) {this.seats = seats;}
+	public void setDate(String date) {this.date = date;}
+	public void setResTime(OpeningHour resTime) {this.resTime = resTime;}
 }

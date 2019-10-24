@@ -31,7 +31,6 @@ public class UserInterface extends Application {
 	String textColor = (new Configuration()).getTextColor();
 	
 	
-	
 //////////START INTERFACE /////////////////////////////////////////////////////////////////////////////////////////////////
 	public void start(Stage stage) {
 		
@@ -93,7 +92,7 @@ public class UserInterface extends Application {
 														e.getMessage();
 														//GESTIRE MESSAGGIO ERRORE
 													}
-										        	int  res = RequestHandler.login(n,p);
+										        	int  res = MessageHandler.login(n,p);
 									         	*/
 													//restaranteurInterface(window);
 													clientInterface(window);
@@ -188,7 +187,7 @@ public class UserInterface extends Application {
 														e.getMessage();
 														//GESTIRE MESSAGGIO ERRORE
 													}
-										        	int  res = RequestHandler.register(n,p,t);
+										        	int  res = MessageHandler.register(n,p,t);
 										        	if(res > 0) {
 										        		window.setScene(loginScene);
 										        	}
@@ -313,7 +312,7 @@ public class UserInterface extends Application {
     												String n = name_f.getText();
     												String d = date_f.getValue().toString();
     												String h = hour_f.getValue();
-    												//int s = RequestHandler.checkSeat(n,d,h);
+    												//int s = MessageHandler.checkSeat(n,d,h);
     												int s = 8;
 
     												if(s>0) {
@@ -339,7 +338,7 @@ public class UserInterface extends Application {
 													e.getMessage();
 													//GESTIRE MESSAGGIO ERRORE
 												}
-												//int res = RequestHandler.bookTable(n,d,h,s);
+												//int res = MessageHandler.bookTable(n,d,h,s);
 												//reservation.myReservation(userID);
 											});
 		date_f.setOnAction((ActionEvent ev) -> { 
@@ -397,19 +396,23 @@ public class UserInterface extends Application {
 		
 		
 	    restaurant.setOnMouseClicked((e) -> {
-			name_f.setText(restaurant.getSelectionModel().getSelectedItem().getName());
-			description_f.setText(restaurant.getSelectionModel().getSelectedItem().getDescription());
-			hour_f.getItems().clear();
-			if(restaurant.getSelectionModel().getSelectedItem().getOpening() == "Lunch&Dinner") {
-				hour_f.getItems().addAll("Lunch", "Dinner");
-			}
-			else if(restaurant.getSelectionModel().getSelectedItem().getOpening() == "Lunch") {
-				hour_f.getItems().add("Lunch");
-			}
-			else {
-				hour_f.getItems().add("Dinner");
-			}
-			});
+	    	try {
+				name_f.setText(restaurant.getSelectionModel().getSelectedItem().getName());
+				description_f.setText(restaurant.getSelectionModel().getSelectedItem().getDescription());
+				hour_f.getItems().clear();
+				if(restaurant.getSelectionModel().getSelectedItem().getOpening() == "Lunch&Dinner") {
+					hour_f.getItems().addAll("Lunch", "Dinner");
+				}
+				else if(restaurant.getSelectionModel().getSelectedItem().getOpening() == "Lunch") {
+					hour_f.getItems().add("Lunch");
+				}
+				else {
+					hour_f.getItems().add("Dinner");
+				}
+	    	}catch(NullPointerException npe) {
+	    		//do nothing
+	    	}	
+		});
 		
 		
 		HBox description_box = new HBox(20);
