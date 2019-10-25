@@ -6,9 +6,9 @@ public class Reservation implements Serializable{
 	int idRes;
 	User customer;
 	Restaurant restaurant;
-	int seats;
 	String date;
 	OpeningHour resTime;
+        int seats;
 	
 	public Reservation() {
 		this.idRes = 0;
@@ -19,13 +19,13 @@ public class Reservation implements Serializable{
 		this.resTime = null;
 	}
 	
-	public Reservation(int idRes, User customer, Restaurant restaurant, int seats, String date, OpeningHour resTime){
+	public Reservation(int idRes, User customer, Restaurant restaurant, String date, String resTime, int seats){
 		this.idRes = idRes;
 		this.customer = customer;
 		this.restaurant = restaurant;
 		this.seats = seats;
 		this.date = date;
-		this.resTime = resTime;
+		this.resTime = OpeningHour.valueOf(resTime);
 	};
 //	public Reservation(ReservationBean rb){
 ////		this.idRes = rb.getReservation();

@@ -44,26 +44,27 @@ public class DBManager{
 		
             int res = -1;
             try {
-				PreparedStatement ps = connectionToDB.prepareStatement("INSERT INTO utente (nome, password) " 
-												+ "VALUES(?,?)");
-            	ps.setString(1, us.getUsername());
-	            ps.setString(2, us.getPassword());
-				res = ps.executeUpdate();
+                PreparedStatement ps = connectionToDB.prepareStatement("INSERT INTO utente (nome, password) " 
+									+ "VALUES(?,?)");
+                ps.setString(1, us.getUsername());
+	        ps.setString(2, us.getPassword());
+                res = ps.executeUpdate();
 				
-				int id;
-				PreparedStatement ps1 = connectionToDB.prepareStatement("SELECT IdUtente"
-																		+"FROM utente WHERE nome= ? AND password = ?;");
+		PreparedStatement ps1 = connectionToDB.prepareStatement("SELECT IdUtente"
+									+"FROM utente WHERE nome= ? AND password = ?;");
                 ps1.setString(1, us.getUsername());
                 ps1.setString(2, us.getPassword());
                 ResultSet result = ps1.executeQuery();
-                id = result.getInt("IdUtente");
+                int id = result.getInt("IdUtente");
 				
-				PreparedStatement ps2 = connectionToDB.prepareStatement("INSERT INTO ristorante (IdUtente, nome, genere, costo, citta, via, descrizione, coperti, apertura)"
-																		+ "VALUES(?, null, null, null, null, null, null, null, null)");
-				ps2.setInt(1, id);
-			                     
-	        }catch(SQLException e) {
-			            System.out.println(e.getMessage());
+                PreparedStatement ps2 = connectionToDB.prepareStatement("INSERT INTO ristorante (IdUtente, nome, genere, costo, citta, via, descrizione, coperti, apertura)"
+								+ "VALUES(?, null, null, null, null, null, null, null, null)");
+		ps2.setInt(1, id);
+		if(us.isRestaurateur())
+                    res = ps2.executeUpdate();
+                
+	    }catch(SQLException e) {
+                System.out.println(e.getMessage());
             }
             return res;
 	}
@@ -73,20 +74,21 @@ public class DBManager{
 		 
             List<Restaurant> restaurants = new ArrayList();
             try {
-                PreparedStatement ps = connectionToDB.prepareStatement("SELECT* " 
-                                                                    + "FROM ristorante;");
+                PreparedStatement ps = connectionToDB.prepareStatement("SELECT * " 
+                                                                    + "FROM ristorante r INNER JOIN utente u "
+                                                                    + "ON r.IdUtente = u.IdUtente;");
                 ResultSet res = ps.executeQuery();
-				while(res.next()) {
-	                int idRestaurant = res.getInt("IdRisto");
-	                int idUser = res.getInt("IdUtente");
-	                String name = res.getString("nome");
-	                String type = res.getString("genere");
-	                int price = res.getInt("costo");				 
-	                String city = res.getString("citta");
-	                String address = res.getString("via");
-	                String description = res.getString("descrizione");
-	                int seats = res.getInt("coperti");
-	                String open = res.getString("apertura");
+                    while(res.next()) {
+	                int idRestaurant = res.getInt("r.IdRisto");
+	                int idUser = res.getInt("u.IdUtente");
+	                String name = res.getString("r.nome");
+	                String type = res.getString("r.genere");
+	                int price = res.getInt("r.costo");				 
+	                String city = res.getString("r.citta");
+	                String address = res.getString("r.via");
+	                String description = res.getString("r.descrizione");
+	                int seats = res.getInt("r.coperti");
+	                String open = res.getString("r.apertura");
 				 
 	                restaurants.add(new Restaurant(idRestaurant, idUser, name, type, price, city, address, description, seats, open));
 						 
@@ -128,13 +130,13 @@ public class DBManager{
         public static int check(Reservation r) {
        	
         try {
-            PreparedStatement ps = connectionToDB.prepareStatement("SELECT (r.coperti - SUM(p.coperti)) AS PostiRimasti"
-            														+"FROM ristorante r INNER JOIN prenotazione p ON r.IdRisto = p.IdRisto"
-            														+ " WHERE p.IdRisto= ? AND p.data = ? AND p.orario=? ;");
+            PreparedStatement ps = connectionToDB.prepareStatement("SELECT (r.coperti - SUM(p.coperti)) AS PostiRimasti "
+            							+"FROM ristorante r INNER JOIN prenotazione p ON r.IdRisto = p.IdRisto "
+                                                                + "WHERE p.IdRisto= ? AND p.data = ? AND p.orario=? ;");
 						
-			ps.setInt(1, r.getRestaurant());
+			ps.setInt(1, r.getRestaurant().getIdRisto());
 			ps.setString(3,r.getDate());
-			ps.setString(4,r.getHour());
+			ps.setString(4,r.getResTime().toString());
 			ResultSet res = ps.executeQuery();
 			return res.getInt("PostiRimasti");
 
@@ -171,18 +173,20 @@ public class DBManager{
             List<Reservation> reservations = new ArrayList<>();
             try {
             	PreparedStatement ps;
-            	if(!restaurateur) {ps = connectionToDB.prepareStatement("SELECT p.IdPrenotazione AS Prenotazione "
-                + "r.IdUtente AS Utente, p.data As Data, r.IdRisto AS Ristorante, p.orario AS Orario, p.persone AS Persone "  
+            	if(!restaurateur) {ps = connectionToDB.prepareStatement("SELECT p.IdPrenotazione AS Prenotazione, u.nome AS NomeU, "
+                + "r.IdUtente AS Utente, p.data As Data, r.IdRisto AS Ristorante, p.orario AS Orario, p.persone AS Persone, r.nome AS NomeR "  
                 + "FROM prenotazione p INNER JOIN ristorante r ON p.IdRisto = r.IdRisto "
-                + "WHERE idCliente = ?;");}
+                + "INNER JOIN utente u ON u.IdUtente = p.IdCliente"
+                + "WHERE p.idCliente = ?;");}
             	else {
-                    ps = connectionToDB.prepareStatement("SELECT p.IdPrenotazione AS Prenotazione "
-                + "r.IdUtente AS Utente, p.data As Data, r.IdRisto AS Ristorante, p.orario AS Orario, p.persone AS Persone "  
+                    ps = connectionToDB.prepareStatement("SELECT p.IdPrenotazione AS Prenotazione, u.nome AS NomeU, "
+                + "r.IdUtente AS Utente, p.data As Data, r.IdRisto AS Ristorante, p.orario AS Orario, p.persone AS Persone, r.nome AS NomeR "  
                 + "FROM prenotazione p INNER JOIN ristorante r ON p.IdRisto = r.IdRisto "
+                + "INNER JOIN utente u ON u.IdUtente = r.IdUtente"
                 + "WHERE r.IdUtente = ?;");
             	};
                 
-                ps.setInt(1, s.getUserId());
+                ps.setInt(1, s.getIdUser());
                 ResultSet res = ps.executeQuery();
 		while(res.next()) {
 	            int reservation = res.getInt("Prenotazione");
@@ -191,8 +195,17 @@ public class DBManager{
 	            String date = res.getString("Data");
 	            String hour = res.getString("Orario");
 	            int seats = res.getInt("Persone");
-				 
-	            reservations.add(new Reservation(reservation, user, restaurant, date, hour, seats, "", ""));		 
+                    String nameUser = res.getString("NomeU");
+                    String nameRestaurant = res.getString("NomeR");
+                     
+                    User u = new User();
+                    u.setIdUser(user);
+                    u.setUsername(nameUser);
+                    Restaurant r = new Restaurant();
+                    r.setIdRisto(restaurant);
+                    r.setName(nameRestaurant);
+                    
+	            reservations.add(new Reservation(reservation, u, r, date, hour, seats));		 
 				}
             }catch(SQLException e) {
                 System.out.println(e.getMessage());
@@ -208,7 +221,7 @@ public class DBManager{
 	    try {
 			PreparedStatement ps = connectionToDB.prepareStatement("DELETE * FROM prenotazione " + 
 			                                                               "WHERE IdPrenotazione = ?"); 									
-			ps.setInt(1, r.getReservation());
+			ps.setInt(1, r.getIdRes());
 			res = ps.executeUpdate();
 	            
         }catch(SQLException e) {
@@ -224,9 +237,9 @@ public class DBManager{
 	        PreparedStatement ps = connectionToDB.prepareStatement("UPDATE prenotazione " + 
 	                                            "SET data = ? AND orario = ? and persone = ? WHERE IdPrenotazione = ? "); 
             ps.setString(1, r.getDate());
-            ps.setString(2,r.getHour());
+            ps.setString(2,r.getResTime().toString());
             ps.setInt(3, r.getSeats());
-            ps.setInt(4, r.getReservation());	 
+            ps.setInt(4, r.getIdRes());	 
             res = ps.executeUpdate();
 	
         }catch(SQLException e) {

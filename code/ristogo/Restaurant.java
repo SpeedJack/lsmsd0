@@ -47,20 +47,19 @@ public class Restaurant implements Serializable{
 		openAt = null;		
 	};
 	
-	public Restaurant(int idRisto, int idOwner, String ownerName, String name, Price cost, String city, String type, String address, String description, int seatsAvailable, OpeningHour openAt ) {
+	public Restaurant(int idRisto, int idOwner, String name, String type, int cost, String city, String address, String description, int seatsAvailable, String openAt ) {
 		this.idRisto = idRisto;
 		this.idOwner = idOwner;
-	
 		this.name = name;
 		this.type = type;
-		this.cost = cost;
+		this.cost = Price.values()[cost];
 		this.city = city;
 		this.address = address;
 		this.description = description;
 		this.seatsAvailable = seatsAvailable;
-		this.openAt = openAt;
-		
+		this.openAt = OpeningHour.valueOf(openAt);		
 	};
+        
 	public Restaurant(RestaurantBean rb) {
 		this.idRisto = rb.getIdRestaurant();
 		this.idOwner = rb.getIdUser();
@@ -78,7 +77,6 @@ public class Restaurant implements Serializable{
 	
 	public int getIdRisto() {return idRisto;}
 	public int getIdOwner() {return idOwner;}
-
 	public String getName() {return name;}
 	public Price getCost() {return cost;}
 	public String getCity() {return city;}
@@ -90,7 +88,6 @@ public class Restaurant implements Serializable{
 
 	public void setIdRisto(int idRisto) {this.idRisto = idRisto;}
 	public void setIdOwner(int idOwner) {this.idOwner = idOwner;}
-	
 	public void setName(String name) {this.name = name;}
 	public void setCost(Price cost) {this.cost = cost;}
 	public void setCity(String city) {this.city = city;}
