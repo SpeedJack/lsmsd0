@@ -20,22 +20,36 @@ public class DBManager{
 	    }
 	
 //login	 
-	public static int login(User us) {
+	public static User login(User us) {
             try {
-            	PreparedStatement ps = connectionToDB.prepareStatement("SELECT IdUtente, COUNT(*) AS Numero " 
-		                                                                + "FROM utente WHERE nome= ? AND password = ?;");                         
+            	PreparedStatement ps = connectionToDB.prepareStatement("SELECT IdUtente, COUNT(*) AS Numero,  " 
+		                                                                + "FROM utente u LEFT OUTER JOIN ristorante r ON u.IdUtente = r.IdUtente "
+		                                                                + "WHERE u.nome= ? AND u.password = ?;");                         
                 ps.setString(1, us.getUsername());
                 ps.setString(2, us.getPassword());
                 ResultSet res = ps.executeQuery();
 				if(res.getInt("Numero")== 1) {
-                    return res.getInt("IdUtente");
+                    us.setIdUser(res.getInt("IdUtente"));
+                    PreparedStatement ps1 = connectionToDB.prepareStatement("SELECT IF(COUNT(*) > 0, TRUE, FALSE) AS hasRestaurants" + 
+                    														"FROM utente u INNER JOIN ristorante r ON r.IdUtente = u.IdUtente" + 
+                    														"WHERE u.IdUtente = ?;");
+                    ps1.setInt(1, us.getIdUser());
+                    ResultSet res1 = ps1.executeQuery();
+                    if(res.getBoolean("hasRestaurants")) {
+                    	us.setRestaurateur(true);
+                    }
+                    else {
+                    	us.setRestaurateur(false);
+                    }
+                    return us;
+                    
                 }
 				else {
-                    return -1;
+                    return null;
 				}			 
             }catch(SQLException e) {
             	System.out.println(e.getMessage());
-            	return -1;
+            	return null;
             }	 
 	 }
 	

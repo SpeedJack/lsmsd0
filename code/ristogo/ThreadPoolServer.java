@@ -27,10 +27,9 @@ public class ThreadPoolServer implements Runnable{
 			switch (code) {
 			case MessageHandler.LOGIN: { 
 				
-				int ret = DBManager.login(u);
-				u.setIdUser(ret);
-				if (ret == -1) success = false;
-				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, u);
+				User ret = DBManager.login(u);
+				if (ret == null) success = false;
+				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, ret);
 				break;
 			}
 			case MessageHandler.REGISTRATION: {
@@ -38,7 +37,7 @@ public class ThreadPoolServer implements Runnable{
 				int ret = DBManager.register(u);
 				if (ret == -1) success = false;
 				u.setIdUser(ret);
-				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, u);
+				//rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, u);
 				break;
 			} 
 			case MessageHandler.LIST_RESTAURANT: {

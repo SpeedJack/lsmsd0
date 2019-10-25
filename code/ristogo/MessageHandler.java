@@ -277,7 +277,7 @@ class MessageHandler {
 		
 		switch(type) {
 		case LOGIN: { 
-			User u = new User((Integer) rx, "", "");
+			User u = (User)rx;
 			return new Response(success, type, null, null, u );
 		}
 		case REGISTRATION: {
@@ -288,7 +288,7 @@ class MessageHandler {
 			return new Response(success, type, lr , null, null);
 		} case RESERVATION: {
 			
-			Reservation res = new Reservation ((Integer) rx, 0, 0, "", "", 0, "", "");
+			Reservation res = (Reservation)rx;
 			List<Reservation> lr= new ArrayList<>();
 			lr.add(res);
 			return new Response(success, type, null, lr, null );
