@@ -38,4 +38,8 @@ public class User {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+	public UserBean getBean() {
+		// TODO Auto-generated method stub
+		return new UserBean(idUser, username, password, restaurateur);
+	}
 }
