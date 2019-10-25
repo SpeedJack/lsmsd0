@@ -5,7 +5,6 @@ import javafx.beans.property.*;
   public class RestaurantBean {
       private final SimpleIntegerProperty idRestaurant;
       private final SimpleIntegerProperty idUser;
-      private final SimpleStringProperty nameUser;
       private final SimpleStringProperty name;
       private final SimpleStringProperty type;
       private final SimpleIntegerProperty price;
@@ -15,11 +14,11 @@ import javafx.beans.property.*;
       private final SimpleIntegerProperty seats;
       private final SimpleStringProperty opening;
  
-      public RestaurantBean(int idR, int idU, String un, String n, String t, int p, String c, String a, String d, int s, String oa) {
+      public RestaurantBean(int idR, int idU, String n, String t, int p, String c, String a, String d, int s, String oa) {
         
         idRestaurant = new SimpleIntegerProperty(idR);
         idUser = new SimpleIntegerProperty(idU);
-        nameUser = new SimpleStringProperty(un);
+
         name = new SimpleStringProperty(n);
         type = new SimpleStringProperty(t);
         seats = new SimpleIntegerProperty(s);
@@ -32,7 +31,7 @@ import javafx.beans.property.*;
       
       public int getIdRestaurant() { return idRestaurant.get(); }
       public int getIdUser() { return idUser.get(); }
-      public String getNameUser() {return nameUser.get();}
+      
       public String getName() { return name.get(); }
       public String getType() { return type.get(); }
       public int getSeats() { return seats.get(); }
@@ -44,7 +43,7 @@ import javafx.beans.property.*;
       
       public void setIdRestaurant(int i) { idRestaurant.set(i); }
       public void setIdUser(int i) { idUser.set(i); }
-      public void setNameUser(String n) { nameUser.set(n);}
+    
       public void setName(String n) { name.set(n); }
       public void setType(String t) { type.set(t); }
       public void setSeats(int s) { seats.set(s); }

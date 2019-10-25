@@ -18,14 +18,17 @@ public class Reservation implements Serializable{
 		this.date = date;
 		this.resTime = resTime;
 	};
-	public Reservation(ReservationBean rb){
-		//SUI BEAN NON CI SONO LE INFORMAZIONI PER GENERARE GLI OGGETTI
-		//USER E RESTAURANT PER customer e restaurant
-	};
+//	public Reservation(ReservationBean rb){
+////		this.idRes = rb.getReservation();
+////		this.customer = UserSession.getUser();
+////		this.restaurant = new Restaurant();
+////		this.restaurant.setName(rb.getRestaurantName());
+////		this.seats = 
+//	};
 	
 	//VA CONVERTITO ENUM IN STRING
 	public ReservationBean getBean() {
-		return new ReservationBean(idRes, customer.getIdUser(), restaurant.getIdRisto(), date, resTime, seats, customer.getUsername(), restaurant.getName());
+		return new ReservationBean(idRes, customer.getIdUser(), restaurant.getIdRisto(), date, resTime.toString(), seats, customer.getUsername(), restaurant.getName());
 	};
 	
 	public int getIdRes() {return idRes;}
