@@ -10,6 +10,15 @@ public class Reservation implements Serializable{
 	String date;
 	OpeningHour resTime;
 	
+	public Reservation() {
+		this.idRes = 0;
+		this.customer = null;
+		this.restaurant = null;
+		this.seats = 0;
+		this.date = null;
+		this.resTime = null;
+	}
+	
 	public Reservation(int idRes, User customer, Restaurant restaurant, int seats, String date, OpeningHour resTime){
 		this.idRes = idRes;
 		this.customer = customer;

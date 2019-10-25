@@ -88,7 +88,7 @@ class MessageHandler {
 				
 				res.getUser().setUsername(strings[0]);
 				res.getUser().setPassword(strings[1]);
-				return res.getUser();
+				return res.getUser().getBean();
 				
 			};
 			break;
@@ -106,6 +106,7 @@ class MessageHandler {
 		}
 		case LIST_RESTAURANT: {
 			r = prepareList();
+			List<RestaurantBean> lr = new ArrayList<>();
 			if (r==null) return null;
 			send(r, REQ, UserSession.getSocket());
 			res = (Response) receive(UserSession.getSocket());
@@ -113,15 +114,14 @@ class MessageHandler {
 			if(res.isSuccess()) {
 				for(Restaurant rr:res.getRestaurants()) {
 					restIdMap.put(rr.getName(), rr.getIdRisto());
+					lr.add(rr.getBean());
 				}
-				return res.getRestaurantsBean();
+				return lr;
 			};
 			break;
 		} case RESERVATION: {
-			int rid = restIdMap.get(strings[1]);
-			//r = prepareReservation(Integer.parseInt(strings[0]), rid, strings[2], strings[3], 
-			//		Integer.parseInt(strings[4]));
-			//if(r == null ) return false;
+			r = prepareReservation(strings[0], strings[1], strings[2], Integer.parseInt(strings[3]));
+			if(r == null ) return false;
 			send(r, REQ, UserSession.getSocket());
 			res = (Response) receive(UserSession.getSocket());
 			if (res == null) return false;
@@ -131,17 +131,21 @@ class MessageHandler {
 			break;
 		} case LIST_RESERVATION: {
 			rsvList.clear();
-			r = prepareListReservation(Integer.parseInt(strings[0]));
+			r = prepareListReservation();
 			if(r == null ) return null;
 			send(r, REQ, UserSession.getSocket());
 			res = (Response) receive(UserSession.getSocket());
 			if (res == null) return null;
 			if(res.isSuccess()) {
 				rsvList.addAll(res.getReservations());
-				return res.getReservations();
+				List<ReservationBean> lr = null;
+				for(Reservation resv: res.getReservations()) {
+					lr.add(resv.getBean());
+				}
+				return lr;
 			};
 		} case LIST_RESERVATION_REST: {
-			r = prepareListReservationRest(Integer.parseInt(strings[0]));
+			r = prepareListReservationRest();
 			if(r == null ) return null;
 			send(r, REQ, UserSession.getSocket());
 			res = (Response) receive(UserSession.getSocket());
@@ -170,6 +174,7 @@ class MessageHandler {
 			};
 			break;
 		} case CHECK_SEATS: {
+			//Numero di posti disponibili
 			
 		} case MODIFY_RESTAURANT:{
 			
@@ -187,6 +192,9 @@ class MessageHandler {
 				
 			User u = new User();
 			//Create Request
+			u.setUsername(username);
+			u.setPassword(password);
+			
 			return new Request(LOGIN, u, null, null);
 	}
 	
@@ -194,7 +202,11 @@ class MessageHandler {
 		
 		//Create User Bean to insert in Request
 		User u = new User();
-		Restaurant r = new Restaurant();    
+		u.setUsername(username);
+		u.setPassword(password);
+		u.setRestaurateur(restaurateur);
+		Restaurant r = null;
+		if (restaurateur) r =new Restaurant();
 		//Create Request
 		return new Request(REGISTRATION, u, r, null);
 	};
@@ -204,20 +216,26 @@ class MessageHandler {
 	};
 	
 	
-	public static Request prepareReservation(int uid, String n, String d, String h, int s, String cn) {
+	public static Request prepareReservation(String n, String d, String h, int s) {
 		
 		Reservation r = new Reservation();
+		r.setCustomer(UserSession.getUser());
+		r.setDate(d);
+		r.setResTime(OpeningHour.valueOf(h));
 		Restaurant rst = new Restaurant();
+		rst.setName(n);
+		rst.setIdRisto(restIdMap.get(n));
+		r.setRestaurant(rst);
 		
 		return new Request(RESERVATION, UserSession.getUser(), rst, r);
 		
 	}
 	
-	public static Request prepareListReservation(int uid) {
+	public static Request prepareListReservation() {
 		return new Request(LIST_RESERVATION, UserSession.getUser(), null ,null);
 	}
 	
-	public static Request prepareListReservationRest(int uid) {
+	public static Request prepareListReservationRest() {
 		return new Request(LIST_RESERVATION_REST, UserSession.getUser(), null ,null);
 	};
 	
