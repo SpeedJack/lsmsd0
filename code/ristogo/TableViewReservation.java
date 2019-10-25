@@ -1,12 +1,13 @@
 package ristogo;
 
+import java.util.*;
 import javafx.collections.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.*;
 
-public class TableViewReservation extends TableView<Reservation> {
+public class TableViewReservation extends TableView<ReservationBean> {
 	
-	 private final ObservableList<Reservation> reservationList;
+	 private final ObservableList<ReservationBean> reservationList;
 	 private TableColumn nameColumn;
 	 private TableColumn dateColumn;
 	 private TableColumn hourColumn;
@@ -52,11 +53,18 @@ public class TableViewReservation extends TableView<Reservation> {
 		    setItems(reservationList); //ATTACCA ALLA TABLEVIEW I DATI LISTA RISTORANTI
 		  }  
 	  
-/*	  public void updateTable (int userID) {
-		  restaurantList.clear();
-		  restaurantList.addAll(RequestHandler.listRestaurant(userID));
+	  public void myReservations (boolean isRestauranteur) {
+		  reservationList.clear();
+		  List<ReservationBean> res;
+		  if(isRestauranteur) {
+			  res = (List<ReservationBean>)MessageHandler.sendRequest(MessageHandler.LIST_RESERVATION_REST);
+		  }
+		  else {
+			  res = (List<ReservationBean>)MessageHandler.sendRequest(MessageHandler.LIST_RESERVATION);
+		  }
+		  reservationList.addAll(res);
 	  }
-*/	 
+	 
 	 
 
 }

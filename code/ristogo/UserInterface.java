@@ -72,7 +72,7 @@ public class UserInterface extends Application {
 		  password_field.setMaxWidth(200);
 		  
 		//////////////////error/////////////////////////////////////////////////////     
-		  Label error = new Label("Error");
+		  Label error = new Label("Error: Login Failed. Retry");
 		  error.setFont(Font.font(font, FontWeight.NORMAL, dimC+3));
 		  error.setTextFill(Color.web(backgroundColor));
 		  error.setStyle("-fx-background-color:   green;");
@@ -85,18 +85,25 @@ public class UserInterface extends Application {
 		  
 			Button login = new Button("Login");   
 			login.setOnAction((ActionEvent ev) -> { 
-										        /*	try {
+										        	try {
+										        		error.setVisible(false);
 														String n = name_field.getText();
 														String p = password_field.getText();
+											        	UserBean res = (UserBean)MessageHandler.sendRequest(MessageHandler.LOGIN, n, p);
+											        	if(res.isRestauranteur()) {
+											        		restaranteurInterface(window);
+											        	}
+											        	else if(!res.isRestauranteur()) {
+											        		clientInterface(window);
+											        	}
+											        	else {
+											        		error.setVisible(true);
+											        	}
 													}catch(NullPointerException e) {
 														e.getMessage();
 														//GESTIRE MESSAGGIO ERRORE
 													}
-										        	int  res = MessageHandler.login(n,p);
-									         	*/
-													//restaranteurInterface(window);
-													clientInterface(window);
-													//error.setVisible(true);
+
 													
 		  									});
 			
@@ -170,7 +177,7 @@ public class UserInterface extends Application {
         type.setTextFill(Color.web(backgroundColor));
         
 //////////////////error/////////////////////////////////////////////////////     
-        Label error = new Label("Error");
+        Label error = new Label("Error: Registration Failed. Retry with different username");
         error.setFont(Font.font(font, FontWeight.NORMAL, dimC+3));
         error.setTextFill(Color.web(backgroundColor));
         error.setStyle("-fx-background-color:   green;");
@@ -179,22 +186,21 @@ public class UserInterface extends Application {
         
         Button register2 = new Button("Register");   
         register2.setOnAction((ActionEvent ev) -> {
-										        /*	try {
+										        	try {
 														String n = name_field.getText();
 														String p = password_field.getText();
 														String t = cb.getValue();
+											        	boolean  res = (boolean)MessageHandler.sendRequest(MessageHandler.REGISTRATION, n, p, t);
+											        	if(res) {
+											        		window.setScene(loginScene);
+											        	}
+											        	else {
+											        		error.setVisible(true);
+											        	}
 													}catch(NullPointerException e) {
 														e.getMessage();
 														//GESTIRE MESSAGGIO ERRORE
 													}
-										        	int  res = MessageHandler.register(n,p,t);
-										        	if(res > 0) {
-										        		window.setScene(loginScene);
-										        	}
-										        	else {
-										        		//GESTIONE ERRORE
-										        	}
-										        	*/
 												});
    
         register2.setFont(Font.font(font, FontWeight.BOLD, dimC+3));
@@ -305,61 +311,20 @@ public class UserInterface extends Application {
 		
 		
 		Button book = new Button("Book");
-		
-		
-    	check.setOnAction((ActionEvent ev) -> {
-    											try {
-    												String n = name_f.getText();
-    												String d = date_f.getValue().toString();
-    												String h = hour_f.getValue();
-    												//int s = MessageHandler.checkSeat(n,d,h);
-    												int s = 8;
-
-    												if(s>0) {
-    													for(int i=1; i<=s; i++) {
-    														seats_f.getItems().add(i);
-    													}
-    													seats_f.setDisable(false);
-    													book.setDisable(false);
-    												}
-    											}catch(NullPointerException e) {
-    												e.getMessage();
-    												//GESTIRE MESSAGGIO ERRORE
-    											}
-										});
-    	
-		book.setOnAction((ActionEvent ev) -> {
-												try {
-													String n = name_f.getText();
-													String d = date_f.getValue().toString();
-													String h = hour_f.getValue();
-													int s = seats_f.getValue();
-												}catch(NullPointerException e) {
-													e.getMessage();
-													//GESTIRE MESSAGGIO ERRORE
-												}
-												//int res = MessageHandler.bookTable(n,d,h,s);
-												//reservation.myReservation(userID);
-											});
-		date_f.setOnAction((ActionEvent ev) -> { 
-											seats_f.setDisable(true);
-											book.setDisable(true);
-											});
-		hour_f.setOnAction((ActionEvent ev) -> { 
-											seats_f.setDisable(true);
-											book.setDisable(true);
-											});
-		
-		
-		
 		book.setFont(Font.font(font, FontWeight.BOLD, dimC+2));
 		book.setTextFill(Color.web(backgroundColor));
 		book.setStyle("-fx-base: " + textColor );
 		book.setDisable(true);
 		
+		Button delRes = new Button("Del. Res.");
+		delRes.setFont(Font.font(font, FontWeight.BOLD, dimC+2));
+		delRes.setTextFill(Color.web(backgroundColor));
+		delRes.setStyle("-fx-base: " + textColor );
+		delRes.setDisable(true);
+		
 		
 		VBox boxBook = new VBox(20);
-		boxBook.getChildren().addAll(subTitle1,l1,name_box, date_box, hour_box, check, seats_box, book);
+		boxBook.getChildren().addAll(subTitle1,l1,name_box, date_box, hour_box, check, seats_box, book, delRes);
         boxBook.setStyle("-fx-padding: 7;" + 
                 "-fx-border-style: solid inside;" + 
                 "-fx-border-width: 2;" +
@@ -383,7 +348,7 @@ public class UserInterface extends Application {
 		subTitle2.setStyle("-fx-underline: true;");
 		
 	    TableViewRestaurant restaurant = new TableViewRestaurant();
-	    //restaurant.updateTable();
+	    restaurant.listRestaurant();
 
 	        
 	    Label description = new Label("Description: ");
@@ -397,6 +362,7 @@ public class UserInterface extends Application {
 		
 	    restaurant.setOnMouseClicked((e) -> {
 	    	try {
+	    		delRes.setDisable(false);
 				name_f.setText(restaurant.getSelectionModel().getSelectedItem().getName());
 				description_f.setText(restaurant.getSelectionModel().getSelectedItem().getDescription());
 				hour_f.getItems().clear();
@@ -413,8 +379,7 @@ public class UserInterface extends Application {
 	    		//do nothing
 	    	}	
 		});
-		
-		
+	   
 		HBox description_box = new HBox(20);
 		description_box.getChildren().addAll(description,description_f);
 		
@@ -424,7 +389,80 @@ public class UserInterface extends Application {
 		subTitle3.setStyle("-fx-underline: true;");
 		
 	    TableViewReservation reservation = new TableViewReservation();
-	   // reservation.updateTable(userID);
+	    reservation.myReservations(false);
+	    
+	    reservation.setOnMouseClicked((e) -> {
+	    		delRes.setDisable(false);
+	    });
+	    
+	    
+    	check.setOnAction((ActionEvent ev) -> {
+												try {
+													String n = name_f.getText();
+													String d = date_f.getValue().toString();
+													String h = hour_f.getValue();
+													int s = (int)MessageHandler.sendRequest(MessageHandler.CHECK_SEATS, n, d, h);
+										
+													if(s>0) {
+														for(int i=1; i<=s; i++) {
+															seats_f.getItems().add(i);
+														}
+														seats_f.setDisable(false);
+														book.setDisable(false);
+													}
+												}catch(NullPointerException e) {
+													e.getMessage();
+													//GESTIRE MESSAGGIO ERRORE
+												}
+										});
+
+		book.setOnAction((ActionEvent ev) -> {
+												try {
+													String n = name_f.getText();
+													String d = date_f.getValue().toString();
+													String h = hour_f.getValue();
+													int s = seats_f.getValue();
+													boolean res = (boolean)MessageHandler.sendRequest(MessageHandler.RESERVATION, n, d, h, Integer.toString(s));
+													if(res) {
+														reservation.myReservations(false);
+													}
+													else {
+														//errore
+														
+													}
+												}catch(NullPointerException e) {
+													e.getMessage();
+													//GESTIRE MESSAGGIO ERRORE
+												}
+											});
+		
+		delRes.setOnAction((ActionEvent ev) -> {
+												try {
+													int idRes = reservation.getSelectionModel().getSelectedItem().getReservation();
+													boolean res = (boolean)MessageHandler.sendRequest(MessageHandler.DELETE_RESERVATION, Integer.toString(idRes));
+													if(res) {
+														reservation.myReservations(false);
+														delRes.setDisable(true);
+													}
+													else {
+														//errore
+														
+													}
+												}catch(NullPointerException e) {
+													e.getMessage();
+													//errore
+												}
+											});
+		
+		
+		date_f.setOnAction((ActionEvent ev) -> { 
+												seats_f.setDisable(true);
+												book.setDisable(true);
+												});
+		hour_f.setOnAction((ActionEvent ev) -> { 
+												seats_f.setDisable(true);
+												book.setDisable(true);
+												});
 	    
 	    VBox rightInterface = new VBox(10);
 	    rightInterface.getChildren().addAll(subTitle2, restaurant, description_box, subTitle3, reservation);
@@ -588,7 +626,7 @@ public class UserInterface extends Application {
 		
 		
 	    TableViewReservation reservation = new TableViewReservation();
-	   // reservation.updateTable(userID);
+	    reservation.myReservations(true);
 	    
 	   	Button refresh = new Button("Refresh");
 
