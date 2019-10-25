@@ -138,12 +138,13 @@ class MessageHandler {
 			if (res == null) return null;
 			if(res.isSuccess()) {
 				rsvList.addAll(res.getReservations());
-				List<ReservationBean> lr = null;
+				List<ReservationBean> lr = new ArrayList<>();
 				for(Reservation resv: res.getReservations()) {
 					lr.add(resv.getBean());
-				}
+				};
 				return lr;
 			};
+			
 		} case LIST_RESERVATION_REST: {
 			r = prepareListReservationRest();
 			if(r == null ) return null;
@@ -151,19 +152,17 @@ class MessageHandler {
 			res = (Response) receive(UserSession.getSocket());
 			if (res == null) return null;
 			if(res.isSuccess()) {
-				return res.getReservations();
+				rsvList.addAll(res.getReservations());
+				List<ReservationBean> lr = new ArrayList<>();
+				for(Reservation resv: res.getReservations()) {
+					lr.add(resv.getBean());
+				};
+				return lr;
 			};
-		} case DELETE_RESERVATION: {
-			int id = 0;
 			
-			for(Reservation rr : rsvList) {
-				if(rr.getCustomer().getIdUser() == Integer.parseInt(strings[0]) && 
-						rr.getRestaurant().getName() == strings[1] &&
-						rr.getDate() == strings[2] &&
-						rr.getResTime().toString() == strings[3])
-				id = rr.getIdRes();
-			}
-			r = prepareDeleteReservation(id);
+		} case DELETE_RESERVATION: {
+			
+			r = prepareDeleteReservation(Integer.parseInt(strings[0]));
 			
 			if(r == null ) return false;
 			send(r, REQ, UserSession.getSocket());
@@ -174,10 +173,17 @@ class MessageHandler {
 			};
 			break;
 		} case CHECK_SEATS: {
-			//Numero di posti disponibili
-			
+			r = prepareCheckSeats(restIdMap.get(strings[0]), strings[1], strings[2]);
+			send(r, REQ, UserSession.getSocket());
+			res = (Response) receive(UserSession.getSocket());
+			if (res == null) return false;
+			if(res.isSuccess()) {
+				return res.getReservations().get(0).getSeats();
+			};
+			break;			
 		} case MODIFY_RESTAURANT:{
-			
+			//nome, tipo, costo, città, undirizzo, descrizion, num posti, orario
+			return true;
 		}
 		
 		default: break;
@@ -249,9 +255,14 @@ class MessageHandler {
 		return new Request(MODIFY_RESTAURANT, UserSession.getUser(), r, null);
 	};
 	
-	public static Request prepareCheckSeats(int rid, LocalDate d, String oa) {
+	public static Request prepareCheckSeats(int rid, String d, String oa) {
 		Reservation r = new Reservation();
-		return new Request(CHECK_SEATS, null, null, r);
+		r.setCustomer(UserSession.getUser());
+		r.setRestaurant(new Restaurant());
+		r.getRestaurant().setIdRisto(rid);
+		r.setDate(d);
+		r.setResTime(OpeningHour.valueOf(oa));
+		return new Request(CHECK_SEATS, UserSession.getUser(), null, r);
 	};	
 	
 /*----------------------------------------------------------------------------------------------------------------------------

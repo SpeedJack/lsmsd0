@@ -76,9 +76,8 @@ public class ThreadPoolServer implements Runnable{
 				
 				int ret = DBManager.check(currentRequest.getReservation());
 				if (ret == -1) success = false;
-				Restaurant rest = new Restaurant(0, 0, null, null, null, null, null, null, null, 0, null);
-				rest.setSeatsAvailable(ret);
-				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, rest);
+				currentRequest.getReservation().setSeats(ret);
+				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, currentRequest.getReservation());
 				break;
 			} case MessageHandler.MODIFY_RESTAURANT:{	
 				
