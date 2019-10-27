@@ -1,26 +1,18 @@
 \section{Requirements}
-	In this section we will introduce the requirements for our application, extracted from the previous specification.
-	
 \subsection{Functional requirements}
+
 \begin{enumerate}
-	\item A customer reserve a table choosing a restaurants from a list.
-	\item A restaurateur add his restaurant in the list provided to customers by the
-		application.
-	\item Users (customers and restaurateurs) must be registered in order to
-		add/modify/remove a reservation.
-	\item Restaurateurs must be registered in order to modify/add/remove their restauraunts
-	\item A Restaurateur can only modify his/her restauraunts
-	\item The application must handle the reservation process, managing also
-		the residual available seats in each restaurant (in order to
-		avoid to take a reservation when the restaurant is full).
+\item Registration process: new users must register in the system by declaring username, password and if they are customers or restaurant owners.
+\item The system shall handle login process: with a username and password, a user identifies himself / herself within the system, so the system is able to manage all the data concerning him / her.
+\item The system shall provide appropriate viewers for the users to see list of restaurants available and/or list of reservations of customers/ restaurant owners.
+\item A costumer should be able to to book a table of a restaurant choosing from a list, selecting date, hour and number of seats.
+\item The system shall handle the reservation process, managing also the residual available seats in each restaurant (in order to avoid to take a reservation when the restaurant is full).
+\item A restaurant owner should be able to add, and if necessary modify, all the details of his/her restaurant in the list provided to customers by the application.
 \end{enumerate}
 
 \subsection{Non functional requirements}
 \begin{enumerate}
-	\item Availability: The application must be always online, in order to
-		handle reservation also when the restaurant is closed, thus
-		significantly simplifying and speeding up the interaction
-		between customers and restaurateurs.
+	\item Availability: The application must be always online, in order to be used at any time by users.
 	\item Usability and Portability: The application must be easy to use and
 		must be as much portable as possible, in order to easily spread among
 		the people. 
