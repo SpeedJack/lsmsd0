@@ -90,10 +90,10 @@ public class UserInterface extends Application {
 														String n = name_field.getText();
 														String p = password_field.getText();
 											        	UserBean res = (UserBean)MessageHandler.sendRequest(MessageHandler.LOGIN, n, p);
-											        	if(res.isRestauranteur()) {
+											        	if(res.isRestaurateur()) {
 											        		restaranteurInterface(window);
 											        	}
-											        	else if(!res.isRestauranteur()) {
+											        	else if(!res.isRestaurateur()) {
 											        		clientInterface(window);
 											        	}
 											        	else {

@@ -19,7 +19,7 @@ import javafx.beans.property.*;
       public int getUserId() {return userId.get();}
       public String getUsername() { return username.get(); }
       public String getPassword() { return password.get(); }
-      public boolean isRestauranteur() { return restaurateur.get();}
+      public boolean isRestaurateur() { return restaurateur.get();}
       
       public void setUserId(int i) {userId.set(i); };
       public void setUsername(String u) { username.set(u); }

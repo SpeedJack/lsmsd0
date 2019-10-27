@@ -9,7 +9,6 @@ import java.util.List;
 public class DBManager{
 	
 	public static Connection connectionToDB;
-	
 	static {
 	    try {
 	    	connectionToDB = DriverManager.getConnection("jdbc:mysql://localhost:3306/ristogo", "root", "");      
@@ -22,20 +21,23 @@ public class DBManager{
 //login	 
 	public static User login(User us) {
             try {
-            	PreparedStatement ps = connectionToDB.prepareStatement("SELECT IdUtente, COUNT(*) AS Numero,  " 
-		                                                                + "FROM utente u LEFT OUTER JOIN ristorante r ON u.IdUtente = r.IdUtente "
-		                                                                + "WHERE u.nome= ? AND u.password = ?;");                         
+            	PreparedStatement ps = connectionToDB.prepareStatement("SELECT u.IdUtente, COUNT(*) AS Numero "+
+            			"FROM utente u "+
+            			"WHERE u.nome = ? AND u.password =? "+
+            			"group by u.IdUtente; ");                         
                 ps.setString(1, us.getUsername());
                 ps.setString(2, us.getPassword());
                 ResultSet res = ps.executeQuery();
+                res.next();
 				if(res.getInt("Numero")== 1) {
                     us.setIdUser(res.getInt("IdUtente"));
-                    PreparedStatement ps1 = connectionToDB.prepareStatement("SELECT IF(COUNT(*) > 0, TRUE, FALSE) AS hasRestaurants" + 
-                    														"FROM utente u INNER JOIN ristorante r ON r.IdUtente = u.IdUtente" + 
+                    PreparedStatement ps1 = connectionToDB.prepareStatement("SELECT IF(COUNT(*) > 0, TRUE, FALSE) AS hasRestaurants " + 
+                    														"FROM utente u INNER JOIN ristorante r ON r.IdUtente = u.IdUtente " + 
                     														"WHERE u.IdUtente = ?;");
                     ps1.setInt(1, us.getIdUser());
                     ResultSet res1 = ps1.executeQuery();
-                    if(res.getBoolean("hasRestaurants")) {
+                    res1.next();
+                    if(res1.getBoolean("hasRestaurants")) {
                     	us.setRestaurateur(true);
                     }
                     else {

@@ -46,15 +46,18 @@ class MessageHandler {
 		if(type.equals(REQ)) {
 			xml = xs.toXML((Request)r);
 		} else if (type.equals(RES)) {
-			xml = xs.toXML((Request)r);
+			xml = xs.toXML((Response)r);
 		}
-	    try ( DataOutputStream dout = new DataOutputStream(s.getOutputStream());
-	    ) { dout.writeUTF(xml);} catch (Exception e) {e.printStackTrace();}
+	    try { 
+	    	DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+	    	dout.writeUTF(xml);
+	    	} catch (Exception e) {e.printStackTrace();}
 		return;
 	};
 	
 	public static Object receive(Socket s) {
-		try (DataInputStream din = new DataInputStream(s.getInputStream())) { 
+		try { 
+			DataInputStream din = new DataInputStream(s.getInputStream());
 			XStream xs = new XStream();
 			String xml = din.readUTF(); 
 			return xs.fromXML(xml);

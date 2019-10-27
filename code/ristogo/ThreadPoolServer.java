@@ -20,15 +20,21 @@ public class ThreadPoolServer implements Runnable{
 			Response rx = null;
 			User u = null;
 			boolean success = true;
-			currentRequest = (Request)MessageHandler.receive(clientSocket);
+			try {
+				currentRequest = (Request)MessageHandler.receive(clientSocket);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+			}
 			if (currentRequest == null) return null;
 			u = currentRequest.getUser();
 			int code = MessageHandler.parseRequest(currentRequest);
 			switch (code) {
 			case MessageHandler.LOGIN: { 
-				
+				System.out.println("CALLING DB MANAGER FOR QUERY: " + code);
 				User ret = DBManager.login(u);
 				if (ret == null) success = false;
+				System.out.println("BUILDING RESPONSE TO" + code);
 				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, ret);
 				break;
 			}
@@ -93,8 +99,10 @@ public class ThreadPoolServer implements Runnable{
 		@Override
 		public void run() {
 			try {
+				System.out.println("EVALUATING REQUEST");
 				currentResponse = evaluateRequest();
 				if (currentResponse == null) return;
+				System.out.println("SENDING RESPONSE");
 				MessageHandler.send(currentResponse, MessageHandler.RES, clientSocket);	
 			} catch (Exception e) {
 				e.printStackTrace();
