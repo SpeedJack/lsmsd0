@@ -1,19 +1,20 @@
 \section{Use cases}
-	In this section we present the use cases for our application.
-	\begin{enumerate}
-		\item Registration: The first time a user use this application he will be asked to registr himself, providing a username and a password, and specifying which type of user he/she is (customer or ristorateur).
-		After this, the User can Login and start to use the application.
-		\item Login/Logout: A User (customer or ristorateur), will provide his credentials, the application will check if he/she is registered (present in the DB) and then will grant or deny the access, depending on the result of the check.
-		\item List Restauraunts: The list of all available restauraunts, with description, genre, price, and number of seats available will be provided to the Customer, he/she will choose among these where to make a reservation.
-		\item List Reservations: The list of all the reservation made from a Customer will be provided to him/her, in order to check the date and hour, or the address of the restauraunt.
-		\item Add/Modify Restauraunt: A Restaurateur will be able to Add/Modify a restauraunt, obviously only the owner of a restauraunt can modify it.
-		\item List Restoauraunt Reservation: A restaurateur can use this in order to know how many reservation have been taken in his restauraunts, a list of reservations, ordered by restauraunt, will be provided to him by the application, only the reservations in the future will be shown.
-	\end{enumerate}
 
 \begin{figure}
   \includegraphics[width=\linewidth]{USE_CASE.png}
   \caption{Use cases diagram.}
   \label{figureUSE_CASE}
 \end{figure}
+
+	\begin{enumerate}
+		\item Registration: The first time a user uses the application  he/she will be asked to register himself/herself, providing an username and a password, and specifying which type of user he/she is (customer or restaurant owner).
+		\item Login: A User (customer or restaurant owner), will provide his credentials, the application will check if he/she is in the system and then will grant or deny the access, depending on the result of the check.
+		\item Browse Restaurant: The list of all available restaurant, with description, genre, price, and number of seats available. the list is provided to  customers from which they can choose the restaurant to book.
+		\item Browse Reservation: The list of all the reservations made. For a customer, it is the list of their reservations made for different restaurants. For the restaurant owner, this is the list of reservations made by customers in their restaurant.
+		\item Add Restaurant: \textbf{?????????????????????????????}
+		\item Modify Restaurant: a restaurant owner is able to modify a restaurant.
+		\item Add Reservation: customer can make a reservation at one of the available restaurants.
+		\item Delete Reservation: customer can delete a reservation made in the past.
+	\end{enumerate}
 
 \pagebreak
