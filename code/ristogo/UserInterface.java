@@ -135,7 +135,9 @@ public class UserInterface extends Application {
 		  loginScene = new Scene(new Group(loginInterface));
 		  loginScene.setFill(Color.web(textColor));
 		  
-		  
+		  window.setOnCloseRequest((WindowEvent ev) -> {
+										MessageHandler.sendRequest(MessageHandler.EXIT);
+									});
 		  window.setTitle("RistoGo");
 		  window.setResizable(false);
 		  window.setScene(loginScene);
@@ -215,6 +217,9 @@ public class UserInterface extends Application {
         regScene = new Scene(new Group(regInterface));
         regScene.setFill(Color.web(textColor));
         window.setScene(regScene);
+        window.setOnCloseRequest((WindowEvent ev) -> {
+										MessageHandler.sendRequest(MessageHandler.EXIT);
+				});
     		
 	}
 ////////////////////////CLIENT INTERFACE /////////////////////////////////////////////////////	
@@ -362,7 +367,7 @@ public class UserInterface extends Application {
 		
 	    restaurant.setOnMouseClicked((e) -> {
 	    	try {
-	    		delRes.setDisable(false);
+	    		delRes.setDisable(true);
 				name_f.setText(restaurant.getSelectionModel().getSelectedItem().getName());
 				description_f.setText(restaurant.getSelectionModel().getSelectedItem().getDescription());
 				hour_f.getItems().clear();
@@ -390,6 +395,7 @@ public class UserInterface extends Application {
 		
 	    TableViewReservation reservation = new TableViewReservation();
 	    reservation.myReservations(false);
+	    reservation.myReservations(false);
 	    
 	    reservation.setOnMouseClicked((e) -> {
 	    		delRes.setDisable(false);
@@ -406,9 +412,10 @@ public class UserInterface extends Application {
 													if(s>0) {
 														for(int i=1; i<=s; i++) {
 															seats_f.getItems().add(i);
+															seats_f.setDisable(false);
+															book.setDisable(false);
 														}
-														seats_f.setDisable(false);
-														book.setDisable(false);
+														
 													}
 												}catch(NullPointerException e) {
 													e.getMessage();
@@ -480,6 +487,9 @@ public class UserInterface extends Application {
 	    tableInterface = new Scene(new Group(clientInterface));
 	    tableInterface.setFill(Color.web(backgroundColor));
 	    window.setScene(tableInterface);
+        window.setOnCloseRequest((WindowEvent ev) -> {
+									MessageHandler.sendRequest(MessageHandler.EXIT);
+				});
     
 	}
 	
@@ -657,6 +667,9 @@ public class UserInterface extends Application {
 	    tableInterface = new Scene(new Group(restaranteurInterface));
 	    tableInterface.setFill(Color.web(backgroundColor));
 	    window.setScene(tableInterface);
+        window.setOnCloseRequest((WindowEvent ev) -> {
+        										MessageHandler.sendRequest(MessageHandler.EXIT);
+        											});
 		
 		
 	}

@@ -64,8 +64,8 @@ CREATE TABLE `prenotazione` (
   `persone` int(11) NOT NULL,
   PRIMARY KEY (`idPrenotazione`),
   FOREIGN KEY (idRisto) REFERENCES ristorante(idRisto),
-  FOREIGN KEY (idCliente) REFERENCES utente(idUtente),
-  CONSTRAINT vincolo_prenotazioni UNIQUE(`idPrenotazione`,`idCliente`,`idRisto`,`data`,`orario`)
+  FOREIGN KEY (idCliente) REFERENCES utente(idUtente)
+  /*CONSTRAINT vincolo_prenotazioni UNIQUE(`idPrenotazione`,`idCliente`,`idRisto`,`data`,`orario`)*/
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 

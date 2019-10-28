@@ -35,6 +35,7 @@ class MessageHandler {
 	public static final int MODIFY_RESTAURANT = 7;
 	public static final int DELETE_RESERVATION = 8;
 	public static final int CHECK_SEATS = 9;
+	public static final int EXIT = 10;
 	
 	/*----------------------------------------------------------------------------------------------------------------------------
 	 * COMMON UTILITIES
@@ -208,8 +209,11 @@ class MessageHandler {
 					return true;
 				};
 				break;
+			} case EXIT: {
+				r = prepareExit();
+				send(r, REQ, s);
+				break;			
 			}
-
 			default: break;
 			}
 			return null;
@@ -255,6 +259,7 @@ class MessageHandler {
 		r.setCustomer(UserSession.getUser());
 		r.setDate(d);
 		r.setResTime(OpeningHour.valueOf(h.toUpperCase()));
+		r.setSeats(s);
 		Restaurant rst = new Restaurant();
 		rst.setName(n);
 		rst.setIdRisto(restIdMap.get(n));
@@ -296,6 +301,7 @@ class MessageHandler {
 	
 	public static Request prepareCheckSeats(int rid, String d, String oa) {
 		Reservation r = new Reservation();
+		
 		r.setCustomer(UserSession.getUser());
 		r.setRestaurant(new Restaurant());
 		r.getRestaurant().setIdRisto(rid);
@@ -303,6 +309,10 @@ class MessageHandler {
 		r.setResTime(OpeningHour.valueOf(oa.toUpperCase()));
 		return new Request(CHECK_SEATS, UserSession.getUser(), null, r);
 	};	
+	
+	public static Request prepareExit() {
+		return new Request(EXIT, null, null, null);
+	};
 	
 /*----------------------------------------------------------------------------------------------------------------------------
  * SERVER SIDE UTILITIES @TODO ADATTARE RICHIESTE A DB
@@ -343,13 +353,15 @@ class MessageHandler {
 		} case DELETE_RESERVATION: {
 			return new Response(success, type, null, null, null);
 		} case CHECK_SEATS: {
-			Restaurant r = new Restaurant();
 			
-			List<Restaurant> lr = new ArrayList<>();
-			lr.add(r);
-			return new Response(success, type, lr, null, null);
+			List<Reservation> lr = new ArrayList<>();
+			lr.add((Reservation)rx);
+			return new Response(success, type, null, lr, null);
 			
 		} case MODIFY_RESTAURANT:{			
+			return new Response(success, type, null, null, null);
+		}
+		case EXIT:{			
 			return new Response(success, type, null, null, null);
 		}
 		default: break;

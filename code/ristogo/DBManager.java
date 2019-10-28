@@ -11,8 +11,9 @@ public class DBManager{
 	public static Connection connectionToDB;
 	static {
 	    try {
+	    	Class.forName("com.mysql.jdbc.Driver");
 	    	connectionToDB = DriverManager.getConnection("jdbc:mysql://localhost:3306/ristogo", "root", "root");      
-	    } catch (SQLException e) {
+	    } catch (Exception e) {
 	        System.out.println("Impossible to connect with DB");
 	        System.err.println(e.getMessage());
 	      }
@@ -50,7 +51,8 @@ public class DBManager{
                     return null;
 				}			 
             }catch(SQLException e) {
-            	System.out.println(e.getMessage());
+            	System.out.println("Error in login in DBManager");
+    	        System.err.println(e.getMessage());
             	return null;
             }	 
 	 }
@@ -81,7 +83,8 @@ public class DBManager{
                     res = ps2.executeUpdate();
                 
 	    }catch(SQLException e) {
-                System.out.println(e.getMessage());
+	    	System.out.println("Error in register in DBManager");
+	        System.err.println(e.getMessage());
             }
             return res;
 	}
@@ -112,7 +115,8 @@ public class DBManager{
 				}
 			 
             }catch(SQLException e) {
-            	System.out.println(e.getMessage());
+            	System.out.println("Error in list_restaurant in DBManager");
+    	        System.err.println(e.getMessage());
             }
             return restaurants;
 	 }
@@ -138,36 +142,53 @@ public class DBManager{
             res = ps.executeUpdate();
 		
         }catch(SQLException e) {
-            System.out.println(e.getMessage());
+        	System.out.println("Error in updateRestaurant in DBManager");
+	        System.err.println(e.getMessage());
         }	 
         return res;
 	}
 	
 //check for a table
         public static int check(Reservation r) {
+        	int totalSeats =0;
+        	int occupedSeats = 0;
        	
         try {
-            PreparedStatement ps = connectionToDB.prepareStatement("SELECT (r.coperti - SUM(p.coperti)) AS PostiRimasti "
-            							+"FROM ristorante r INNER JOIN prenotazione p ON r.IdRisto = p.IdRisto "
-                                                                + "WHERE p.IdRisto= ? AND p.data = ? AND p.orario=? ;");
+        	PreparedStatement ps = connectionToDB.prepareStatement("SELECT r.coperti AS Coperti "
+																	+"FROM ristorante r WHERE r.IdRisto= ? ;");
+        	
+        	ps.setInt(1, r.getRestaurant().getIdRisto());
+        	ResultSet res = ps.executeQuery();
+        	if(res.next()) {
+        		totalSeats = res.getInt("Coperti");
+        	}
+            PreparedStatement ps1 = connectionToDB.prepareStatement("SELECT SUM(p.persone) AS PostiOccupati "
+            							+"FROM prenotazione p WHERE p.IdRisto= ? AND p.data = ? AND p.orario=? ;");
 						
-			ps.setInt(1, r.getRestaurant().getIdRisto());
-			ps.setString(3,r.getDate());
-			ps.setString(4,r.getResTime().toString());
-			ResultSet res = ps.executeQuery();
-			res.next();
-			return res.getInt("PostiRimasti");
+            ps1.setInt(1, r.getRestaurant().getIdRisto());
+			ps1.setString(2,r.getDate());
+			ps1.setString(3,r.getResTime().toString());
+			ResultSet res1 = ps1.executeQuery();
+			if(res1.next()) {
+				occupedSeats = res1.getInt("PostiOccupati");
+			}
+			if(totalSeats -occupedSeats == 0) {
+				return -1;
+			}
+			else {
+				return totalSeats -occupedSeats;
+			}
 
         }catch(SQLException e) {
-        	System.out.println(e.getMessage());
+        	System.out.println("Error in check in DBManager");
+	        System.err.println(e.getMessage());
         	return -1;
         }
         
  }
 	
 //book a table
-	public static int book(Reservation r) {
-                 
+	public static int book(Reservation r) {  
             int res = -1;
             try {
                 PreparedStatement ps = connectionToDB.prepareStatement("INSERT INTO prenotazione " 
@@ -180,12 +201,13 @@ public class DBManager{
 				res = ps.executeUpdate();
 
             }catch(SQLException e) {
-            	System.out.println(e.getMessage());
+            	System.out.println("Error in book in DBManager");
+    	        System.err.println(e.getMessage());
             }	 
             return res;
 	 }
 
-//list of reservation (client/restaurateur) 
+//list of reservation (client/restaurant owner) 
 	public static List<Reservation> list_reservation(User s, boolean restaurateur){
 	
             List<Reservation> reservations = new ArrayList<>();
@@ -226,7 +248,8 @@ public class DBManager{
 	            reservations.add(new Reservation(reservation, u, r, date, hour, seats));		 
 				}
             }catch(SQLException e) {
-                System.out.println(e.getMessage());
+            	System.out.println("Error in list_reservation in DBManager");
+    	        System.err.println(e.getMessage());
             }
 		  
             return reservations;   
@@ -261,7 +284,8 @@ public class DBManager{
             res = ps.executeUpdate();
 	
         }catch(SQLException e) {
-        	System.out.println(e.getMessage());
+        	System.out.println("Error in deleteReservation in DBManager");
+	        System.err.println(e.getMessage());
 	        }	 
         return res;
 	}

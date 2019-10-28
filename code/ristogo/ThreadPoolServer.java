@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ThreadPoolServer implements Runnable{
+	
 	 class Worker implements Runnable {
 		private Socket clientSocket = null;
 		private Request currentRequest = null;
@@ -80,6 +81,7 @@ public class ThreadPoolServer implements Runnable{
 			} case MessageHandler.CHECK_SEATS: {
 				
 				int ret = DBManager.check(currentRequest.getReservation());
+				
 				if (ret == -1) success = false;
 				currentRequest.getReservation().setSeats(ret);
 				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, currentRequest.getReservation());
@@ -89,6 +91,9 @@ public class ThreadPoolServer implements Runnable{
 				int ret = DBManager.updateRestaurant(currentRequest.getRestaurant());
 				if (ret == -1) success = false;
 				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, null);
+				break;
+			}case MessageHandler.EXIT:{	
+				rx = MessageHandler.buildResponse(currentRequest.getReqType(), true, null);
 				break;
 			}
 			default: break;
@@ -105,6 +110,10 @@ public class ThreadPoolServer implements Runnable{
 				System.out.println("EVALUATING REQUEST");
 				currentResponse = evaluateRequest();
 				if (currentResponse == null) return;
+				if(currentResponse.getResType()== MessageHandler.EXIT) {
+					System.out.println("CLIENT EXIT");
+					return;
+				}
 				System.out.println("SENDING RESPONSE");
 				MessageHandler.send(currentResponse, MessageHandler.RES, clientSocket);	
 			} catch (Exception e) {
