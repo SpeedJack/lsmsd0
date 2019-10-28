@@ -155,6 +155,7 @@ public class DBManager{
 			ps.setString(3,r.getDate());
 			ps.setString(4,r.getResTime().toString());
 			ResultSet res = ps.executeQuery();
+			res.next();
 			return res.getInt("PostiRimasti");
 
         }catch(SQLException e) {

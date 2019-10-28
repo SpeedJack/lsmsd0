@@ -49,6 +49,7 @@ class MessageHandler {
 			xml = xs.toXML((Response)r);
 		}
 	    try { 
+	    	System.out.println("[MESSAGE HANDLER] XML: " + xml);
 	    	DataOutputStream dout = new DataOutputStream(s.getOutputStream());
 	    	dout.writeUTF(xml);
 	    	} catch (Exception e) {e.printStackTrace();}
@@ -63,6 +64,7 @@ class MessageHandler {
 			DataInputStream din = new DataInputStream(s.getInputStream());
 			
 			xml = din.readUTF(); 
+			System.out.println("[MESSAGE HANDLER] XML: " + xml);
 			return xs.fromXML(xml);
 		} catch(EOFException eofex) {
 			System.out.println(eofex.getMessage());
@@ -252,7 +254,7 @@ class MessageHandler {
 		Reservation r = new Reservation();
 		r.setCustomer(UserSession.getUser());
 		r.setDate(d);
-		r.setResTime(OpeningHour.valueOf(h));
+		r.setResTime(OpeningHour.valueOf(h.toUpperCase()));
 		Restaurant rst = new Restaurant();
 		rst.setName(n);
 		rst.setIdRisto(restIdMap.get(n));
@@ -298,7 +300,7 @@ class MessageHandler {
 		r.setRestaurant(new Restaurant());
 		r.getRestaurant().setIdRisto(rid);
 		r.setDate(d);
-		r.setResTime(OpeningHour.valueOf(oa));
+		r.setResTime(OpeningHour.valueOf(oa.toUpperCase()));
 		return new Request(CHECK_SEATS, UserSession.getUser(), null, r);
 	};	
 	
@@ -341,7 +343,8 @@ class MessageHandler {
 		} case DELETE_RESERVATION: {
 			return new Response(success, type, null, null, null);
 		} case CHECK_SEATS: {
-			Restaurant r = new Restaurant(0 , 0, "", "", 0, "", "", "", 0, "");
+			Restaurant r = new Restaurant();
+			
 			List<Restaurant> lr = new ArrayList<>();
 			lr.add(r);
 			return new Response(success, type, lr, null, null);
