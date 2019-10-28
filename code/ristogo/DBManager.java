@@ -11,7 +11,7 @@ public class DBManager{
 	public static Connection connectionToDB;
 	static {
 	    try {
-	    	connectionToDB = DriverManager.getConnection("jdbc:mysql://localhost:3306/ristogo", "root", "");      
+	    	connectionToDB = DriverManager.getConnection("jdbc:mysql://localhost:3306/ristogo", "root", "root");      
 	    } catch (SQLException e) {
 	        System.out.println("Impossible to connect with DB");
 	        System.err.println(e.getMessage());
@@ -67,14 +67,15 @@ public class DBManager{
                 res = ps.executeUpdate();
 				
 		PreparedStatement ps1 = connectionToDB.prepareStatement("SELECT IdUtente"
-									+"FROM utente WHERE nome= ? AND password = ?;");
+									+" FROM utente WHERE nome= ? AND password = ?;");
                 ps1.setString(1, us.getUsername());
                 ps1.setString(2, us.getPassword());
                 ResultSet result = ps1.executeQuery();
+                result.next();
                 int id = result.getInt("IdUtente");
 				
                 PreparedStatement ps2 = connectionToDB.prepareStatement("INSERT INTO ristorante (IdUtente, nome, genere, costo, citta, via, descrizione, coperti, apertura)"
-								+ "VALUES(?, null, null, null, null, null, null, null, null)");
+								+ " VALUES(?, null, null, null, null, null, null, null, null)");
 		ps2.setInt(1, id);
 		if(us.isRestaurateur())
                     res = ps2.executeUpdate();
@@ -190,16 +191,16 @@ public class DBManager{
             try {
             	PreparedStatement ps;
             	if(!restaurateur) {ps = connectionToDB.prepareStatement("SELECT p.IdPrenotazione AS Prenotazione, u.nome AS NomeU, "
-                + "r.IdUtente AS Utente, p.data As Data, r.IdRisto AS Ristorante, p.orario AS Orario, p.persone AS Persone, r.nome AS NomeR "  
-                + "FROM prenotazione p INNER JOIN ristorante r ON p.IdRisto = r.IdRisto "
-                + "INNER JOIN utente u ON u.IdUtente = p.IdCliente"
-                + "WHERE p.idCliente = ?;");}
+                + " r.IdUtente AS Utente, p.data As Data, r.IdRisto AS Ristorante, p.orario AS Orario, p.persone AS Persone, r.nome AS NomeR "  
+                + " FROM prenotazione p INNER JOIN ristorante r ON p.IdRisto = r.IdRisto "
+                + " INNER JOIN utente u ON u.IdUtente = p.IdCliente"
+                + " WHERE p.idCliente = ?;");}
             	else {
                     ps = connectionToDB.prepareStatement("SELECT p.IdPrenotazione AS Prenotazione, u.nome AS NomeU, "
-                + "r.IdUtente AS Utente, p.data As Data, r.IdRisto AS Ristorante, p.orario AS Orario, p.persone AS Persone, r.nome AS NomeR "  
-                + "FROM prenotazione p INNER JOIN ristorante r ON p.IdRisto = r.IdRisto "
-                + "INNER JOIN utente u ON u.IdUtente = r.IdUtente"
-                + "WHERE r.IdUtente = ?;");
+                + " r.IdUtente AS Utente, p.data As Data, r.IdRisto AS Ristorante, p.orario AS Orario, p.persone AS Persone, r.nome AS NomeR "  
+                + " FROM prenotazione p INNER JOIN ristorante r ON p.IdRisto = r.IdRisto "
+                + " INNER JOIN utente u ON u.IdUtente = r.IdUtente"
+                + " WHERE r.IdUtente = ?;");
             	};
                 
                 ps.setInt(1, s.getIdUser());

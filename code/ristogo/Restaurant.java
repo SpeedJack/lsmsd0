@@ -13,8 +13,7 @@ enum Price{
 enum OpeningHour{
 	LUNCH,
 	DINNER,
-	ALWAYS;
-	
+	ALWAYS;	
 }
 
 public class Restaurant implements Serializable{
@@ -52,7 +51,7 @@ public class Restaurant implements Serializable{
 		this.idOwner = idOwner;
 		this.name = name;
 		this.type = type;
-		this.cost = Price.values()[cost];
+		this.cost = Price.values()[cost-1];
 		this.city = city;
 		this.address = address;
 		this.description = description;

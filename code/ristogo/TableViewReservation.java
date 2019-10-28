@@ -56,6 +56,7 @@ public class TableViewReservation extends TableView<ReservationBean> {
 	  public void myReservations (boolean isRestauranteur) {
 		  reservationList.clear();
 		  List<ReservationBean> res;
+		  System.out.println("[GUI] Richiedo lista prenotazioni");
 		  if(isRestauranteur) {
 			  res = (List<ReservationBean>)MessageHandler.sendRequest(MessageHandler.LIST_RESERVATION_REST);
 		  }

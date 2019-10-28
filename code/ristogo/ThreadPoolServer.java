@@ -43,7 +43,7 @@ public class ThreadPoolServer implements Runnable{
 				int ret = DBManager.register(u);
 				if (ret == -1) success = false;
 				u.setIdUser(ret);
-				//rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, u);
+				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, u);
 				break;
 			} 
 			case MessageHandler.LIST_RESTAURANT: {
@@ -95,6 +95,9 @@ public class ThreadPoolServer implements Runnable{
 			}
 			return rx;
 		}
+		
+		
+		
 
 		@Override
 		public void run() {

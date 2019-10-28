@@ -76,6 +76,7 @@ public class TableViewRestaurant extends TableView<RestaurantBean> {
 	  
 	 public void listRestaurant () {
 		  restaurantList.clear();
+		  System.out.println("[GUI] Richiedo Lista Ristoranti");
 		  List<RestaurantBean> res = (List<RestaurantBean>)MessageHandler.sendRequest(MessageHandler.LIST_RESTAURANT);
 		  restaurantList.addAll(res);
 	  }
