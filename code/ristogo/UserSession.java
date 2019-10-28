@@ -3,7 +3,7 @@ package ristogo;
 import java.net.*;
 
 public class UserSession {
-	private static User currUser = new User();
+	private static User currUser = null;
 	private static Socket sClientToServer = null;
 	private static ServerSocket sServerToClient = null;
 	static{
@@ -16,4 +16,5 @@ public class UserSession {
 	static Socket getSocket(){return sClientToServer;};
 	static ServerSocket getServerSocket(){return sServerToClient;};
 	static User getUser() {return currUser;};
+	static void setUser(User u) { currUser = u;};
 }

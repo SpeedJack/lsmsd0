@@ -103,7 +103,7 @@ class MessageHandler {
 				s.close();			
 				if (res == null) return null;
 				if(res.isSuccess()) {
-
+					UserSession.setUser(res.getUser());
 					res.getUser().setUsername(strings[0]);
 					res.getUser().setPassword(strings[1]);
 					return res.getUser().getBean();
