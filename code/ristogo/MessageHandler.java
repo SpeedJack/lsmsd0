@@ -17,7 +17,6 @@ import java.util.*;
 
 class MessageHandler {
 	private static Map<String,Integer> restIdMap = new HashMap<String, Integer>(); //Map Used to save the RestId using as key the name
-	private static List<Reservation> rsvList = new ArrayList<>();
 	public static final String REQ = "req";
 	public static final String RES = "res";
 	private static String xml;
@@ -147,14 +146,13 @@ class MessageHandler {
 				} else return false;
 				
 			} case LIST_RESERVATION: {
-				rsvList.clear();
+		
 				r = prepareListReservation();
 				if(r == null ) return null;
 				send(r, REQ, s);
 				res = (Response) receive(s);
 				
 				if(res.isSuccess()) {
-					rsvList.addAll(res.getReservations());
 					List<ReservationBean> lr = new ArrayList<>();
 					for(Reservation resv: res.getReservations()) {
 						lr.add(resv.getBean());
@@ -169,7 +167,7 @@ class MessageHandler {
 				res = (Response) receive(s);
 				
 				if(res.isSuccess()) {
-					rsvList.addAll(res.getReservations());
+					
 					List<ReservationBean> lr = new ArrayList<>();
 					for(Reservation resv: res.getReservations()) {
 						lr.add(resv.getBean());
@@ -213,8 +211,10 @@ class MessageHandler {
 			} case RESTAURANT_INFO:{
 			r = prepareRestaurantInfo();
 			send(r, REQ, s);
+			
 			res = (Response) receive(s);
 			if(res.isSuccess()) {
+				UserSession.setCurrRestaurant(res.getRestaurants().get(0));
 				return res.getRestaurants().get(0).getBean();
 			} else return null;
 			}
@@ -294,7 +294,7 @@ private static Request prepareRestaurantInfo() {
 	
 	public static Request prepareModifyRestaurant(String n, String t, int p, String c, String a, String d, int s, String oa ) {
 		Restaurant r = new Restaurant();
-		r.setIdRisto(restIdMap.get(n));
+		r.setIdRisto(UserSession.getCurrRestaurant().getIdRisto());
 		r.setIdOwner(UserSession.getUser().getIdUser());
 		r.setName(n);
 		r.setType(t);
