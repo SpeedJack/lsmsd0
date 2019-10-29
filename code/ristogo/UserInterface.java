@@ -623,8 +623,17 @@ error.setVisible(false);
     	commit.setTextFill(Color.web(backgroundColor));
     	commit.setStyle("-fx-base: " + textColor );
     	
-    	//FILL FORM WITH RESTAURANT
-		
+    	/*FILL FORM WITH RESTAURANT*/
+		RestaurantBean r = (RestaurantBean)MessageHandler.sendRequest(MessageHandler.RESTAURANT_INFO);
+		name_f.setText(r.getName());
+		type_f.setValue(r.getType());
+		cost_f.setValue(r.getPrice());
+		city_f.setText(r.getCity());
+		address_f.setText(r.getAddress());
+		desc_f.setText(r.getDescription());
+		seats_f.setText(new Integer(r.getSeats()).toString());
+		hour_f.setValue(r.getOpening());
+ 
     	commit.setOnAction((ActionEvent ev) -> {
 										    	try {
 													String n = name_f.getText();

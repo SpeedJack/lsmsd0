@@ -273,6 +273,36 @@ public class DBManager{
 	        }	 
         return res;
 	}
+	
+//restaurant info 
+	public static Restaurant restaurantInfo(int id) {
+		 try {
+			 	Restaurant r = new Restaurant();
+	        	PreparedStatement ps = connectionToDB.prepareStatement("SELECT * "
+																		+"FROM ristorante r WHERE r.IdRisto= ? ;");
+	        	
+	        	ps.setInt(1, id);
+	        	ResultSet res = ps.executeQuery();
+	        	if(res.next()) {
+	        		r.setIdRisto(res.getInt("IdRisto"));
+	        		r.setIdOwner(id);
+	        		r.setName(res.getString("nome"));
+	        		r.setType(res.getString("genere"));
+	        		r.setCost(Price.values()[res.getInt("costo")]);
+	        		r.setCity(res.getString("citta"));
+	        		r.setAddress(res.getString("via"));
+	        		r.setDescription(res.getString("descrizione"));
+	        		r.setSeatsAvailable(res.getInt("coperti"));
+	        		r.setOpenAt(OpeningHour.valueOf(res.getString("apertura")));
+	        		return r;
+	        	}
+	        	return null;
+		 }catch(SQLException e) {
+			 System.out.println("Error in restaurantInfo in DBManager");
+		     System.err.println(e.getMessage());
+		     return null;
+		 }
+	}
 //modify a reservation(not used)         
 	public static int updateReservation(Reservation r) {
 	         
