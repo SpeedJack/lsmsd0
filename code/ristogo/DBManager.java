@@ -29,8 +29,7 @@ public class DBManager{
                 ps.setString(1, us.getUsername());
                 ps.setString(2, us.getPassword());
                 ResultSet res = ps.executeQuery();
-                res.next();
-				if(res.getInt("Numero")== 1) {
+                if(res.next()) {
                     us.setIdUser(res.getInt("IdUtente"));
                     PreparedStatement ps1 = connectionToDB.prepareStatement("SELECT IF(COUNT(*) > 0, TRUE, FALSE) AS hasRestaurants " + 
                     														"FROM utente u INNER JOIN ristorante r ON r.IdUtente = u.IdUtente " + 
@@ -63,30 +62,33 @@ public class DBManager{
             int res = -1;
             try {
                 PreparedStatement ps = connectionToDB.prepareStatement("INSERT INTO utente (nome, password) " 
-									+ "VALUES(?,?)");
+																		+ "VALUES(?,?)");
                 ps.setString(1, us.getUsername());
-	        ps.setString(2, us.getPassword());
+                ps.setString(2, us.getPassword());
                 res = ps.executeUpdate();
 				
-		PreparedStatement ps1 = connectionToDB.prepareStatement("SELECT IdUtente"
-									+" FROM utente WHERE nome= ? AND password = ?;");
+                PreparedStatement ps1 = connectionToDB.prepareStatement("SELECT IdUtente"
+																		+" FROM utente WHERE nome= ? AND password = ?;");
                 ps1.setString(1, us.getUsername());
                 ps1.setString(2, us.getPassword());
                 ResultSet result = ps1.executeQuery();
-                result.next();
-                int id = result.getInt("IdUtente");
-				
-                PreparedStatement ps2 = connectionToDB.prepareStatement("INSERT INTO ristorante (IdUtente, nome, genere, costo, citta, via, descrizione, coperti, apertura)"
-								+ " VALUES(?, null, null, null, null, null, null, null, null)");
-		ps2.setInt(1, id);
-		if(us.isRestaurateur())
-                    res = ps2.executeUpdate();
+                if(result.next()) {
+
+                	int id = result.getInt("IdUtente");
+                	if(us.isRestaurateur()) {
+                		PreparedStatement ps2 = connectionToDB.prepareStatement("INSERT INTO ristorante (IdUtente, nome, genere, costo, citta, via, descrizione, coperti, apertura)"												
+                															+ " VALUES(?, null, null, null, null, null, null, null, null)");
+                		ps2.setInt(1, id);
+                		res = ps2.executeUpdate();
+                	}
+                }
+                return res;
                 
-	    }catch(SQLException e) {
+        }catch(SQLException e) {
 	    	System.out.println("Error in register in DBManager");
 	        System.err.println(e.getMessage());
+	        return -1;
             }
-            return res;
 	}
 	 
 //list of restaurant	 
@@ -222,7 +224,7 @@ public class DBManager{
                     ps = connectionToDB.prepareStatement("SELECT p.IdPrenotazione AS Prenotazione, u.nome AS NomeU, "
                 + " r.IdUtente AS Utente, p.data As Data, r.IdRisto AS Ristorante, p.orario AS Orario, p.persone AS Persone, r.nome AS NomeR "  
                 + " FROM prenotazione p INNER JOIN ristorante r ON p.IdRisto = r.IdRisto "
-                + " INNER JOIN utente u ON u.IdUtente = r.IdUtente"
+                + " INNER JOIN utente u ON u.IdUtente = p.IdCliente"
                 + " WHERE r.IdUtente = ?;");
             	};
                 

@@ -101,7 +101,7 @@ class MessageHandler {
 				send(r, REQ, s);
 				res = (Response) receive(s);
 				s.close();			
-				if (res == null) return null;
+				if (!res.isSuccess()) return null;
 				if(res.isSuccess()) {
 					UserSession.setUser(res.getUser());
 					res.getUser().setUsername(strings[0]);
@@ -116,11 +116,12 @@ class MessageHandler {
 				if(r == null ) return false;
 				send(r, REQ, s);
 				res = (Response) receive(s);
-				if (res == null) return false;
 				if(res.isSuccess()) {
 					return true;
-				};
-				break;
+				}
+				else {
+					return false;
+				}
 			}
 			case LIST_RESTAURANT: {
 				r = prepareList();
@@ -204,11 +205,11 @@ class MessageHandler {
 				r = prepareModifyRestaurant(strings[0], strings[1], Integer.parseInt(strings[2]), strings[3], strings[4], strings[5], Integer.parseInt(strings[6]), strings[7]);
 				send(r, REQ, s);
 				res = (Response) receive(s);
-				if (res == null) return false;
 				if(res.isSuccess()) {
 					return true;
-				};
-				break;
+				}else {
+					return false;
+				}
 			} case EXIT: {
 				r = prepareExit();
 				send(r, REQ, s);

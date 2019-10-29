@@ -21,10 +21,7 @@ public class UserInterface extends Application {
 	Scene loginScene;
 	Scene regScene;
 	Scene tableInterface;
-	
-	String username = "Prova";
-	int userID = 0000;
-	
+		
 	String font = (new Configuration()).getFont();
 	double dimC = (new Configuration()).getDimCharacter();
 	String backgroundColor = (new Configuration()).getBackgroundColor();
@@ -65,7 +62,7 @@ public class UserInterface extends Application {
 		  name_field.setMaxWidth(200);
 		
 		  Label password = new Label("Password: ");
-		  TextField password_field = new TextField();
+		  PasswordField password_field = new PasswordField();
 		  password.setFont(Font.font(font, FontWeight.NORMAL, dimC+3));
 		  password.setTextFill(Color.web(backgroundColor));
 		  password_field.setFont(Font.font(font, dimC));
@@ -75,7 +72,7 @@ public class UserInterface extends Application {
 		  Label error = new Label("Error: Login Failed. Retry");
 		  error.setFont(Font.font(font, FontWeight.NORMAL, dimC+3));
 		  error.setTextFill(Color.web(backgroundColor));
-		  error.setStyle("-fx-background-color:   green;");
+		  error.setStyle("-fx-background-color:   red;");
 		  error.setVisible(false);
 		///////////////////////////////////////////////////////////////////////////////
 		  
@@ -90,14 +87,16 @@ public class UserInterface extends Application {
 														String n = name_field.getText();
 														String p = password_field.getText();
 											        	UserBean res = (UserBean)MessageHandler.sendRequest(MessageHandler.LOGIN, n, p);
-											        	if(res.isRestaurateur()) {
+											        	if(res == null) {
+											        		error.setVisible(true);
+											        		name_field.clear();
+											        		password_field.clear();
+											        	}
+											        	else if(res.isRestaurateur()) {
 											        		restaranteurInterface(window);
 											        	}
 											        	else if(!res.isRestaurateur()) {
 											        		clientInterface(window);
-											        	}
-											        	else {
-											        		error.setVisible(true);
 											        	}
 													}catch(NullPointerException e) {
 														e.getMessage();
@@ -166,10 +165,10 @@ public class UserInterface extends Application {
         name_field.setMaxWidth(200);
       
         Label password = new Label("Password: ");
-        TextField password_field = new TextField();
+        PasswordField password_field = new PasswordField();
         password.setFont(Font.font(font, FontWeight.NORMAL, dimC+3));
         password.setTextFill(Color.web(backgroundColor));
-        password_field.setFont(Font.font(font, dimC+3));
+        password_field.setFont(Font.font(font, dimC));
         password_field.setMaxWidth(200);
         
         Label type = new Label("Type of User: ");
@@ -182,7 +181,7 @@ public class UserInterface extends Application {
         Label error = new Label("Error: Registration Failed. Retry with different username");
         error.setFont(Font.font(font, FontWeight.NORMAL, dimC+3));
         error.setTextFill(Color.web(backgroundColor));
-        error.setStyle("-fx-background-color:   green;");
+        error.setStyle("-fx-background-color:   red;");
         error.setVisible(false);
 ///////////////////////////////////////////////////////////////////////////////
         
@@ -198,6 +197,8 @@ public class UserInterface extends Application {
 											        	}
 											        	else {
 											        		error.setVisible(true);
+											        		name_field.clear();
+											        		password_field.clear();
 											        	}
 													}catch(NullPointerException e) {
 														e.getMessage();
@@ -238,7 +239,7 @@ public class UserInterface extends Application {
 		HBox boxTitle = new HBox(10);
 		boxTitle.getChildren().addAll(title,icon);
 		
-		Label title2 = new Label("Welcome " + username + "!");
+		Label title2 = new Label("Welcome " + UserSession.getUser().getUsername() + "!");
 		title2.setFont(Font.font(font, FontWeight.NORMAL, dimC+4));
 		title2.setTextFill(Color.web(textColor));
 		
@@ -312,9 +313,16 @@ public class UserInterface extends Application {
 		
 		HBox seats_box = new HBox(20);
 		seats_box.getChildren().addAll(seats,seats_f);
+		
+//////////////////error/////////////////////////////////////////////////////     
+Label error = new Label();
+error.setFont(Font.font(font, FontWeight.NORMAL, dimC+3));
+error.setTextFill(Color.web(backgroundColor));
+error.setStyle("-fx-background-color:   red;");
+error.setVisible(false);
+///////////////////////////////////////////////////////////////////////////////
     
-		
-		
+	
 		Button book = new Button("Book");
 		book.setFont(Font.font(font, FontWeight.BOLD, dimC+2));
 		book.setTextFill(Color.web(backgroundColor));
@@ -329,7 +337,7 @@ public class UserInterface extends Application {
 		
 		
 		VBox boxBook = new VBox(20);
-		boxBook.getChildren().addAll(subTitle1,l1,name_box, date_box, hour_box, check, seats_box, book, delRes);
+		boxBook.getChildren().addAll(subTitle1,l1,name_box, date_box, hour_box, check, seats_box, error, book, delRes);
         boxBook.setStyle("-fx-padding: 7;" + 
                 "-fx-border-style: solid inside;" + 
                 "-fx-border-width: 2;" +
@@ -415,11 +423,9 @@ public class UserInterface extends Application {
 															seats_f.setDisable(false);
 															book.setDisable(false);
 														}
-														
 													}
 												}catch(NullPointerException e) {
 													e.getMessage();
-													//GESTIRE MESSAGGIO ERRORE
 												}
 										});
 
@@ -434,12 +440,17 @@ public class UserInterface extends Application {
 														reservation.myReservations(false);
 													}
 													else {
-														//errore
+														error.setText("Error: Booking Failed. Retry");
+														error.setVisible(true);
+														seats_f.getItems().clear();
 														
 													}
+													book.setDisable(true);
+													
 												}catch(NullPointerException e) {
 													e.getMessage();
-													//GESTIRE MESSAGGIO ERRORE
+													error.setText("Error: fill out the entire form to be able to book");
+													error.setVisible(true);
 												}
 											});
 		
@@ -452,12 +463,13 @@ public class UserInterface extends Application {
 														delRes.setDisable(true);
 													}
 													else {
-														//errore
+														error.setText("Error: Delection Failed. Retry");
+														error.setVisible(true);
 														
 													}
 												}catch(NullPointerException e) {
 													e.getMessage();
-													//errore
+													delRes.setDisable(true);
 												}
 											});
 		
@@ -509,7 +521,7 @@ public class UserInterface extends Application {
 		HBox boxTitle = new HBox(10);
 		boxTitle.getChildren().addAll(title,icon);
 		
-		Label title2 = new Label("Welcome " + username + "!");
+		Label title2 = new Label("Welcome " + UserSession.getUser().getUsername() + "!");
 		title2.setFont(Font.font(font, FontWeight.NORMAL, dimC+4));
 		title2.setTextFill(Color.web(textColor));
 		
@@ -595,23 +607,49 @@ public class UserInterface extends Application {
 		HBox hour_box = new HBox(20);
 		hour_box.getChildren().addAll(hour,hour_f);
 
+//////////////////error/////////////////////////////////////////////////////     
+		Label error = new Label();
+		error.setFont(Font.font(font, FontWeight.NORMAL, dimC+3));
+		error.setTextFill(Color.web(backgroundColor));
+		error.setStyle("-fx-background-color:   red;");
+		error.setVisible(false);
+///////////////////////////////////////////////////////////////////////////////
     	
     	Button commit = new Button("Commit");
-
-
     	commit.setFont(Font.font(font, FontWeight.BOLD, dimC+2));
     	commit.setTextFill(Color.web(backgroundColor));
     	commit.setStyle("-fx-base: " + textColor );
-		
-
-		
+    	
+    	//FILL FORM WITH RESTAURANT
 		
     	commit.setOnAction((ActionEvent ev) -> {
-  
-										});
+										    	try {
+													String n = name_f.getText();
+													String t = type_f.getValue().toString();
+													String c = cost_f.getValue().toString();
+													String ct = city_f.getText();
+													String add = address_f.getText();
+													String d = desc_f.getText();
+													String s = seats_f.getText();
+													String h = hour_f.getValue();
+													boolean res = (boolean)MessageHandler.sendRequest(MessageHandler.MODIFY_RESTAURANT, n, t, c, ct, add, d, s, h);
+													if(!res) {
+											
+														error.setText("Error: Commit Failed. Retry");
+														error.setVisible(true);
+														//FILL FORM WITH RESTAURANT
+													}
+													
+												}catch(NullPointerException e) {
+													e.getMessage();
+													error.setText("Error: fill out the entire form to be able to commit");
+													error.setVisible(true);
+												}
+    										});
+		
 		
 		VBox boxModify = new VBox(20);
-		boxModify.getChildren().addAll(subTitle1,name_box, type_box, cost_box, city_box, address_box, desc, desc_f, seats_box, hour_box, commit);
+		boxModify.getChildren().addAll(subTitle1,name_box, type_box, cost_box, city_box, address_box, desc, desc_f, seats_box, hour_box, error, commit);
 		boxModify.setStyle("-fx-padding: 7;" + 
                 "-fx-border-style: solid inside;" + 
                 "-fx-border-width: 2;" +
@@ -644,10 +682,13 @@ public class UserInterface extends Application {
 	   	refresh.setFont(Font.font(font, FontWeight.BOLD, dimC+2));
 	   	refresh.setTextFill(Color.web(backgroundColor));
 	   	refresh.setStyle("-fx-base: " + textColor );
+	   	
+	   	
+	   	refresh.setOnAction((ActionEvent ev) -> {
+	   											reservation.myReservations(true);
+	   											});
 		
-    	commit.setOnAction((ActionEvent ev) -> {
-  
-										});
+    	
 	    
 	    VBox rightInterface = new VBox(10);
 	    rightInterface.setAlignment(Pos.CENTER);

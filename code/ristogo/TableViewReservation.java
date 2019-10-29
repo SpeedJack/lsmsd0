@@ -24,7 +24,12 @@ public class TableViewReservation extends TableView<ReservationBean> {
 		    String textColor =(new Configuration()).getTextColor();
 		   
 		    nameColumn = new TableColumn("Name");
-		    nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+		    if(UserSession.getUser().isRestaurateur()) {
+		    	nameColumn.setCellValueFactory(new PropertyValueFactory<>("clientName"));
+		    }
+		    else {
+		    	nameColumn.setCellValueFactory(new PropertyValueFactory<>("restaurantName"));
+		    }
 		    nameColumn.setStyle("-fx-font-family: " + font + "; -fx-font-size: " + (new Configuration()).getDimCharacter() + "; -fx-color: "+ textColor +";");
 		    
 		    
