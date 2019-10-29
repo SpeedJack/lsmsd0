@@ -262,13 +262,14 @@ public class DBManager{
 	
 	    int res = -1;
 	    try {
-			PreparedStatement ps = connectionToDB.prepareStatement("DELETE * FROM prenotazione " + 
+			PreparedStatement ps = connectionToDB.prepareStatement("DELETE FROM prenotazione " + 
 			                                                               "WHERE IdPrenotazione = ?"); 									
 			ps.setInt(1, r.getIdRes());
 			res = ps.executeUpdate();
 	            
         }catch(SQLException e) {
-        	System.out.println(e.getMessage());
+        	System.out.println("Error in deleteReservation in DBManager");
+	        System.err.println(e.getMessage());
 	        }	 
         return res;
 	}
@@ -286,7 +287,7 @@ public class DBManager{
             res = ps.executeUpdate();
 	
         }catch(SQLException e) {
-        	System.out.println("Error in deleteReservation in DBManager");
+        	System.out.println("Error in updateReservation in DBManager");
 	        System.err.println(e.getMessage());
 	        }	 
         return res;

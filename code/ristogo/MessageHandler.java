@@ -182,15 +182,13 @@ class MessageHandler {
 			} case DELETE_RESERVATION: {
 
 				r = prepareDeleteReservation(Integer.parseInt(strings[0]));
-
-				if(r == null ) return false;
 				send(r, REQ, s);
 				res = (Response) receive(s);
-				if (res == null) return false;
 				if(res.isSuccess()) {
 					return true;
-				};
-				break;
+				}else {
+					return false;
+				}
 			} case CHECK_SEATS: {
 				r = prepareCheckSeats(restIdMap.get(strings[0]), strings[1], strings[2]);
 				send(r, REQ, s);

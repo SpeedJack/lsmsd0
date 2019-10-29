@@ -335,9 +335,11 @@ error.setVisible(false);
 		delRes.setStyle("-fx-base: " + textColor );
 		delRes.setDisable(true);
 		
+		HBox buttonBox = new HBox(20);
+		buttonBox.getChildren().addAll(book,delRes);		
 		
 		VBox boxBook = new VBox(20);
-		boxBook.getChildren().addAll(subTitle1,l1,name_box, date_box, hour_box, check, seats_box, error, book, delRes);
+		boxBook.getChildren().addAll(subTitle1,l1,name_box, date_box, hour_box, check, seats_box, error, buttonBox);
         boxBook.setStyle("-fx-padding: 7;" + 
                 "-fx-border-style: solid inside;" + 
                 "-fx-border-width: 2;" +
@@ -368,6 +370,7 @@ error.setVisible(false);
 		TextArea description_f = new TextArea();
 		description.setFont(Font.font(font, FontWeight.BOLD, dimC-2));
 		description.setTextFill(Color.web(textColor));
+		description_f.setWrapText(true);
 		description_f.setEditable(false);
 		description_f.setMinSize(480, 100);
 		description_f.setMaxSize(480, 100);
@@ -379,10 +382,10 @@ error.setVisible(false);
 				name_f.setText(restaurant.getSelectionModel().getSelectedItem().getName());
 				description_f.setText(restaurant.getSelectionModel().getSelectedItem().getDescription());
 				hour_f.getItems().clear();
-				if(restaurant.getSelectionModel().getSelectedItem().getOpening() == "Lunch&Dinner") {
+				if(restaurant.getSelectionModel().getSelectedItem().getOpening() == "ALWAYS") {
 					hour_f.getItems().addAll("Lunch", "Dinner");
 				}
-				else if(restaurant.getSelectionModel().getSelectedItem().getOpening() == "Lunch") {
+				else if(restaurant.getSelectionModel().getSelectedItem().getOpening() == "LUNCH") {
 					hour_f.getItems().add("Lunch");
 				}
 				else {
@@ -634,10 +637,9 @@ error.setVisible(false);
 													String h = hour_f.getValue();
 													boolean res = (boolean)MessageHandler.sendRequest(MessageHandler.MODIFY_RESTAURANT, n, t, c, ct, add, d, s, h);
 													if(!res) {
-											
 														error.setText("Error: Commit Failed. Retry");
 														error.setVisible(true);
-														//FILL FORM WITH RESTAURANT
+														//FILL FORM WITH RESTAURANT ?
 													}
 													
 												}catch(NullPointerException e) {

@@ -17,7 +17,12 @@ public class TableViewReservation extends TableView<ReservationBean> {
 	  public TableViewReservation () {
 		    setEditable(false);
 		    setFixedCellSize(35);
-		    setMaxHeight(((new Configuration()).getnumberRowsDisplayable()-2)*getFixedCellSize());
+		    if(UserSession.getUser().isRestaurateur()) {
+		    	setMaxHeight(((new Configuration()).getnumberRowsDisplayable()+8)*getFixedCellSize());
+		    }
+		    else {
+		    	setMaxHeight(((new Configuration()).getnumberRowsDisplayable()-2)*getFixedCellSize());
+		    }
 		    setMinWidth(600);
 		    setMaxWidth(600);
 		    String font = (new Configuration()).getFont();
