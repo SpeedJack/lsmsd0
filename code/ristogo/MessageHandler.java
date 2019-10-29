@@ -36,6 +36,7 @@ class MessageHandler {
 	public static final int DELETE_RESERVATION = 8;
 	public static final int CHECK_SEATS = 9;
 	public static final int EXIT = 10;
+	public static final int RESTAURANT_INFO = 11;
 	
 	/*----------------------------------------------------------------------------------------------------------------------------
 	 * COMMON UTILITIES
@@ -100,16 +101,14 @@ class MessageHandler {
 
 				send(r, REQ, s);
 				res = (Response) receive(s);
-				s.close();			
-				if (!res.isSuccess()) return null;
+				s.close();
 				if(res.isSuccess()) {
 					UserSession.setUser(res.getUser());
 					res.getUser().setUsername(strings[0]);
 					res.getUser().setPassword(strings[1]);
 					return res.getUser().getBean();
 
-				};
-				break;
+				} else return false;
 			}
 			case REGISTRATION: {
 				r = prepareRegistration(strings[0], strings[1], Boolean.parseBoolean(strings[2]));
@@ -136,25 +135,24 @@ class MessageHandler {
 						lr.add(rr.getBean());
 					}
 					return lr;
-				};
-				break;
+				} else return false;
 			} case RESERVATION: {
 				r = prepareReservation(strings[0], strings[1], strings[2], Integer.parseInt(strings[3]));
 				if(r == null ) return false;
 				send(r, REQ, s);
 				res = (Response) receive(s);
-				if (res == null) return false;
+				
 				if(res.isSuccess()) {
 					return true;
-				};
-				break;
+				} else return false;
+				
 			} case LIST_RESERVATION: {
 				rsvList.clear();
 				r = prepareListReservation();
 				if(r == null ) return null;
 				send(r, REQ, s);
 				res = (Response) receive(s);
-				if (res == null) return null;
+				
 				if(res.isSuccess()) {
 					rsvList.addAll(res.getReservations());
 					List<ReservationBean> lr = new ArrayList<>();
@@ -162,14 +160,14 @@ class MessageHandler {
 						lr.add(resv.getBean());
 					};
 					return lr;
-				};
+				} else return false;
 
 			} case LIST_RESERVATION_REST: {
 				r = prepareListReservationRest();
 				if(r == null ) return null;
 				send(r, REQ, s);
 				res = (Response) receive(s);
-				if (res == null) return null;
+				
 				if(res.isSuccess()) {
 					rsvList.addAll(res.getReservations());
 					List<ReservationBean> lr = new ArrayList<>();
@@ -177,7 +175,7 @@ class MessageHandler {
 						lr.add(resv.getBean());
 					};
 					return lr;
-				};
+				} else return null;
 
 			} case DELETE_RESERVATION: {
 
@@ -193,11 +191,11 @@ class MessageHandler {
 				r = prepareCheckSeats(restIdMap.get(strings[0]), strings[1], strings[2]);
 				send(r, REQ, s);
 				res = (Response) receive(s);
-				if (res == null) return false;
+				
 				if(res.isSuccess()) {
 					return res.getReservations().get(0).getSeats();
-				};
-				break;			
+				} else return false;
+				
 			} case MODIFY_RESTAURANT:{
 				//nome, tipo, costo, città, undirizzo, descrizion, num posti, orario
 				r = prepareModifyRestaurant(strings[0], strings[1], Integer.parseInt(strings[2]), strings[3], strings[4], strings[5], Integer.parseInt(strings[6]), strings[7]);
@@ -212,18 +210,30 @@ class MessageHandler {
 				r = prepareExit();
 				send(r, REQ, s);
 				break;			
+			} case RESTAURANT_INFO:{
+			r = prepareRestaurantInfo();
+			send(r, REQ, s);
+			res = (Response) receive(s);
+			if(res.isSuccess()) {
+				return res.getRestaurants().get(0).getBean();
+			} else return null;
 			}
 			default: break;
 			}
 			return null;
-		} catch (Exception e){
+		} 
+		catch (Exception e){
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 			return null;
 		}
 	}
 	
-/*
+private static Request prepareRestaurantInfo() {
+		return new Request(RESTAURANT_INFO, UserSession.getUser(), null, null);
+ 	}
+
+	/*
  * @TODO Adattare metodi a nuovi User
  */
 	public static Request prepareLogin(String username, String password) {
@@ -362,6 +372,11 @@ class MessageHandler {
 		}
 		case EXIT:{			
 			return new Response(success, type, null, null, null);
+		} 
+		case RESTAURANT_INFO :{
+			List<Restaurant> lr = new ArrayList<>();
+			lr.add((Restaurant)rx);
+			return new Response(success, type, lr, null, null);
 		}
 		default: break;
 		}

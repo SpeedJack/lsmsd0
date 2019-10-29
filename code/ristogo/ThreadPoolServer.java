@@ -95,6 +95,10 @@ public class ThreadPoolServer implements Runnable{
 			}case MessageHandler.EXIT:{	
 				rx = MessageHandler.buildResponse(currentRequest.getReqType(), true, null);
 				break;
+			} case MessageHandler.RESTAURANT_INFO :{
+				Restaurant r = DBManager.restaurantInfo(currentRequest.getUser().getIdUser());
+				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, r);
+				break;
 			}
 			default: break;
 			}

@@ -1,6 +1,8 @@
 package ristogo;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable{
 	int idUser = 0;
 	String password = null;
 	String username = null;

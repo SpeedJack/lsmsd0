@@ -7,7 +7,4 @@ public class RistogoServer {
     	ThreadPoolServer server = new ThreadPoolServer(serverPort);
     	new Thread(server).start();
     }
-    
-   
- 
 }
