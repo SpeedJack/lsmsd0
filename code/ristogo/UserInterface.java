@@ -3,6 +3,7 @@ package ristogo;
 
 
 import javafx.application.*;
+import javafx.collections.FXCollections;
 import javafx.stage.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -585,6 +586,7 @@ error.setVisible(false);
 		TextArea desc_f = new TextArea();
 		desc.setFont(Font.font(font, FontWeight.BOLD, dimC));
 		desc.setTextFill(Color.web(textColor));
+		desc_f.setWrapText(true);
 		desc_f.setMinSize(480, 100);
 		desc_f.setMaxSize(480, 100);
 		
@@ -604,8 +606,8 @@ error.setVisible(false);
 		hour.setFont(Font.font(font, FontWeight.BOLD, dimC));
 		hour.setTextFill(Color.web(textColor));
 
-		ChoiceBox<String> hour_f = new ChoiceBox();
-		hour_f.getItems().addAll("Lunch", "Dinner", "Lunch&Dinner");
+		ChoiceBox<String> hour_f = new ChoiceBox(FXCollections.observableArrayList("Lunch", "Dinner", "Lunch/Dinner"));
+		//hour_f.getItems().addAll("Lunch", "Dinner", "Lunch&Dinner");
 		
 		HBox hour_box = new HBox(20);
 		hour_box.getChildren().addAll(hour,hour_f);
@@ -626,15 +628,23 @@ error.setVisible(false);
     	/*FILL FORM WITH RESTAURANT*/
 		RestaurantBean r = (RestaurantBean)MessageHandler.sendRequest(MessageHandler.RESTAURANT_INFO);
 		name_f.setText(r.getName());
-		type_f.setValue(r.getType());
+		type_f.getSelectionModel().select(r.getType());
 		cost_f.setValue(r.getPrice());
 		city_f.setText(r.getCity());
 		address_f.setText(r.getAddress());
 		desc_f.setText(r.getDescription());
 		seats_f.setText(new Integer(r.getSeats()).toString());
-		hour_f.setValue(r.getOpening());
- 
+		if(r.getOpening().equals("LUNCH")) {
+			hour_f.getSelectionModel().select("Lunch");
+		}
+		else if(r.getOpening().equals("DINNER")) {
+			hour_f.getSelectionModel().select("Dinner");
+		}
+		else {
+			hour_f.getSelectionModel().select("Lunch/Dinner");
+		}
     	commit.setOnAction((ActionEvent ev) -> {
+    											error.setVisible(false);
 										    	try {
 													String n = name_f.getText();
 													String t = type_f.getValue().toString();
@@ -643,7 +653,16 @@ error.setVisible(false);
 													String add = address_f.getText();
 													String d = desc_f.getText();
 													String s = seats_f.getText();
-													String h = hour_f.getValue();
+													String h;
+													if(hour_f.getValue().equals("Lunch")) {
+														h = "LUNCH";
+													}
+													else if(hour_f.getValue().contentEquals("Dinner")) {
+														h="DINNER";
+													}
+													else {
+														h = "ALWAYS";
+													}
 													boolean res = (boolean)MessageHandler.sendRequest(MessageHandler.MODIFY_RESTAURANT, n, t, c, ct, add, d, s, h);
 													if(!res) {
 														error.setText("Error: Commit Failed. Retry");

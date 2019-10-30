@@ -304,7 +304,6 @@ private static Request prepareRestaurantInfo() {
 		r.setSeatsAvailable(s);
 		r.setDescription(d);
 		r.setOpenAt(OpeningHour.valueOf(oa));
-		
 		return new Request(MODIFY_RESTAURANT, UserSession.getUser(), r, null);
 	};
 	

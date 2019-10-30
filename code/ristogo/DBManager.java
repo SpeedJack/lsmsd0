@@ -129,18 +129,18 @@ public class DBManager{
         int res = -1;
         try {
         	PreparedStatement ps = connectionToDB.prepareStatement("UPDATE ristorante " +
-                    "SET IdUtente = ? AND nome = ? AND genere = ? AND costo = ? AND citta = ? AND via = ? " +
-                    "AND descrizione = ? AND coperti = ? AND apertura = ? WHERE IdRisto = ? "); 
-            ps.setInt(1, r.getIdOwner());
-            ps.setString(2, r.getName());
-            ps.setString(3,r.getType());
-            ps.setInt(4, r.getCost().ordinal());
-            ps.setString(5, r.getCity());
-            ps.setString(6, r.getAddress());
-            ps.setString(7, r.getDescription());
-            ps.setInt(8, r.getSeatsAvailable());
-            ps.setString(9, r.getOpenAt().toString());
-            ps.setInt(10, r.getIdRisto());                         
+                    "SET nome = ? , genere = ? , costo = ? , citta = ? , via = ? " +
+                    ", descrizione = ? , coperti = ? , apertura = ? WHERE IdRisto = ? AND IdUtente= ? ;"); 
+            ps.setString(1, r.getName());
+            ps.setString(2,r.getType());
+            ps.setInt(3, r.getCost().ordinal());
+            ps.setString(4, r.getCity());
+            ps.setString(5, r.getAddress());
+            ps.setString(6, r.getDescription());
+            ps.setInt(7, r.getSeatsAvailable());
+            ps.setString(8, r.getOpenAt().toString());
+            ps.setInt(9, r.getIdRisto()); 
+            ps.setInt(10, r.getIdOwner());
             res = ps.executeUpdate();
 		
         }catch(SQLException e) {
