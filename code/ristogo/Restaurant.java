@@ -1,14 +1,6 @@
 package ristogo;
 
-import java.io.Serializable;
-
-enum Price{
-	ECONOMIC,
-	LOW,
-	MIDDLE,
-	HIGH,
-	LUXURY
-}
+import java.io.*;
 
 enum OpeningHour{
 	LUNCH,
@@ -21,7 +13,7 @@ public class Restaurant implements Serializable{
 	int idOwner;
 	String name;
 	String type;
-	Price cost;
+	int cost;
 	String city;
 	String address;
 	String description;
@@ -30,7 +22,10 @@ public class Restaurant implements Serializable{
 	
 	//VA CONVERTITO ENUM IN STRING
 	RestaurantBean getBean() {
-		return new RestaurantBean(idRisto, idOwner, name, type, cost.ordinal(), city, address, description, seatsAvailable, openAt.toString());
+		if(name == null) {
+			return new RestaurantBean(idRisto, idOwner, "", "", 0, "", "", "", 0, null);
+		}
+		return new RestaurantBean(idRisto, idOwner, name, type, cost, city, address, description, seatsAvailable, openAt.toString());
 	};
 	
 	public Restaurant() {
@@ -38,7 +33,7 @@ public class Restaurant implements Serializable{
 		idOwner = 0;
 		name = null;
 		type = null;
-		cost = null;
+		cost = 1;
 		city = null;
 		address = null;
 		description = null;
@@ -51,7 +46,7 @@ public class Restaurant implements Serializable{
 		this.idOwner = idOwner;
 		this.name = name;
 		this.type = type;
-		this.cost = Price.values()[cost-1];
+		this.cost = cost;
 		this.city = city;
 		this.address = address;
 		this.description = description;
@@ -64,7 +59,7 @@ public class Restaurant implements Serializable{
 		this.idOwner = rb.getIdUser();
 		this.name = rb.getName();
 		this.type = rb.getType();
-		this.cost = Price.values()[rb.getPrice()];
+		this.cost = rb.getPrice();
 		this.city = rb.getCity();
 		this.address = rb.getAddress();
 		this.description = rb.getDescription();
@@ -77,7 +72,7 @@ public class Restaurant implements Serializable{
 	public int getIdRisto() {return idRisto;}
 	public int getIdOwner() {return idOwner;}
 	public String getName() {return name;}
-	public Price getCost() {return cost;}
+	public int getCost() {return cost;}
 	public String getCity() {return city;}
 	public String getAddress() {return address;}
 	public String getDescription() {return description;}
@@ -88,7 +83,7 @@ public class Restaurant implements Serializable{
 	public void setIdRisto(int idRisto) {this.idRisto = idRisto;}
 	public void setIdOwner(int idOwner) {this.idOwner = idOwner;}
 	public void setName(String name) {this.name = name;}
-	public void setCost(Price cost) {this.cost = cost;}
+	public void setCost(int cost) {this.cost = cost;}
 	public void setCity(String city) {this.city = city;}
 	public void setAddress(String address) {this.address = address;}
 	public void setDescription(String description) {this.description = description;}

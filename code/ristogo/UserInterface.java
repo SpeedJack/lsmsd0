@@ -174,7 +174,7 @@ public class UserInterface extends Application {
         
         Label type = new Label("Type of User: ");
         ChoiceBox<String> cb = new ChoiceBox();
-        cb.getItems().addAll("Client", "Restaurateur");
+        cb.getItems().addAll("Customer", "Restaurant Owner");
         type.setFont(Font.font(font, FontWeight.NORMAL, dimC+3));
         type.setTextFill(Color.web(backgroundColor));
         
@@ -407,7 +407,6 @@ error.setVisible(false);
 		
 	    TableViewReservation reservation = new TableViewReservation();
 	    reservation.myReservations(false);
-	    reservation.myReservations(false);
 	    
 	    reservation.setOnMouseClicked((e) -> {
 	    		delRes.setDisable(false);
@@ -626,23 +625,29 @@ error.setVisible(false);
     	commit.setStyle("-fx-base: " + textColor );
     	
     	/*FILL FORM WITH RESTAURANT*/
-		RestaurantBean r = (RestaurantBean)MessageHandler.sendRequest(MessageHandler.RESTAURANT_INFO);
-		name_f.setText(r.getName());
-		type_f.getSelectionModel().select(r.getType());
-		cost_f.setValue(r.getPrice());
-		city_f.setText(r.getCity());
-		address_f.setText(r.getAddress());
-		desc_f.setText(r.getDescription());
-		seats_f.setText(new Integer(r.getSeats()).toString());
-		if(r.getOpening().equals("LUNCH")) {
-			hour_f.getSelectionModel().select("Lunch");
-		}
-		else if(r.getOpening().equals("DINNER")) {
-			hour_f.getSelectionModel().select("Dinner");
-		}
-		else {
-			hour_f.getSelectionModel().select("Lunch/Dinner");
-		}
+    	try {
+			RestaurantBean r = (RestaurantBean)MessageHandler.sendRequest(MessageHandler.RESTAURANT_INFO);
+			if(r.getName() != null) {
+				name_f.setText(r.getName());
+				type_f.getSelectionModel().select(r.getType());
+				cost_f.setValue(r.getPrice());
+				city_f.setText(r.getCity());
+				address_f.setText(r.getAddress());
+				desc_f.setText(r.getDescription());
+				seats_f.setText(new Integer(r.getSeats()).toString());
+			}
+			if(r.getOpening().equals("LUNCH")) {
+				hour_f.getSelectionModel().select("Lunch");
+			}
+			else if(r.getOpening().equals("DINNER")) {
+				hour_f.getSelectionModel().select("Dinner");
+			}
+			else {
+				hour_f.getSelectionModel().select("Lunch/Dinner");
+			}
+    	}catch(NullPointerException e) {
+    		
+    	}
     	commit.setOnAction((ActionEvent ev) -> {
     											error.setVisible(false);
 										    	try {

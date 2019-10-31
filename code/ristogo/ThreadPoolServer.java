@@ -32,71 +32,90 @@ public class ThreadPoolServer implements Runnable{
 			int code = MessageHandler.parseRequest(currentRequest);
 			switch (code) {
 			case MessageHandler.LOGIN: { 
-				System.out.println("CALLING DB MANAGER FOR QUERY: " + code);
+				
+				System.out.println("Serving LOGIN");
 				User ret = DBManager.login(u);
 				if (ret == null) success = false;
-				System.out.println("BUILDING RESPONSE TO" + code);
+				System.out.println("LOGIN SUCCESS " + success);
 				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, ret);
 				break;
 			}
 			case MessageHandler.REGISTRATION: {
 				
+				System.out.println("Serving REGISTRATION");
 				int ret = DBManager.register(u);
 				if (ret == -1) success = false;
+				System.out.println("LOGIN SUCCESS " + success);
 				u.setIdUser(ret);
 				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, u);
 				break;
 			} 
 			case MessageHandler.LIST_RESTAURANT: {
 				
+				System.out.println("Serving LIST_RESTAURANT");
 				List<Restaurant> lr = DBManager.list_restaurant();
 				if (lr == null) success = false;
+				System.out.println("LOGIN SUCCESS " + success);
 				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, lr);
 				break;
 			} case MessageHandler.RESERVATION: {
 				
+				System.out.println("Serving RESERVATION");
 				int ret = DBManager.book(currentRequest.getReservation());
 				if (ret == -1) success = false;
+				System.out.println("LOGIN SUCCESS " + success);
 				Reservation rsv = currentRequest.getReservation();
 				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, rsv);
 				break;
 			} case MessageHandler.LIST_RESERVATION: {
 				
+				System.out.println("Serving LIST_RESERVATION");
 				List<Reservation> lr= DBManager.list_reservation(currentRequest.getUser(), false);
 				if (lr == null) success = false;
+				System.out.println("LOGIN SUCCESS " + success);
 				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, lr);
 				break;
 			} case MessageHandler.LIST_RESERVATION_REST: {
-				
+				System.out.println("Serving LIST_RESERVATION_REST");
 				List<Reservation> lr= DBManager.list_reservation(currentRequest.getUser(), true);
 				if (lr == null) success = false;
+				System.out.println("LOGIN SUCCESS " + success);
 				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, lr);
 				break;
 			} case MessageHandler.DELETE_RESERVATION: {
-				
+				System.out.println("Serving DELETE_RESERVATION");
 				int ret = DBManager.deleteReservation(currentRequest.getReservation());
 				if (ret == -1) success = false;
+				System.out.println("LOGIN SUCCESS " + success);
 				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, null);
 				break;
 			} case MessageHandler.CHECK_SEATS: {
 				
+				System.out.println("Serving CHECK_SEATS");
 				int ret = DBManager.check(currentRequest.getReservation());
-				
 				if (ret == -1) success = false;
+				System.out.println("LOGIN SUCCESS " + success);
 				currentRequest.getReservation().setSeats(ret);
 				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, currentRequest.getReservation());
 				break;
 			} case MessageHandler.MODIFY_RESTAURANT:{	
 				
+				System.out.println("Serving MODIFY_RESTAURANT");
 				int ret = DBManager.updateRestaurant(currentRequest.getRestaurant());
 				if (ret == -1) success = false;
+				System.out.println("LOGIN SUCCESS " + success);
 				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, null);
 				break;
 			}case MessageHandler.EXIT:{	
+				
 				rx = MessageHandler.buildResponse(currentRequest.getReqType(), true, null);
 				break;
 			} case MessageHandler.RESTAURANT_INFO :{
+				
+				System.out.println("Serving RESTAURANT_INFO");
 				Restaurant r = DBManager.restaurantInfo(currentRequest.getUser().getIdUser());
+				if(r == null) success = false;
+				System.out.println("LOGIN SUCCESS " + success);
 				rx = MessageHandler.buildResponse(currentRequest.getReqType(), success, r);
 				break;
 			}
@@ -111,14 +130,14 @@ public class ThreadPoolServer implements Runnable{
 		@Override
 		public void run() {
 			try {
-				System.out.println("EVALUATING REQUEST");
+				//System.out.println("EVALUATING REQUEST");
 				currentResponse = evaluateRequest();
 				if (currentResponse == null) return;
 				if(currentResponse.getResType()== MessageHandler.EXIT) {
 					System.out.println("CLIENT EXIT");
 					return;
 				}
-				System.out.println("SENDING RESPONSE");
+				//System.out.println("SENDING RESPONSE");
 				MessageHandler.send(currentResponse, MessageHandler.RES, clientSocket);	
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -12,7 +12,7 @@ public class DBManager{
 	static {
 	    try {
 	    	Class.forName("com.mysql.jdbc.Driver");
-	    	connectionToDB = DriverManager.getConnection("jdbc:mysql://localhost:3306/ristogo", "root", "root");      
+	    	connectionToDB = DriverManager.getConnection("jdbc:mysql://localhost:3306/ristogo?useSSL=false", "root", "root");      
 	    } catch (Exception e) {
 	        System.out.println("Impossible to connect with DB");
 	        System.err.println(e.getMessage());
@@ -98,7 +98,8 @@ public class DBManager{
             try {
                 PreparedStatement ps = connectionToDB.prepareStatement("SELECT * " 
                                                                     + "FROM ristorante r INNER JOIN utente u "
-                                                                    + "ON r.IdUtente = u.IdUtente;");
+                                                                    + "ON r.IdUtente = u.IdUtente "
+                                                                    + "WHERE r.nome  != '';");
                 ResultSet res = ps.executeQuery();
                     while(res.next()) {
 	                int idRestaurant = res.getInt("r.IdRisto");
@@ -133,7 +134,7 @@ public class DBManager{
                     ", descrizione = ? , coperti = ? , apertura = ? WHERE IdRisto = ? AND IdUtente= ? ;"); 
             ps.setString(1, r.getName());
             ps.setString(2,r.getType());
-            ps.setInt(3, r.getCost().ordinal());
+            ps.setInt(3, r.getCost());
             ps.setString(4, r.getCity());
             ps.setString(5, r.getAddress());
             ps.setString(6, r.getDescription());
@@ -279,21 +280,23 @@ public class DBManager{
 		 try {
 			 	Restaurant r = new Restaurant();
 	        	PreparedStatement ps = connectionToDB.prepareStatement("SELECT * "
-																		+"FROM ristorante r WHERE r.IdRisto= ? ;");
+																		+"FROM ristorante r WHERE r.IdUtente= ? ;");
 	        	
 	        	ps.setInt(1, id);
 	        	ResultSet res = ps.executeQuery();
 	        	if(res.next()) {
 	        		r.setIdRisto(res.getInt("IdRisto"));
 	        		r.setIdOwner(id);
-	        		r.setName(res.getString("nome"));
-	        		r.setType(res.getString("genere"));
-	        		r.setCost(Price.values()[res.getInt("costo")]);
-	        		r.setCity(res.getString("citta"));
-	        		r.setAddress(res.getString("via"));
-	        		r.setDescription(res.getString("descrizione"));
-	        		r.setSeatsAvailable(res.getInt("coperti"));
-	        		r.setOpenAt(OpeningHour.valueOf(res.getString("apertura")));
+	        		if(res.getString("nome") != null){
+		        		r.setName(res.getString("nome"));
+		        		r.setType(res.getString("genere"));
+		        		r.setCost(res.getInt("costo"));
+		        		r.setCity(res.getString("citta"));
+		        		r.setAddress(res.getString("via"));
+		        		r.setDescription(res.getString("descrizione"));
+		        		r.setSeatsAvailable(res.getInt("coperti"));
+		        		r.setOpenAt(OpeningHour.valueOf(res.getString("apertura")));
+	        		}
 	        		return r;
 	        	}
 	        	return null;

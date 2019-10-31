@@ -6,10 +6,7 @@ package ristogo;
 */
 
 import java.net.*;
-import java.time.LocalDate;
-import java.lang.String;
-
-import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.*;
 
 import java.io.*;
 
@@ -43,35 +40,40 @@ class MessageHandler {
 
 	public static void send(Object r, String type, Socket s) { 
 		XStream xs = new XStream();
-		System.out.println("[MESSAGE HANDLER] Send");
+
 		if(type.equals(REQ)) {
+			
 			xml = xs.toXML((Request)r);
+			
 		} else if (type.equals(RES)) {
+			
 			xml = xs.toXML((Response)r);
 		}
-	    try { 
-	    	System.out.println("[MESSAGE HANDLER] XML: " + xml);
+	    try {
 	    	DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+	    	//System.out.println("[MESSAGE HANDLER] SEND XML: " + xml);
 	    	dout.writeUTF(xml);
-	    	} catch (Exception e) {e.printStackTrace();}
+	    	
+	    } catch (IOException e) {
+	    		e.printStackTrace();
+	    	}
 		return;
 	};
 	
 	public static Object receive(Socket s) {
 		XStream xs = new XStream();
 		String xml = null;
-		try { 
-			System.out.println("[MESSAGE HANDLER] Receive");
+		try {
 			DataInputStream din = new DataInputStream(s.getInputStream());
-			
+			//System.out.println("[MESSAGE HANDLER] RECEIVE XML: " + xml);
 			xml = din.readUTF(); 
-			System.out.println("[MESSAGE HANDLER] XML: " + xml);
 			return xs.fromXML(xml);
+			
 		} catch(EOFException eofex) {
-			System.out.println(eofex.getMessage());
+			//System.out.println(eofex.getMessage());
 			return xs.fromXML(xml);
 		} 
-		catch (Exception e) {
+		catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -89,7 +91,7 @@ class MessageHandler {
 		 * the server, the function returns an Object that in order to be used
 		 * must be casted from the user interface to the desired Class
 		 */
-		System.out.println("[MESSAGE HANDLER] SendRequest" + type);
+		//System.out.println("SendRequest " + type);
 		Request r = null; 
 		Response res = null;
 		try(Socket s = new Socket("localhost", 8080)){
@@ -99,6 +101,7 @@ class MessageHandler {
 				if(r == null ) return null;
 
 				send(r, REQ, s);
+				System.out.println("Send LOGIN");
 				res = (Response) receive(s);
 				s.close();
 				if(res.isSuccess()) {
@@ -110,8 +113,11 @@ class MessageHandler {
 				} else return false;
 			}
 			case REGISTRATION: {
-				r = prepareRegistration(strings[0], strings[1], Boolean.parseBoolean(strings[2]));
+				boolean isRes = true;
+				if(strings[2].equals("Customer")) isRes = false;
+				r = prepareRegistration(strings[0], strings[1], isRes);
 				if(r == null ) return false;
+				System.out.println("Send REGISTRATION");
 				send(r, REQ, s);
 				res = (Response) receive(s);
 				if(res.isSuccess()) {
@@ -125,6 +131,7 @@ class MessageHandler {
 				r = prepareList();
 				List<RestaurantBean> lr = new ArrayList<>();
 				if (r==null) return null;
+				System.out.println("Send LIST_RESTAURANT");
 				send(r, REQ, s);
 				res = (Response) receive(s);
 				if (res == null) return null;
@@ -138,6 +145,7 @@ class MessageHandler {
 			} case RESERVATION: {
 				r = prepareReservation(strings[0], strings[1], strings[2], Integer.parseInt(strings[3]));
 				if(r == null ) return false;
+				System.out.println("Send RESERVATION");
 				send(r, REQ, s);
 				res = (Response) receive(s);
 				
@@ -149,6 +157,7 @@ class MessageHandler {
 		
 				r = prepareListReservation();
 				if(r == null ) return null;
+				System.out.println("Send LIST_RESERVATION");
 				send(r, REQ, s);
 				res = (Response) receive(s);
 				
@@ -163,6 +172,7 @@ class MessageHandler {
 			} case LIST_RESERVATION_REST: {
 				r = prepareListReservationRest();
 				if(r == null ) return null;
+				System.out.println("Send LIST_RESERVATION_REST");
 				send(r, REQ, s);
 				res = (Response) receive(s);
 				
@@ -178,6 +188,7 @@ class MessageHandler {
 			} case DELETE_RESERVATION: {
 
 				r = prepareDeleteReservation(Integer.parseInt(strings[0]));
+				System.out.println("Send DELETE_RESERVATION");
 				send(r, REQ, s);
 				res = (Response) receive(s);
 				if(res.isSuccess()) {
@@ -187,6 +198,7 @@ class MessageHandler {
 				}
 			} case CHECK_SEATS: {
 				r = prepareCheckSeats(restIdMap.get(strings[0]), strings[1], strings[2]);
+				System.out.println("Send CHECK_SEATS");
 				send(r, REQ, s);
 				res = (Response) receive(s);
 				
@@ -197,6 +209,7 @@ class MessageHandler {
 			} case MODIFY_RESTAURANT:{
 				//nome, tipo, costo, città, undirizzo, descrizion, num posti, orario
 				r = prepareModifyRestaurant(strings[0], strings[1], Integer.parseInt(strings[2]), strings[3], strings[4], strings[5], Integer.parseInt(strings[6]), strings[7]);
+				System.out.println("Send MODIFY_RESTAURANT");
 				send(r, REQ, s);
 				res = (Response) receive(s);
 				if(res.isSuccess()) {
@@ -206,14 +219,16 @@ class MessageHandler {
 				}
 			} case EXIT: {
 				r = prepareExit();
+				System.out.println("Send EXIT");
 				send(r, REQ, s);
 				break;			
 			} case RESTAURANT_INFO:{
 			r = prepareRestaurantInfo();
+			System.out.println("Send RESTAURANT_INFO");
 			send(r, REQ, s);
-			
 			res = (Response) receive(s);
 			if(res.isSuccess()) {
+				System.out.println("ID RISTO CARICATO :" + res.getRestaurants().get(0).getIdRisto());
 				UserSession.setCurrRestaurant(res.getRestaurants().get(0));
 				return res.getRestaurants().get(0).getBean();
 			} else return null;
@@ -233,9 +248,7 @@ private static Request prepareRestaurantInfo() {
 		return new Request(RESTAURANT_INFO, UserSession.getUser(), null, null);
  	}
 
-	/*
- * @TODO Adattare metodi a nuovi User
- */
+
 	public static Request prepareLogin(String username, String password) {
 				
 			User u = new User();
@@ -298,7 +311,7 @@ private static Request prepareRestaurantInfo() {
 		r.setIdOwner(UserSession.getUser().getIdUser());
 		r.setName(n);
 		r.setType(t);
-		r.setCost(Price.values()[p]);
+		r.setCost(p);
 		r.setCity(c);
 		r.setAddress(a);
 		r.setSeatsAvailable(s);
