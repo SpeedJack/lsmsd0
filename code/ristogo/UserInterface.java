@@ -151,6 +151,7 @@ public class UserInterface extends Application {
 	}
 
 //////////////////////////////REGISTER INTERFACE ///////////////////////////////////////////////////////////////////////////	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void registerInterface(Stage window) {
 		
 		Label title = new Label("Sign in!");
@@ -225,6 +226,7 @@ public class UserInterface extends Application {
     		
 	}
 ////////////////////////CLIENT INTERFACE /////////////////////////////////////////////////////	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void clientInterface(Stage window) {	
 
 //Left Interface
@@ -510,6 +512,7 @@ error.setVisible(false);
 	
 /////////////////////////////////RESTAURANTEUR INTERFACE ///////////////////////////////////////////////////////////////////////////////////////////////
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void restaranteurInterface(Stage window) {
 //Left Interface
 		//Title Box

@@ -94,7 +94,7 @@ public class DBManager{
 //list of restaurant	 
 	public static List<Restaurant> list_restaurant(){
 		 
-            List<Restaurant> restaurants = new ArrayList();
+            List<Restaurant> restaurants = new ArrayList<>();
             try {
                 PreparedStatement ps = connectionToDB.prepareStatement("SELECT * " 
                                                                     + "FROM ristorante r INNER JOIN utente u "

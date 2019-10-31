@@ -1,8 +1,7 @@
 package ristogo;
 
-import java.io.Serializable;
 
-public class Reservation implements Serializable{
+public class Reservation {
 	int idRes;
 	User customer;
 	Restaurant restaurant;

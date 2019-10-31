@@ -23,6 +23,9 @@ public class ThreadPoolServer implements Runnable{
 			boolean success = true;
 			try {
 				currentRequest = (Request)MessageHandler.receive(clientSocket);
+			} catch (NullPointerException npe) {
+				System.out.println("Client Disconneted");
+				return null;
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 				e.printStackTrace();
@@ -122,8 +125,7 @@ public class ThreadPoolServer implements Runnable{
 			default: break;
 			}
 			return rx;
-		}
-		
+			};
 		
 		
 

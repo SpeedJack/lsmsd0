@@ -1,9 +1,5 @@
 package ristogo;
-/*@TODO
- * Aggiungere condizione per request/response
- * Aggiungere gestione risposte
-* 
-*/
+
 
 import java.net.*;
 import com.thoughtworks.xstream.*;
@@ -70,8 +66,8 @@ class MessageHandler {
 			return xs.fromXML(xml);
 			
 		} catch(EOFException eofex) {
-			//System.out.println(eofex.getMessage());
-			return xs.fromXML(xml);
+			if(s.isClosed());
+			return null;
 		} 
 		catch (IOException e) {
 			e.printStackTrace();
@@ -343,6 +339,7 @@ private static Request prepareRestaurantInfo() {
 	};	
 	
 	
+	@SuppressWarnings("unchecked")
 	public static Response buildResponse(int type, boolean success, Object rx) {
 		
 		switch(type) {

@@ -1,6 +1,6 @@
 package ristogo;
 
-import java.io.*;
+
 
 enum OpeningHour{
 	LUNCH,
@@ -8,7 +8,7 @@ enum OpeningHour{
 	ALWAYS;	
 }
 
-public class Restaurant implements Serializable{
+public class Restaurant{
 	int idRisto;
 	int idOwner;
 	String name;
